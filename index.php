@@ -251,20 +251,20 @@ require_once('config.php');
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero-gradient text-white relative overflow-hidden">
+    <section class="hero-gradient text-white relative overflow-hidden" data-aos="fade">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                <div class="animate-fadeInLeft">
-                    <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-6 animate__animated animate__fadeIn">Pendidikan Berkualitas untuk Semua</h1>
-                    <p class="text-xl mb-8 animate__animated animate__fadeIn animate__delay-1s">EduConnect menghubungkan siswa di daerah 3T dengan mentor profesional dan materi pembelajaran berkualitas melalui platform digital inovatif.</p>
-                    <div class="flex flex-col sm:flex-row gap-4 animate__animated animate__fadeIn animate__delay-2s">
-                        <a href="#signup" class="bg-white text-primary font-semibold px-6 py-3 rounded-lg shadow-lg hover:bg-gray-100 hover:scale-105 transition duration-300 text-center transform hover:-translate-y-1">Daftar Sekarang</a>
-                        <a href="#how-it-works" class="border-2 border-white text-white font-semibold px-6 py-3 rounded-lg hover:bg-white hover:text-primary hover:scale-105 transition duration-300 text-center transform hover:-translate-y-1">Pelajari Lebih Lanjut</a>
+                <div data-aos="fade-right" data-aos-delay="100">
+                    <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-6">Pendidikan Berkualitas untuk Semua</h1>
+                    <p class="text-xl mb-8">EduConnect menghubungkan siswa di daerah 3T dengan mentor profesional dan materi pembelajaran berkualitas melalui platform digital inovatif.</p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="#signup" class="bg-white text-primary font-semibold px-6 py-3 rounded-lg shadow hover:bg-gray-100 transition duration-300 text-center">Daftar Sekarang</a>
+                        <a href="#how-it-works" class="border-2 border-white text-white font-semibold px-6 py-3 rounded-lg hover:bg-white hover:text-primary transition duration-300 text-center">Pelajari Lebih Lanjut</a>
                     </div>
                 </div>
-                <div class="relative animate__animated animate__fadeInRight">
-                    <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Students learning together" class="rounded-xl shadow-2xl border-4 border-white transform hover:rotate-1 transition duration-500">
-                    <div class="absolute -bottom-6 -left-6 bg-white p-4 rounded-lg shadow-lg hidden md:block animate-bounce">
+                <div class="relative" data-aos="fade-left" data-aos-delay="200">
+                    <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Students learning together" class="rounded-xl shadow-2xl border-4 border-white w-full">
+                    <div class="absolute -bottom-6 -left-6 bg-white p-4 rounded-lg shadow-lg hidden md:block floating">
                         <div class="flex items-center">
                             <div class="bg-primary rounded-full p-2 mr-3">
                                 <i class="fas fa-chalkboard-teacher text-white"></i>
@@ -275,7 +275,7 @@ require_once('config.php');
                             </div>
                         </div>
                     </div>
-                    <div class="absolute -top-6 -right-6 bg-white p-4 rounded-lg shadow-lg hidden md:block animate-bounce animate-delay-1000">
+                    <div class="absolute -top-6 -right-6 bg-white p-4 rounded-lg shadow-lg hidden md:block floating" style="animation-delay: 1s">
                         <div class="flex items-center">
                             <div class="bg-secondary rounded-full p-2 mr-3">
                                 <i class="fas fa-users text-white"></i>
