@@ -362,50 +362,130 @@ require_once('config.php');
                 </div>
             </div>
         </div>
-    </section>
-
-    <!-- How It Works Section -->
-    <section id="how-it-works" class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold text-dark mb-4">Bagaimana EduConnect Bekerja?</h2>
-                <p class="text-xl text-gray-600 max-w-3xl mx-auto">Hanya dengan 3 langkah sederhana, siswa bisa mulai belajar dengan mentor profesional</p>
-            </div>
+    </section><!-- Modern How It Works Section -->
+<section id="how-it-works" class="py-16 md:py-24 bg-gradient-to-b from-white to-gray-50">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+        <!-- Animated Header -->
+        <div class="text-center mb-12 md:mb-20" data-aos="fade-up">
+            <span class="inline-block text-primary font-semibold mb-3 tracking-wider">PROSES BELAJAR</span>
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">Belajar Lebih Mudah<br class="hidden md:block"> dengan <span class="text-primary">EduConnect</span></h2>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">Hanya dengan 3 langkah sederhana, mulai perjalanan belajar Anda dengan mentor profesional</p>
+        </div>
+        
+        <!-- Timeline Steps - Desktop -->
+        <div class="hidden md:block relative">
+            <!-- Timeline line -->
+            <div class="absolute left-1/2 top-0 h-full w-1 bg-gradient-to-b from-primary to-accent transform -translate-x-1/2"></div>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="grid grid-cols-9 gap-0 relative z-10">
                 <!-- Step 1 -->
-                <div class="text-center transform hover:scale-105 transition duration-300">
-                    <div class="bg-primary bg-opacity-10 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 hover:rotate-12 transition-transform">
-                        <span class="text-primary text-2xl font-bold">1</span>
+                <div class="col-span-3 text-right pr-10 transform hover:scale-[1.02] transition duration-300 group" data-aos="fade-right">
+                    <div class="relative">
+                        <div class="absolute -right-10 top-1/2 transform -translate-y-1/2 w-8 h-8 rounded-full bg-primary flex items-center justify-center border-4 border-white shadow-lg group-hover:scale-110 transition">
+                            <span class="text-white font-bold">1</span>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">Daftar Gratis</h3>
+                            <p class="text-gray-600">Buat akun siswa dan lengkapi profil untuk mendapatkan rekomendasi pembelajaran yang sesuai.</p>
+                        </div>
                     </div>
-                    <h3 class="text-xl font-bold text-dark mb-3">Daftar Gratis</h3>
-                    <p class="text-gray-600">Buat akun siswa dan lengkapi profil untuk mendapatkan rekomendasi pembelajaran yang sesuai.</p>
                 </div>
                 
+                <!-- Spacer -->
+                <div class="col-span-3"></div>
+                
                 <!-- Step 2 -->
-                <div class="text-center transform hover:scale-105 transition duration-300">
-                    <div class="bg-secondary bg-opacity-10 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 hover:rotate-12 transition-transform">
-                        <span class="text-secondary text-2xl font-bold">2</span>
+                <div class="col-span-3 text-left pl-10 transform hover:scale-[1.02] transition duration-300 group" data-aos="fade-left" data-aos-delay="150">
+                    <div class="relative">
+                        <div class="absolute -left-10 top-1/2 transform -translate-y-1/2 w-8 h-8 rounded-full bg-secondary flex items-center justify-center border-4 border-white shadow-lg group-hover:scale-110 transition">
+                            <span class="text-white font-bold">2</span>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">Pilih Mentor atau Materi</h3>
+                            <p class="text-gray-600">Temukan mentor profesional atau pilih materi pembelajaran dari berbagai bidang yang tersedia.</p>
+                        </div>
                     </div>
-                    <h3 class="text-xl font-bold text-dark mb-3">Pilih Mentor atau Materi</h3>
-                    <p class="text-gray-600">Temukan mentor profesional atau pilih materi pembelajaran dari berbagai bidang yang tersedia.</p>
                 </div>
                 
                 <!-- Step 3 -->
-                <div class="text-center transform hover:scale-105 transition duration-300">
-                    <div class="bg-accent bg-opacity-10 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 hover:rotate-12 transition-transform">
-                        <span class="text-accent text-2xl font-bold">3</span>
+                <div class="col-span-3 text-right pr-10 mt-16 transform hover:scale-[1.02] transition duration-300 group" data-aos="fade-right" data-aos-delay="300">
+                    <div class="relative">
+                        <div class="absolute -right-10 top-1/2 transform -translate-y-1/2 w-8 h-8 rounded-full bg-accent flex items-center justify-center border-4 border-white shadow-lg group-hover:scale-110 transition">
+                            <span class="text-white font-bold">3</span>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">Mulai Belajar</h3>
+                            <p class="text-gray-600">Ikuti sesi belajar interaktif, diskusi kelompok, atau akses materi pembelajaran kapan saja.</p>
+                        </div>
                     </div>
-                    <h3 class="text-xl font-bold text-dark mb-3">Mulai Belajar</h3>
-                    <p class="text-gray-600">Ikuti sesi belajar interaktif, diskusi kelompok, atau akses materi pembelajaran kapan saja.</p>
                 </div>
             </div>
+        </div>
+        
+        <!-- Mobile Steps - Vertical Timeline -->
+        <div class="md:hidden relative">
+            <!-- Vertical line -->
+            <div class="absolute left-6 top-0 h-full w-1 bg-gradient-to-b from-primary to-accent transform -translate-x-1/2"></div>
             
-            <div class="mt-16 text-center">
-                <a href="#signup" class="bg-primary text-white font-semibold px-8 py-3 rounded-lg shadow-lg hover:bg-primary-dark hover:scale-105 transition duration-300 inline-block transform hover:-translate-y-1">Mulai Sekarang</a>
+            <div class="space-y-10 pl-16">
+                <!-- Step 1 -->
+                <div class="relative transform hover:scale-[1.02] transition duration-300" data-aos="fade-up">
+                    <div class="absolute -left-10 top-0 w-8 h-8 rounded-full bg-primary flex items-center justify-center border-4 border-white shadow-lg">
+                        <span class="text-white font-bold">1</span>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Daftar Gratis</h3>
+                        <p class="text-gray-600">Buat akun siswa dan lengkapi profil untuk mendapatkan rekomendasi pembelajaran yang sesuai.</p>
+                    </div>
+                </div>
+                
+                <!-- Step 2 -->
+                <div class="relative transform hover:scale-[1.02] transition duration-300" data-aos="fade-up" data-aos-delay="100">
+                    <div class="absolute -left-10 top-0 w-8 h-8 rounded-full bg-secondary flex items-center justify-center border-4 border-white shadow-lg">
+                        <span class="text-white font-bold">2</span>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Pilih Mentor atau Materi</h3>
+                        <p class="text-gray-600">Temukan mentor profesional atau pilih materi pembelajaran dari berbagai bidang yang tersedia.</p>
+                    </div>
+                </div>
+                
+                <!-- Step 3 -->
+                <div class="relative transform hover:scale-[1.02] transition duration-300" data-aos="fade-up" data-aos-delay="200">
+                    <div class="absolute -left-10 top-0 w-8 h-8 rounded-full bg-accent flex items-center justify-center border-4 border-white shadow-lg">
+                        <span class="text-white font-bold">3</span>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Mulai Belajar</h3>
+                        <p class="text-gray-600">Ikuti sesi belajar interaktif, diskusi kelompok, atau akses materi pembelajaran kapan saja.</p>
+                    </div>
+                </div>
             </div>
         </div>
-    </section>
+        
+        <!-- Animated CTA Button -->
+        <div class="mt-16 md:mt-20 text-center" data-aos="fade-up" data-aos-delay="400">
+            <a href="#signup" class="relative inline-block bg-gradient-to-r from-primary to-secondary text-white font-semibold px-8 py-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 group">
+                <span class="relative z-10">Mulai Sekarang</span>
+                <span class="absolute inset-0 bg-gradient-to-r from-primary-dark to-secondary-dark opacity-0 group-hover:opacity-100 rounded-full transition-opacity duration-300"></span>
+                <span class="absolute -bottom-1 left-1/2 w-4/5 h-2 bg-primary/30 blur-md transform -translate-x-1/2 group-hover:blur-lg transition-all duration-300"></span>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- AOS Animation CSS -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+<!-- Initialize AOS -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init({
+        duration: 800,
+        easing: 'ease-out-quad',
+        once: true
+    });
+</script>
 
     <!-- AI Chat Section -->
     <section id="ai-chat" class="py-20 bg-gray-50">
@@ -495,29 +575,157 @@ require_once('config.php');
     </section>
 
     <!-- Bootcamp Section -->
-    <section id="bootcamp" class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold text-dark mb-4">Bootcamp Profesional</h2>
-                <p class="text-xl text-gray-600 max-w-3xl mx-auto">Tingkatkan skill dengan program bootcamp intensif bersama mentor ahli di bidangnya</p>
+    <section id="bootcamp" class="py-16 md:py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+        <div class="text-center mb-12 md:mb-16">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3">Bootcamp Profesional</h2>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">Tingkatkan skill dengan program bootcamp intensif bersama mentor ahli di bidangnya</p>
+        </div>
+        
+        <!-- Desktop Grid (3 columns) -->
+        <div class="hidden md:grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Bootcamp 1 -->
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition duration-300 transform hover:-translate-y-2">
+                <div class="bg-primary h-2 w-full"></div>
+                <div class="p-6 md:p-8">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-primary bg-opacity-10 p-3 rounded-full mr-4 hover:rotate-12 transition-transform">
+                            <i class="fas fa-code text-primary text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900">Bootcamp Pemrograman</h3>
+                    </div>
+                    <p class="text-gray-600 mb-6">Pelajari dasar-dasar pemrograman hingga siap kerja dalam 12 minggu intensif.</p>
+                    
+                    <div class="mb-6">
+                        <p class="text-3xl font-bold text-gray-900 mb-1">Rp 1.500.000</p>
+                        <p class="text-gray-500 text-sm">atau 3x Rp 500.000</p>
+                    </div>
+                    
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            <span class="text-gray-700">24 sesi mentoring</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            <span class="text-gray-700">Proyek akhir</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            <span class="text-gray-700">Sertifikat kelulusan</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            <span class="text-gray-700">Dukungan karir</span>
+                        </li>
+                    </ul>
+                    
+                    <a href="#signup" class="block w-full bg-primary text-white text-center font-semibold py-3 rounded-lg hover:bg-primary-dark transition duration-300 transform hover:scale-[1.02]">Daftar Sekarang</a>
+                </div>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Bootcamp 2 (Populer) -->
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition duration-300 transform hover:-translate-y-2 scale-105 z-10 relative">
+                <div class="bg-secondary h-2 w-full"></div>
+                <div class="absolute top-4 right-4 bg-secondary text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">
+                    POPULER
+                </div>
+                <div class="p-6 md:p-8">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-secondary bg-opacity-10 p-3 rounded-full mr-4 hover:rotate-12 transition-transform">
+                            <i class="fas fa-chart-line text-secondary text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900">Bootcamp Digital Marketing</h3>
+                    </div>
+                    <p class="text-gray-600 mb-6">Kuasi skill digital marketing dari dasar hingga strategi lanjutan dalam 8 minggu.</p>
+                    
+                    <div class="mb-6">
+                        <p class="text-3xl font-bold text-gray-900 mb-1">Rp 1.200.000</p>
+                        <p class="text-gray-500 text-sm">atau 3x Rp 400.000</p>
+                    </div>
+                    
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            <span class="text-gray-700">16 sesi mentoring</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            <span class="text-gray-700">Studi kasus nyata</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            <span class="text-gray-700">Sertifikat kelulusan</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            <span class="text-gray-700">Akses komunitas</span>
+                        </li>
+                    </ul>
+                    
+                    <a href="#signup" class="block w-full bg-secondary text-white text-center font-semibold py-3 rounded-lg hover:bg-secondary-dark transition duration-300 transform hover:scale-[1.02]">Daftar Sekarang</a>
+                </div>
+            </div>
+            
+            <!-- Bootcamp 3 -->
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition duration-300 transform hover:-translate-y-2">
+                <div class="bg-accent h-2 w-full"></div>
+                <div class="p-6 md:p-8">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-accent bg-opacity-10 p-3 rounded-full mr-4 hover:rotate-12 transition-transform">
+                            <i class="fas fa-paint-brush text-accent text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900">Bootcamp Desain Grafis</h3>
+                    </div>
+                    <p class="text-gray-600 mb-6">Pelajari prinsip desain dan tools populer untuk menjadi desainer profesional.</p>
+                    
+                    <div class="mb-6">
+                        <p class="text-3xl font-bold text-gray-900 mb-1">Rp 1.000.000</p>
+                        <p class="text-gray-500 text-sm">atau 2x Rp 500.000</p>
+                    </div>
+                    
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            <span class="text-gray-700">12 sesi mentoring</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            <span class="text-gray-700">Portofolio desain</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            <span class="text-gray-700">Sertifikat kelulusan</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check text-green-500 mr-2"></i>
+                            <span class="text-gray-700">Review karya</span>
+                        </li>
+                    </ul>
+                    
+                    <a href="#signup" class="block w-full bg-accent text-white text-center font-semibold py-3 rounded-lg hover:bg-accent-dark transition duration-300 transform hover:scale-[1.02]">Daftar Sekarang</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Horizontal Scroll -->
+        <div class="md:hidden pb-6 -mx-5 px-5 overflow-x-auto">
+            <div class="flex space-x-5 w-max" style="padding-right: 1.25rem;">
                 <!-- Bootcamp 1 -->
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition duration-300 transform hover:-translate-y-2">
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 w-80 flex-shrink-0">
                     <div class="bg-primary h-2 w-full"></div>
-                    <div class="p-8">
+                    <div class="p-6">
                         <div class="flex items-center mb-4">
-                            <div class="bg-primary bg-opacity-10 p-3 rounded-full mr-4 hover:rotate-12 transition-transform">
+                            <div class="bg-primary bg-opacity-10 p-3 rounded-full mr-4">
                                 <i class="fas fa-code text-primary text-xl"></i>
                             </div>
-                            <h3 class="text-xl font-bold text-dark">Bootcamp Pemrograman</h3>
+                            <h3 class="text-xl font-bold text-gray-900">Bootcamp Pemrograman</h3>
                         </div>
                         <p class="text-gray-600 mb-6">Pelajari dasar-dasar pemrograman hingga siap kerja dalam 12 minggu intensif.</p>
                         
                         <div class="mb-6">
-                            <p class="text-3xl font-bold text-dark mb-2">Rp 1.500.000</p>
-                            <p class="text-gray-500">atau 3x Rp 500.000</p>
+                            <p class="text-3xl font-bold text-gray-900 mb-1">Rp 1.500.000</p>
+                            <p class="text-gray-500 text-sm">atau 3x Rp 500.000</p>
                         </div>
                         
                         <ul class="space-y-3 mb-8">
@@ -539,30 +747,28 @@ require_once('config.php');
                             </li>
                         </ul>
                         
-                        <a href="#signup" class="block w-full bg-primary text-white text-center font-semibold py-3 rounded-lg hover:bg-primary-dark transition duration-300 hover:scale-105">Daftar Sekarang</a>
+                        <a href="#signup" class="block w-full bg-primary text-white text-center font-semibold py-3 rounded-lg">Daftar Sekarang</a>
                     </div>
                 </div>
                 
-                <!-- Bootcamp 2 -->
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition duration-300 transform hover:-translate-y-2 scale-105 z-10">
-                    <div class="relative">
-                        <div class="bg-secondary h-2 w-full"></div>
-                        <div class="absolute top-0 right-0 bg-secondary text-white text-xs font-bold px-2 py-1 rounded-bl-lg">
-                            POPULER
-                        </div>
+                <!-- Bootcamp 2 (Populer) -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 w-80 flex-shrink-0 relative">
+                    <div class="bg-secondary h-2 w-full"></div>
+                    <div class="absolute top-4 right-4 bg-secondary text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">
+                        POPULER
                     </div>
-                    <div class="p-8">
+                    <div class="p-6">
                         <div class="flex items-center mb-4">
-                            <div class="bg-secondary bg-opacity-10 p-3 rounded-full mr-4 hover:rotate-12 transition-transform">
+                            <div class="bg-secondary bg-opacity-10 p-3 rounded-full mr-4">
                                 <i class="fas fa-chart-line text-secondary text-xl"></i>
                             </div>
-                            <h3 class="text-xl font-bold text-dark">Bootcamp Digital Marketing</h3>
+                            <h3 class="text-xl font-bold text-gray-900">Bootcamp Digital Marketing</h3>
                         </div>
                         <p class="text-gray-600 mb-6">Kuasi skill digital marketing dari dasar hingga strategi lanjutan dalam 8 minggu.</p>
                         
                         <div class="mb-6">
-                            <p class="text-3xl font-bold text-dark mb-2">Rp 1.200.000</p>
-                            <p class="text-gray-500">atau 3x Rp 400.000</p>
+                            <p class="text-3xl font-bold text-gray-900 mb-1">Rp 1.200.000</p>
+                            <p class="text-gray-500 text-sm">atau 3x Rp 400.000</p>
                         </div>
                         
                         <ul class="space-y-3 mb-8">
@@ -584,25 +790,25 @@ require_once('config.php');
                             </li>
                         </ul>
                         
-                        <a href="#signup" class="block w-full bg-secondary text-white text-center font-semibold py-3 rounded-lg hover:bg-secondary-dark transition duration-300 hover:scale-105">Daftar Sekarang</a>
+                        <a href="#signup" class="block w-full bg-secondary text-white text-center font-semibold py-3 rounded-lg">Daftar Sekarang</a>
                     </div>
                 </div>
                 
                 <!-- Bootcamp 3 -->
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition duration-300 transform hover:-translate-y-2">
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 w-80 flex-shrink-0">
                     <div class="bg-accent h-2 w-full"></div>
-                    <div class="p-8">
+                    <div class="p-6">
                         <div class="flex items-center mb-4">
-                            <div class="bg-accent bg-opacity-10 p-3 rounded-full mr-4 hover:rotate-12 transition-transform">
+                            <div class="bg-accent bg-opacity-10 p-3 rounded-full mr-4">
                                 <i class="fas fa-paint-brush text-accent text-xl"></i>
                             </div>
-                            <h3 class="text-xl font-bold text-dark">Bootcamp Desain Grafis</h3>
+                            <h3 class="text-xl font-bold text-gray-900">Bootcamp Desain Grafis</h3>
                         </div>
                         <p class="text-gray-600 mb-6">Pelajari prinsip desain dan tools populer untuk menjadi desainer profesional.</p>
                         
                         <div class="mb-6">
-                            <p class="text-3xl font-bold text-dark mb-2">Rp 1.000.000</p>
-                            <p class="text-gray-500">atau 2x Rp 500.000</p>
+                            <p class="text-3xl font-bold text-gray-900 mb-1">Rp 1.000.000</p>
+                            <p class="text-gray-500 text-sm">atau 2x Rp 500.000</p>
                         </div>
                         
                         <ul class="space-y-3 mb-8">
@@ -624,16 +830,20 @@ require_once('config.php');
                             </li>
                         </ul>
                         
-                        <a href="#signup" class="block w-full bg-accent text-white text-center font-semibold py-3 rounded-lg hover:bg-accent-dark transition duration-300 hover:scale-105">Daftar Sekarang</a>
+                        <a href="#signup" class="block w-full bg-accent text-white text-center font-semibold py-3 rounded-lg">Daftar Sekarang</a>
                     </div>
                 </div>
             </div>
-            
-            <div class="mt-12 text-center">
-                <a href="#bootcamp" class="text-primary font-semibold hover:underline transform hover:scale-105 inline-block">Lihat semua program bootcamp →</a>
-            </div>
         </div>
-    </section>
+        
+        <div class="mt-12 text-center">
+            <a href="#bootcamp" class="text-primary font-semibold hover:underline inline-flex items-center group">
+                Lihat semua program bootcamp
+                <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+            </a>
+        </div>
+    </div>
+</section>
 
     <!-- Testimonials -->
     <section class="py-20 bg-gray-50">
