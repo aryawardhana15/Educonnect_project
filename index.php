@@ -51,6 +51,8 @@ require_once('config.php');
                 }
             }
         }
+
+        
     </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -203,6 +205,26 @@ require_once('config.php');
                 margin-bottom: 1rem;
             }
         }
+        .mobile-nav {
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        transform: scaleY(0);
+        transform-origin: top;
+        opacity: 0;
+        transition: transform 0.3s ease-out, opacity 0.2s ease;
+    }
+    
+    .mobile-nav.scale-y-100 {
+        transform: scaleY(1);
+        opacity: 1;
+    }
+    
+    .hamburger-line {
+        transition: all 0.3s ease;
+    }
+    
+    .mobile-menu-item {
+        transition: all 0.2s ease;
+    }
     </style>
 </head>
 <body class="bg-gray-50 relative overflow-x-hidden">
@@ -213,84 +235,358 @@ require_once('config.php');
 
     <!-- Navigation -->
     <nav class="bg-white shadow-lg sticky top-0 z-50 backdrop-blur-sm bg-opacity-80">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0 flex items-center">
-                        <i class="fas fa-graduation-cap text-primary text-2xl mr-2 transform hover:rotate-12 transition-transform"></i>
-                        <span class="text-xl font-bold text-dark hover:text-primary transition-colors">EduConnect</span>
-                    </div>
-                </div>
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="#features" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">Fitur</a>
-                    <a href="#how-it-works" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">Cara Kerja</a>
-                    <a href="#bootcamp" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">Bootcamp</a>
-                    <a href="#ai-chat" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">AI Assistant</a>
-                    <a href="#contact" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">Kontak</a>
-                </div>
-                <div class="flex items-center md:hidden">
-                    <button id="mobile-menu-button" class="hamburger p-2 rounded-md text-gray-700 hover:text-primary focus:outline-none">
-                        <span class="block w-6 h-0.5 bg-gray-700 mb-1.5"></span>
-                        <span class="block w-6 h-0.5 bg-gray-700 mb-1.5"></span>
-                        <span class="block w-6 h-0.5 bg-gray-700"></span>
-                    </button>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16 items-center">
+            <div class="flex items-center">
+                <div class="flex-shrink-0 flex items-center">
+                    <i class="fas fa-graduation-cap text-primary text-2xl mr-2 transform hover:rotate-12 transition-transform"></i>
+                    <span class="text-xl font-bold text-dark hover:text-primary transition-colors">EduConnect</span>
                 </div>
             </div>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#features" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">Fitur</a>
+                <a href="#how-it-works" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">Cara Kerja</a>
+                <a href="#bootcamp" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">Bootcamp</a>
+                <a href="#ai-chat" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">AI Assistant</a>
+                <a href="#contact" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">Kontak</a>
+            </div>
+            <div class="flex items-center md:hidden">
+                <button id="mobile-menu-button" class="hamburger p-2 rounded-md text-gray-700 hover:text-primary focus:outline-none transition-transform duration-300">
+                    <span class="hamburger-line block w-6 h-0.5 bg-gray-700 mb-1.5 transition-all duration-300"></span>
+                    <span class="hamburger-line block w-6 h-0.5 bg-gray-700 mb-1.5 transition-all duration-300"></span>
+                    <span class="hamburger-line block w-6 h-0.5 bg-gray-700 transition-all duration-300"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="mobile-nav md:hidden bg-white shadow-lg hidden transform origin-top transition-all duration-300 ease-out">
+        <div class="px-2 pt-2 pb-4 space-y-1 sm:px-3">
+            <a href="#features" class="mobile-menu-item block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition">Fitur</a>
+            <a href="#how-it-works" class="mobile-menu-item block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition">Cara Kerja</a>
+            <a href="#bootcamp" class="mobile-menu-item block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition">Bootcamp</a>
+            <a href="#ai-chat" class="mobile-menu-item block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition">AI Assistant</a>
+            <a href="#contact" class="mobile-menu-item block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition">Kontak</a>
+        </div>
+    </div>
+</nav>
+
+
+
+    <!-- Hero Section --><section id="hero" class="hero-section relative overflow-hidden min-h-screen flex items-center">
+  <!-- Animated Gradient Background -->
+  <div class="absolute inset-0 bg-gradient-to-br from-primary via-secondary to-accent animate-gradient"></div>
+  
+  <!-- Floating Particles -->
+  <div class="particles absolute inset-0 overflow-hidden">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 py-20 md:py-0 relative z-10">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <!-- Text Content -->
+      <div class="text-center lg:text-left" data-aos="fade-up">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight">
+          <span class="text-white">Pendidikan berkualitas</span>
+          <span class="text-yellow-300 block mt-2">Untuk semua</span>
+        </h1>
+        
+        <p class="text-xl md:text-2xl text-white/90 mb-8 max-w-lg mx-auto lg:mx-0">
+          EduConnect membuka akses pendidikan berkualitas melalui teknologi inovatif dengan
+          <span class="font-semibold text-yellow-300">mentor profesional</span> dan 
+          <span class="font-semibold text-yellow-300">materi pembelajaran terbaik</span>.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+          <a href="#signup" class="hero-btn-primary px-8 py-4 text-lg font-bold transform transition-all duration-300 hover:-translate-y-1">
+            Mulai Belajar Gratis
+            <i class="fas fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+          </a>
+          
+          <a href="#how-it-works" class="hero-btn-secondary px-8 py-4 text-lg font-bold transform transition-all duration-300 hover:-translate-y-1">
+            <i class="fas fa-play-circle mr-2"></i>
+            Lihat Demo
+          </a>
         </div>
         
-        <!-- Mobile menu -->
-        <div id="mobile-menu" class="mobile-nav md:hidden bg-white shadow-lg absolute w-full">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#features" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-100 rounded-md transition">Fitur</a>
-                <a href="#how-it-works" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-100 rounded-md transition">Cara Kerja</a>
-                <a href="#bootcamp" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-100 rounded-md transition">Bootcamp</a>
-                <a href="#ai-chat" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-100 rounded-md transition">AI Assistant</a>
-                <a href="#contact" class="block px-3 py-2 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-100 rounded-md transition">Kontak</a>
-            </div>
+        <!-- Trust Badges -->
+        <div class="mt-12 flex flex-wrap justify-center lg:justify-start items-center gap-4">
+          <div class="flex items-center bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full">
+            <i class="fas fa-check-circle text-green-400 mr-2"></i>
+            <span class="text-white text-sm font-medium">500+ Mentor Profesional</span>
+          </div>
+          <div class="flex items-center bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full">
+            <i class="fas fa-users text-blue-300 mr-2"></i>
+            <span class="text-white text-sm font-medium">10.000+ Siswa</span>
+          </div>
         </div>
-    </nav>
+      </div>
 
-    <!-- Hero Section -->
-    <section class="hero-gradient text-white relative overflow-hidden" data-aos="fade">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                <div data-aos="fade-right" data-aos-delay="100">
-                    <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-6">Pendidikan Berkualitas untuk Semua</h1>
-                    <p class="text-xl mb-8">EduConnect menghubungkan siswa di daerah 3T dengan mentor profesional dan materi pembelajaran berkualitas melalui platform digital inovatif.</p>
-                    <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="#signup" class="bg-white text-primary font-semibold px-6 py-3 rounded-lg shadow hover:bg-gray-100 transition duration-300 text-center">Daftar Sekarang</a>
-                        <a href="#how-it-works" class="border-2 border-white text-white font-semibold px-6 py-3 rounded-lg hover:bg-white hover:text-primary transition duration-300 text-center">Pelajari Lebih Lanjut</a>
-                    </div>
-                </div>
-                <div class="relative" data-aos="fade-left" data-aos-delay="200">
-                    <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Students learning together" class="rounded-xl shadow-2xl border-4 border-white w-full">
-                    <div class="absolute -bottom-6 -left-6 bg-white p-4 rounded-lg shadow-lg hidden md:block floating">
-                        <div class="flex items-center">
-                            <div class="bg-primary rounded-full p-2 mr-3">
-                                <i class="fas fa-chalkboard-teacher text-white"></i>
-                            </div>
-                            <div>
-                                <p class="text-sm text-gray-500">Mentor Tersedia</p>
-                                <p class="font-bold text-dark">500+ Profesional</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="absolute -top-6 -right-6 bg-white p-4 rounded-lg shadow-lg hidden md:block floating" style="animation-delay: 1s">
-                        <div class="flex items-center">
-                            <div class="bg-secondary rounded-full p-2 mr-3">
-                                <i class="fas fa-users text-white"></i>
-                            </div>
-                            <div>
-                                <p class="text-sm text-gray-500">Siswa Terdaftar</p>
-                                <p class="font-bold text-dark">10,000+</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      <!-- Image Content -->
+      <div class="relative" data-aos="fade-left" data-aos-delay="300">
+        <div class="relative z-10">
+          <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
+               alt="Students learning together" 
+               class="rounded-2xl shadow-2xl border-4 border-white/30 w-full hover:border-white/50 transition-all duration-500">
         </div>
-        <div class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-gray-50 to-transparent"></div>
-    </section>
+        
+        <!-- Floating Cards -->
+        <div class="floating-card mentor-card hidden lg:flex">
+          <div class="flex items-center">
+            <div class="icon-box bg-primary">
+              <i class="fas fa-chalkboard-teacher"></i>
+            </div>
+            <div>
+              <p class="text-xs text-gray-300">Expert Mentors</p>
+              <p class="font-bold text-white">500+ Profesional</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="floating-card student-card hidden lg:flex">
+          <div class="flex items-center">
+            <div class="icon-box bg-secondary">
+              <i class="fas fa-users"></i>
+            </div>
+            <div>
+              <p class="text-xs text-gray-300">Active Students</p>
+              <p class="font-bold text-white">10,000+</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="floating-card rating-card hidden lg:flex">
+          <div class="flex items-center">
+            <div class="icon-box bg-yellow-500">
+              <i class="fas fa-star"></i>
+            </div>
+            <div>
+              <p class="text-xs text-gray-300">Average Rating</p>
+              <p class="font-bold text-white">4.9/5.0</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Scroll Down Indicator -->
+  <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10 animate-bounce">
+    <a href="#features" class="scroll-down-btn">
+      <i class="fas fa-chevron-down text-white text-2xl"></i>
+    </a>
+  </div>
+</section>
+
+<style>
+  .hero-section {
+    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
+    background-size: 200% 200%;
+  }
+  
+  .animate-gradient {
+    animation: gradientBG 12s ease infinite;
+  }
+  
+  @keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  .particles {
+    position: absolute;
+    z-index: 1;
+  }
+  
+  .particle {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    animation: float 15s infinite linear;
+  }
+  
+  .particle:nth-child(1) {
+    width: 20px;
+    height: 20px;
+    top: 20%;
+    left: 10%;
+    animation-delay: 0s;
+  }
+  
+  .particle:nth-child(2) {
+    width: 30px;
+    height: 30px;
+    top: 60%;
+    left: 80%;
+    animation-delay: 2s;
+  }
+  
+  .particle:nth-child(3) {
+    width: 15px;
+    height: 15px;
+    top: 80%;
+    left: 30%;
+    animation-delay: 4s;
+  }
+  
+  .particle:nth-child(4) {
+    width: 25px;
+    height: 25px;
+    top: 30%;
+    left: 60%;
+    animation-delay: 6s;
+  }
+  
+  .particle:nth-child(5) {
+    width: 10px;
+    height: 10px;
+    top: 70%;
+    left: 20%;
+    animation-delay: 8s;
+  }
+  
+  @keyframes float {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+  }
+  
+  .hero-btn-primary {
+    background: white;
+    color: #3b82f6;
+    border-radius: 9999px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+  
+  .hero-btn-primary:hover {
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    background: #f8fafc;
+  }
+  
+  .hero-btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 9999px;
+    backdrop-filter: blur(5px);
+  }
+  
+  .hero-btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: white;
+  }
+  
+  .floating-card {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    animation: floatCard 6s ease-in-out infinite;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .mentor-card {
+    top: -5%;
+    right: -5%;
+    animation-delay: 0.5s;
+  }
+  
+  .student-card {
+    bottom: -5%;
+    left: -5%;
+    animation-delay: 1s;
+  }
+  
+  .rating-card {
+    top: 50%;
+    right: -10%;
+    animation-delay: 1.5s;
+  }
+  
+  @keyframes floatCard {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+  }
+  
+  .icon-box {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    color: white;
+    font-size: 18px;
+  }
+  
+  .scroll-down-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+  }
+  
+  .scroll-down-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(5px);
+  }
+  
+  @media (max-width: 1023px) {
+    .hero-section {
+      padding-top: 100px;
+      padding-bottom: 100px;
+    }
+    
+    .floating-card {
+      display: none !important;
+    }
+    
+    .hero-btn-primary, .hero-btn-secondary {
+      padding: 12px 24px;
+      font-size: 16px;
+    }
+  }
+</style>
+
+<script>
+    
+  // Initialize AOS animation
+  document.addEventListener('DOMContentLoaded', function() {
+    AOS.init({
+      duration: 800,
+      easing: 'ease-out-quad',
+      once: true
+    });
+    
+    // Create particles dynamically
+    const particlesContainer = document.querySelector('.particles');
+    for (let i = 0; i < 10; i++) {
+      const particle = document.createElement('div');
+      particle.classList.add('particle');
+      particle.style.width = `${Math.random() * 20 + 10}px`;
+      particle.style.height = particle.style.width;
+      particle.style.left = `${Math.random() * 100}%`;
+      particle.style.top = `${Math.random() * 100}%`;
+      particle.style.animationDelay = `${Math.random() * 10}s`;
+      particle.style.opacity = Math.random() * 0.5 + 0.1;
+      particlesContainer.appendChild(particle);
+    }
+  });
+</script>
 
     <!-- Stats Section -->
     <section class="bg-white py-12">
@@ -318,51 +614,57 @@ require_once('config.php');
 
     <!-- Features Section -->
     <section id="features" class="py-20 bg-gray-50 relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold text-dark mb-4">Apa yang Membuat EduConnect Berbeda?</h2>
-                <p class="text-xl text-gray-600 max-w-3xl mx-auto">Platform pembelajaran inovatif yang dirancang khusus untuk menjawab tantangan pendidikan di daerah 3T</p>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16" data-aos="fade-up">
+            <h2 class="text-3xl font-bold text-dark mb-4">Apa yang Membuat EduConnect Berbeda?</h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">Platform pembelajaran inovatif yang dirancang khusus untuk menjawab tantangan pendidikan di daerah 3T</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- Feature 1 -->
+            <div class="feature-card bg-white p-8 rounded-xl shadow-md transition duration-300 hover:shadow-xl" 
+                 data-aos="fade-up" data-aos-delay="100">
+                <div class="bg-primary bg-opacity-10 p-4 rounded-full w-16 h-16 flex items-center justify-center mb-6 mx-auto hover:rotate-12 transition-transform">
+                    <i class="fas fa-comments text-primary text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-dark mb-3 text-center">Mentoring Interaktif</h3>
+                <p class="text-gray-600 text-center">Siswa bisa berinteraksi langsung dengan mentor melalui sesi live chat dan video call untuk tanya jawab dan diskusi.</p>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <!-- Feature 1 -->
-                <div class="feature-card bg-white p-8 rounded-xl shadow-md transition duration-300 hover:shadow-xl">
-                    <div class="bg-primary bg-opacity-10 p-4 rounded-full w-16 h-16 flex items-center justify-center mb-6 mx-auto hover:rotate-12 transition-transform">
-                        <i class="fas fa-comments text-primary text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-dark mb-3 text-center">Mentoring Interaktif</h3>
-                    <p class="text-gray-600 text-center">Siswa bisa berinteraksi langsung dengan mentor melalui sesi live chat dan video call untuk tanya jawab dan diskusi.</p>
+            <!-- Feature 2 -->
+            <div class="feature-card bg-white p-8 rounded-xl shadow-md transition duration-300 hover:shadow-xl" 
+                 data-aos="fade-up" data-aos-delay="200">
+                <div class="bg-secondary bg-opacity-10 p-4 rounded-full w-16 h-16 flex items-center justify-center mb-6 mx-auto hover:rotate-12 transition-transform">
+                    <i class="fas fa-users text-secondary text-2xl"></i>
                 </div>
-                
-                <!-- Feature 2 -->
-                <div class="feature-card bg-white p-8 rounded-xl shadow-md transition duration-300 hover:shadow-xl">
-                    <div class="bg-secondary bg-opacity-10 p-4 rounded-full w-16 h-16 flex items-center justify-center mb-6 mx-auto hover:rotate-12 transition-transform">
-                        <i class="fas fa-users text-secondary text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-dark mb-3 text-center">Belajar Kolaboratif</h3>
-                    <p class="text-gray-600 text-center">Ruang diskusi virtual memungkinkan siswa dari berbagai daerah saling berbagi ide dan belajar bersama.</p>
+                <h3 class="text-xl font-bold text-dark mb-3 text-center">Belajar Kolaboratif</h3>
+                <p class="text-gray-600 text-center">Ruang diskusi virtual memungkinkan siswa dari berbagai daerah saling berbagi ide dan belajar bersama.</p>
+            </div>
+            
+            <!-- Feature 3 -->
+            <div class="feature-card bg-white p-8 rounded-xl shadow-md transition duration-300 hover:shadow-xl" 
+                 data-aos="fade-up" data-aos-delay="300">
+                <div class="bg-accent bg-opacity-10 p-4 rounded-full w-16 h-16 flex items-center justify-center mb-6 mx-auto hover:rotate-12 transition-transform">
+                    <i class="fas fa-robot text-accent text-2xl"></i>
                 </div>
-                
-                <!-- Feature 3 -->
-                <div class="feature-card bg-white p-8 rounded-xl shadow-md transition duration-300 hover:shadow-xl">
-                    <div class="bg-accent bg-opacity-10 p-4 rounded-full w-16 h-16 flex items-center justify-center mb-6 mx-auto hover:rotate-12 transition-transform">
-                        <i class="fas fa-robot text-accent text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-dark mb-3 text-center">Pembelajaran Adaptif</h3>
-                    <p class="text-gray-600 text-center">Sistem AI kami menyesuaikan materi belajar dengan minat dan kemampuan masing-masing siswa.</p>
+                <h3 class="text-xl font-bold text-dark mb-3 text-center">Pembelajaran Adaptif</h3>
+                <p class="text-gray-600 text-center">Sistem AI kami menyesuaikan materi belajar dengan minat dan kemampuan masing-masing siswa.</p>
+            </div>
+            
+            <!-- Feature 4 -->
+            <div class="feature-card bg-white p-8 rounded-xl shadow-md transition duration-300 hover:shadow-xl" 
+                 data-aos="fade-up" data-aos-delay="400">
+                <div class="bg-primary bg-opacity-10 p-4 rounded-full w-16 h-16 flex items-center justify-center mb-6 mx-auto hover:rotate-12 transition-transform">
+                    <i class="fas fa-cloud-download-alt text-primary text-2xl"></i>
                 </div>
-                
-                <!-- Feature 4 -->
-                <div class="feature-card bg-white p-8 rounded-xl shadow-md transition duration-300 hover:shadow-xl">
-                    <div class="bg-primary bg-opacity-10 p-4 rounded-full w-16 h-16 flex items-center justify-center mb-6 mx-auto hover:rotate-12 transition-transform">
-                        <i class="fas fa-cloud-download-alt text-primary text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-dark mb-3 text-center">Akses Offline</h3>
-                    <p class="text-gray-600 text-center">Konten pembelajaran bisa diunduh dan diakses tanpa koneksi internet stabil, cocok untuk daerah 3T.</p>
-                </div>
+                <h3 class="text-xl font-bold text-dark mb-3 text-center">Akses Offline</h3>
+                <p class="text-gray-600 text-center">Konten pembelajaran bisa diunduh dan diakses tanpa koneksi internet stabil, cocok untuk daerah 3T.</p>
             </div>
         </div>
-    </section><!-- Modern How It Works Section -->
+    </div>
+</section>
+
+    <!-- Modern How It Works Section -->
 <section id="how-it-works" class="py-16 md:py-24 bg-gradient-to-b from-white to-gray-50">
     <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
         <!-- Animated Header -->
@@ -488,92 +790,220 @@ require_once('config.php');
 </script>
 
     <!-- AI Chat Section -->
-    <section id="ai-chat" class="py-20 bg-gray-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                <div class="relative">
-                    <div class="bg-white p-6 rounded-xl shadow-lg transform hover:-translate-y-2 transition duration-500">
-                        <div class="flex items-center mb-4">
-                            <div class="bg-primary rounded-full p-2 mr-3 animate-waving-hand">
-                                <i class="fas fa-robot text-white"></i>
-                            </div>
-                            <h3 class="text-xl font-bold text-dark">AI Assistant EduConnect</h3>
+  <!-- AI Chat Section -->
+<section id="ai-chat" class="py-16 md:py-24 bg-gradient-to-b from-gray-50 to-white">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+        <div class="text-center mb-12" data-aos="fade-up">
+            <span class="inline-block text-primary font-semibold mb-3 tracking-wider">TEKNOLOGI PENDIDIKAN</span>
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Dukungan AI 24/7 untuk <span class="text-primary">Pembelajaran Tanpa Batas</span></h2>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">Dengan teknologi Asisten AI terbaru, EduConnect memberikan pengalaman bimbingan belajar yang lebih interaktif dan responsif.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+            <!-- AI Chat Box -->
+            <div class="relative" data-aos="fade-right">
+                <div class="bg-white p-6 rounded-2xl shadow-xl transform hover:-translate-y-2 transition duration-500 hover:shadow-2xl">
+                    <div class="flex items-center mb-6">
+                        <div class="bg-primary rounded-full p-3 mr-4 animate-waving-hand">
+                            <i class="fas fa-robot text-white text-xl"></i>
                         </div>
-                        
-                        <div id="chat-box" class="mb-4 p-4 bg-gray-50 rounded-lg h-64 overflow-y-auto">
-                            <div class="ai-message p-3 mb-3 max-w-xs">
-                                <p class="font-medium">🤖 AI Assistant:</p>
-                                <p>Hai! Saya AI Assistant EduConnect. Ada yang bisa saya bantu terkait pembelajaran Anda hari ini?</p>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-center">
-                            <textarea id="user-message" placeholder="Ketik pertanyaan Anda..." rows="2" 
-                                class="flex-grow px-4 py-2 rounded-l-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
-                            <button onclick="sendMessage()" class="bg-primary text-white px-4 py-2 rounded-r-lg hover:bg-primary-dark transition duration-300 h-full hover:scale-105">
-                                <i class="fas fa-paper-plane"></i>
-                            </button>
-                        </div>
-                        
-                        <div class="mt-2 text-sm text-gray-500">
-                            <p>Contoh pertanyaan: "Apa itu fotosintesis?" atau "Bantu saya dengan soal matematika ini" dan jika anda kebingungan dengan bahasa inggris silahkan ketik "menggunakan bahasa indonesia"</p>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-900">AI Assistant EduConnect</h3>
+                            <p class="text-sm text-gray-500">Siap membantu 24 jam sehari</p>
                         </div>
                     </div>
                     
-                    <div class="absolute -bottom-6 -right-6 bg-white p-4 rounded-lg shadow-lg hidden md:block animate-pulse-slow">
-                        <div class="flex items-center">
-                            <div class="bg-secondary rounded-full p-2 mr-3">
-                                <i class="fas fa-lightbulb text-white"></i>
+                    <!-- Chat Container -->
+                    <div id="chat-box" class="mb-6 p-4 bg-gray-50 rounded-lg h-64 overflow-y-auto shadow-inner">
+                        <div class="ai-message p-3 mb-3 bg-white rounded-lg shadow-sm max-w-[80%]">
+                            <p class="font-medium text-primary">🤖 AI Assistant:</p>
+                            <p class="text-gray-700">Hai! Saya AI Assistant EduConnect. Ada yang bisa saya bantu terkait pembelajaran Anda hari ini?</p>
+                            <p class="text-xs text-gray-400 mt-1">Baru saja</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Input Area -->
+                    <div class="flex items-center mb-3">
+                        <textarea id="user-message" placeholder="Ketik pertanyaan Anda..." rows="2"
+                            class="flex-grow px-4 py-3 rounded-l-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 resize-none"></textarea>
+                        <button onclick="sendMessage()" class="bg-primary text-white px-5 py-3 rounded-r-lg hover:bg-primary-dark transition duration-300 h-full hover:scale-105 active:scale-95">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="text-xs text-gray-500">
+                        <p>Contoh pertanyaan: "Jelaskan fotosintesis" atau "Bantu saya memahami aljabar"</p>
+                    </div>
+                </div>
+                
+                <!-- Floating Feature Card -->
+                <div class="absolute -bottom-5 -right-5 bg-white p-4 rounded-xl shadow-lg hidden lg:block" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="flex items-center">
+                        <div class="bg-secondary rounded-full p-2 mr-3">
+                            <i class="fas fa-bolt text-white"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">Respons Cepat</p>
+                            <p class="font-bold text-gray-900">< 1 Detik</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Features List -->
+            <div data-aos="fade-left" data-aos-delay="100">
+                <div class="space-y-6">
+                    <div class="feature-item p-5 bg-white rounded-xl shadow-md hover:shadow-lg transition" data-aos="fade-left" data-aos-delay="150">
+                        <div class="flex items-start">
+                            <div class="bg-primary bg-opacity-10 p-2 rounded-full mr-4 flex-shrink-0">
+                                <i class="fas fa-check text-primary"></i>
                             </div>
                             <div>
-                                <p class="text-sm text-gray-500">Fitur AI</p>
-                                <p class="font-bold text-dark">24/7 Tersedia</p>
+                                <h3 class="text-lg font-bold text-gray-900 mb-1">Jawaban Instan</h3>
+                                <p class="text-gray-600">Dapatkan penjelasan langsung untuk semua pertanyaan seputar materi pembelajaran</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item p-5 bg-white rounded-xl shadow-md hover:shadow-lg transition" data-aos="fade-left" data-aos-delay="200">
+                        <div class="flex items-start">
+                            <div class="bg-primary bg-opacity-10 p-2 rounded-full mr-4 flex-shrink-0">
+                                <i class="fas fa-language text-primary"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900 mb-1">Multi-Bahasa</h3>
+                                <p class="text-gray-600">Dukungan berbagai bahasa daerah untuk memudahkan pemahaman</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item p-5 bg-white rounded-xl shadow-md hover:shadow-lg transition" data-aos="fade-left" data-aos-delay="250">
+                        <div class="flex items-start">
+                            <div class="bg-primary bg-opacity-10 p-2 rounded-full mr-4 flex-shrink-0">
+                                <i class="fas fa-brain text-primary"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900 mb-1">Pembelajaran Adaptif</h3>
+                                <p class="text-gray-600">Materi disesuaikan dengan tingkat pemahaman dan gaya belajar Anda</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item p-5 bg-white rounded-xl shadow-md hover:shadow-lg transition" data-aos="fade-left" data-aos-delay="300">
+                        <div class="flex items-start">
+                            <div class="bg-primary bg-opacity-10 p-2 rounded-full mr-4 flex-shrink-0">
+                                <i class="fas fa-book text-primary"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900 mb-1">Integrasi Materi</h3>
+                                <p class="text-gray-600">Terhubung langsung dengan konten pembelajaran di platform EduConnect</p>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <div>
-                    <h2 class="text-3xl font-bold text-dark mb-6">Dukungan AI 24/7 untuk Pembelajaran Tanpa Batas</h2>
-                    <p class="text-gray-600 mb-6">Dengan teknologi Asistent AI terbaru, EduConnect memberikan pengalaman bimbingan belajar yang lebih interaktif dan responsif.</p>
-                    
-                    <div class="space-y-4">
-                        <div class="flex items-start transform hover:translate-x-2 transition-transform">
-                            <div class="bg-primary bg-opacity-10 p-2 rounded-full mr-4">
-                                <i class="fas fa-check text-primary"></i>
-                            </div>
-                            <p class="text-gray-700">Jawaban instan untuk pertanyaan seputar materi pembelajaran</p>
-                        </div>
-                        <div class="flex items-start transform hover:translate-x-2 transition-transform">
-                            <div class="bg-primary bg-opacity-10 p-2 rounded-full mr-4">
-                                <i class="fas fa-check text-primary"></i>
-                            </div>
-                            <p class="text-gray-700">Penjelasan konsep sulit dengan bahasa yang mudah dimengerti</p>
-                        </div>
-                        <div class="flex items-start transform hover:translate-x-2 transition-transform">
-                            <div class="bg-primary bg-opacity-10 p-2 rounded-full mr-4">
-                                <i class="fas fa-check text-primary"></i>
-                            </div>
-                            <p class="text-gray-700">Rekomendasi materi belajar berdasarkan kebutuhan individu</p>
-                        </div>
-                        <div class="flex items-start transform hover:translate-x-2 transition-transform">
-                            <div class="bg-primary bg-opacity-10 p-2 rounded-full mr-4">
-                                <i class="fas fa-check text-primary"></i>
-                            </div>
-                            <p class="text-gray-700">Dukungan multi-bahasa untuk daerah dengan bahasa ibu berbeda</p>
-                        </div>
-                        <div class="flex items-start transform hover:translate-x-2 transition-transform">
-                            <div class="bg-primary bg-opacity-10 p-2 rounded-full mr-4">
-                                <i class="fas fa-check text-primary"></i>
-                            </div>
-                            <p class="text-gray-700">Integrasi dengan materi pembelajaran di platform EduConnect</p>
-                        </div>
-                    </div>
+                <div class="mt-8" data-aos="fade-up" data-aos-delay="350">
+                    <a href="#signup" class="inline-flex items-center text-primary font-semibold hover:text-primary-dark transition">
+                        Coba fitur AI sekarang
+                        <i class="fas fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+                    </a>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
+<style>
+    .animate-waving-hand {
+        animation: wave 2s infinite;
+    }
+    
+    @keyframes wave {
+        0%, 100% { transform: rotate(0deg); }
+        25% { transform: rotate(15deg); }
+        50% { transform: rotate(-10deg); }
+        75% { transform: rotate(5deg); }
+    }
+    
+    .ai-message {
+        border-left: 3px solid #3b82f6;
+    }
+    
+    .feature-item:hover {
+        transform: translateY(-3px);
+    }
+    
+    #chat-box::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    #chat-box::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+    
+    #chat-box::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 10px;
+    }
+    
+    #chat-box::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+</style>
+
+<script>
+    // Initialize AOS
+    document.addEventListener('DOMContentLoaded', function() {
+        AOS.init({
+            duration: 800,
+            easing: 'ease-out-quad',
+            once: true
+        });
+    });
+    
+    // Simple chat function (mock)
+    function sendMessage() {
+        const userMessage = document.getElementById('user-message');
+        const chatBox = document.getElementById('chat-box');
+        
+        if (userMessage.value.trim() === '') return;
+        
+        // Add user message
+        const userMsgDiv = document.createElement('div');
+        userMsgDiv.className = 'user-message p-3 mb-3 bg-blue-50 rounded-lg shadow-sm max-w-[80%] ml-auto text-right';
+        userMsgDiv.innerHTML = `
+            <p class="font-medium text-blue-600">👤 Anda:</p>
+            <p class="text-gray-700">${userMessage.value}</p>
+            <p class="text-xs text-gray-400 mt-1">Baru saja</p>
+        `;
+        chatBox.appendChild(userMsgDiv);
+        
+        // Simulate AI response
+        setTimeout(() => {
+            const aiMsgDiv = document.createElement('div');
+            aiMsgDiv.className = 'ai-message p-3 mb-3 bg-white rounded-lg shadow-sm max-w-[80%]';
+            aiMsgDiv.innerHTML = `
+                <p class="font-medium text-primary">🤖 AI Assistant:</p>
+                <p class="text-gray-700">Saya memahami pertanyaan Anda tentang "${userMessage.value}". Berikut penjelasannya: ...</p>
+                <p class="text-xs text-gray-400 mt-1">Baru saja</p>
+            `;
+            chatBox.appendChild(aiMsgDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }, 1000);
+        
+        userMessage.value = '';
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+    
+    // Allow sending message with Enter key
+    document.getElementById('user-message').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+</script>
     <!-- Bootcamp Section -->
     <section id="bootcamp" class="py-16 md:py-20 bg-white">
     <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
@@ -1182,13 +1612,56 @@ require_once('config.php');
         </div>
     </div>
 
-    <script>
+   
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Nonaktifkan scroll restoration browser
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+    
+    // Scroll ke hero section
+    const hero = document.getElementById('hero');
+    if (hero) {
+      window.scrollTo({
+        top: hero.offsetTop,
+        behavior: 'instant'
+      });
+    }
+  });
+
+
         // Loading overlay
         window.addEventListener('load', function() {
             setTimeout(function() {
                 document.getElementById('loading-overlay').classList.add('hidden');
             }, 1500);
         });
+
+        // Pastikan dijalankan setelah halaman selesai dimuat
+window.addEventListener('load', function() {
+  const heroSection = document.querySelector('.hero-section');
+  if (heroSection) {
+    // Scroll ke hero section dengan efek smooth
+    heroSection.scrollIntoView({ behavior: 'smooth' });
+    
+    // Atau untuk scroll instan tanpa animasi:
+    // window.scrollTo(0, 0);
+  }
+});
+
+        // Simpan posisi scroll dalam history state
+window.addEventListener('scroll', function() {
+  history.replaceState({ scrollPosition: window.scrollY }, '');
+});
+
+// Kembalikan posisi scroll
+window.addEventListener('load', function() {
+  if (history.state && history.state.scrollPosition) {
+    window.scrollTo(0, history.state.scrollPosition);
+  }
+});
 
         // Mobile menu toggle
         const mobileMenuButton = document.getElementById('mobile-menu-button');
@@ -1454,6 +1927,53 @@ require_once('config.php');
                 scrub: true
             }
         });
+
+        
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const hamburgerLines = document.querySelectorAll('.hamburger-line');
+        
+        mobileMenuButton.addEventListener('click', function() {
+            const isOpen = mobileMenu.classList.contains('hidden');
+            
+            if (isOpen) {
+                // Open menu
+                mobileMenu.classList.remove('hidden');
+                mobileMenu.classList.add('scale-y-100', 'opacity-100');
+                mobileMenu.classList.remove('scale-y-0', 'opacity-0');
+                
+                // Hamburger to X animation
+                hamburgerLines[0].classList.add('transform', 'rotate-45', 'translate-y-2');
+                hamburgerLines[1].classList.add('opacity-0');
+                hamburgerLines[2].classList.add('transform', '-rotate-45', '-translate-y-2');
+            } else {
+                // Close menu
+                mobileMenu.classList.add('scale-y-0', 'opacity-0');
+                mobileMenu.classList.remove('scale-y-100', 'opacity-100');
+                
+                // X to hamburger animation
+                hamburgerLines[0].classList.remove('transform', 'rotate-45', 'translate-y-2');
+                hamburgerLines[1].classList.remove('opacity-0');
+                hamburgerLines[2].classList.remove('transform', '-rotate-45', '-translate-y-2');
+                
+                // Hide after animation completes
+                setTimeout(() => {
+                    mobileMenu.classList.add('hidden');
+                }, 300);
+            }
+        });
+        
+        // Close menu when clicking on a link
+        document.querySelectorAll('.mobile-menu-item').forEach(item => {
+            item.addEventListener('click', () => {
+                mobileMenu.classList.add('scale-y-0', 'opacity-0', 'hidden');
+                hamburgerLines[0].classList.remove('transform', 'rotate-45', 'translate-y-2');
+                hamburgerLines[1].classList.remove('opacity-0');
+                hamburgerLines[2].classList.remove('transform', '-rotate-45', '-translate-y-2');
+            });
+        });
+    });
         
         // Animate features on hover
         document.querySelectorAll('.feature-card').forEach(card => {
