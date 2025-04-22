@@ -903,7 +903,7 @@ require_once('config.php');
                 </div>
                 
                 <div class="mt-8" data-aos="fade-up" data-aos-delay="350">
-                    <a href="#signup" class="inline-flex items-center text-primary font-semibold hover:text-primary-dark transition">
+                    <a href="#ai-chat" class="inline-flex items-center text-primary font-semibold hover:text-primary-dark transition">
                         Coba fitur AI sekarang
                         <i class="fas fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
                     </a>
