@@ -232,17 +232,19 @@ require_once('config.php');
     <div class="blob bg-purple-300 w-64 h-64 top-0 left-0 animate-float"></div>
     <div class="blob bg-emerald-300 w-96 h-96 bottom-0 right-0 animate-float animation-delay-2000"></div>
     <div class="blob bg-amber-200 w-80 h-80 top-1/3 right-1/4 animate-float animation-delay-4000"></div>
-
-    <!-- Navigation -->
-    <nav class="bg-white shadow-lg sticky top-0 z-50 backdrop-blur-sm bg-opacity-80">
+<!-- Navigation -->
+<nav class="bg-white shadow-lg sticky top-0 z-50 backdrop-blur-sm bg-opacity-80">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16 items-center">
+            <!-- Logo dan Judul -->
             <div class="flex items-center">
                 <div class="flex-shrink-0 flex items-center">
                     <i class="fas fa-graduation-cap text-primary text-2xl mr-2 transform hover:rotate-12 transition-transform"></i>
                     <span class="text-xl font-bold text-dark hover:text-primary transition-colors">EduConnect</span>
                 </div>
             </div>
+
+            <!-- Menu utama (Desktop) -->
             <div class="hidden md:flex items-center space-x-8">
                 <a href="#features" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">Fitur</a>
                 <a href="#how-it-works" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">Cara Kerja</a>
@@ -250,6 +252,18 @@ require_once('config.php');
                 <a href="#ai-chat" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">AI Assistant</a>
                 <a href="#contact" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">Kontak</a>
             </div>
+
+            <!-- Ikon User dan Keranjang -->
+            <div class="hidden md:flex items-center space-x-4">
+                <a href="/belanja" class="text-gray-700 hover:text-primary text-xl transition-transform transform hover:scale-110">
+                    <i class="fas fa-shopping-cart"></i>
+                </a>
+                <a href="/login" class="text-gray-700 hover:text-primary text-xl transition-transform transform hover:scale-110">
+                    <i class="fas fa-user-circle"></i>
+                </a>
+            </div>
+
+            <!-- Tombol menu untuk mobile -->
             <div class="flex items-center md:hidden">
                 <button id="mobile-menu-button" class="hamburger p-2 rounded-md text-gray-700 hover:text-primary focus:outline-none transition-transform duration-300">
                     <span class="hamburger-line block w-6 h-0.5 bg-gray-700 mb-1.5 transition-all duration-300"></span>
@@ -259,7 +273,7 @@ require_once('config.php');
             </div>
         </div>
     </div>
-    
+
     <!-- Mobile menu -->
     <div id="mobile-menu" class="mobile-nav md:hidden bg-white shadow-lg hidden transform origin-top transition-all duration-300 ease-out">
         <div class="px-2 pt-2 pb-4 space-y-1 sm:px-3">
@@ -268,10 +282,11 @@ require_once('config.php');
             <a href="#bootcamp" class="mobile-menu-item block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition">Bootcamp</a>
             <a href="#ai-chat" class="mobile-menu-item block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition">AI Assistant</a>
             <a href="#contact" class="mobile-menu-item block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition">Kontak</a>
+            <a href="/belanja" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition"><i class="fas fa-shopping-cart mr-2"></i>Belanja</a>
+            <a href="/login" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition"><i class="fas fa-user-circle mr-2"></i>Login</a>
         </div>
     </div>
 </nav>
-
 
 
     <!-- Hero Section --><section id="hero" class="hero-section relative overflow-hidden min-h-screen flex items-center">
