@@ -232,7 +232,8 @@ require_once('config.php');
     <div class="blob bg-purple-300 w-64 h-64 top-0 left-0 animate-float"></div>
     <div class="blob bg-emerald-300 w-96 h-96 bottom-0 right-0 animate-float animation-delay-2000"></div>
     <div class="blob bg-amber-200 w-80 h-80 top-1/3 right-1/4 animate-float animation-delay-4000"></div>
-<!-- Navigation -->
+
+<!-- Navigation --><!-- Navigation -->
 <nav class="bg-white shadow-lg sticky top-0 z-50 backdrop-blur-sm bg-opacity-80">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16 items-center">
@@ -253,8 +254,11 @@ require_once('config.php');
                 <a href="#contact" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">Kontak</a>
             </div>
 
-            <!-- Ikon User dan Keranjang -->
+            <!-- Ikon Kelas, Keranjang, dan Login -->
             <div class="hidden md:flex items-center space-x-4">
+                <a href="kelas.php" class="text-gray-700 hover:text-primary text-xl transition-transform transform hover:scale-110">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                </a>
                 <a href="/belanja" class="text-gray-700 hover:text-primary text-xl transition-transform transform hover:scale-110">
                     <i class="fas fa-shopping-cart"></i>
                 </a>
@@ -282,11 +286,19 @@ require_once('config.php');
             <a href="#bootcamp" class="mobile-menu-item block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition">Bootcamp</a>
             <a href="#ai-chat" class="mobile-menu-item block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition">AI Assistant</a>
             <a href="#contact" class="mobile-menu-item block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition">Kontak</a>
-            <a href="/belanja" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition"><i class="fas fa-shopping-cart mr-2"></i>Belanja</a>
-            <a href="/login" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition"><i class="fas fa-user-circle mr-2"></i>Login</a>
+            <a href="kelas.php" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition">
+                <i class="fas fa-chalkboard-teacher mr-2"></i>Kelas Anda
+            </a>
+            <a href="/belanja" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition">
+                <i class="fas fa-shopping-cart mr-2"></i>Belanja
+            </a>
+            <a href="/login" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition">
+                <i class="fas fa-user-circle mr-2"></i>Login
+            </a>
         </div>
     </div>
 </nav>
+
 
 
     <!-- Hero Section --><section id="hero" class="hero-section relative overflow-hidden min-h-screen flex items-center">
