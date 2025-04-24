@@ -1250,4 +1250,321 @@ require_once('config.php');
                             <span class="text-gray-400">+62 21 1234 5678</span>
                         </li>
                         <li class="flex items-center">
-                            <i class="fas fa-map
+                            <i class="fas fa-map-marker-alt mr-2 text-gray-400"></i>
+                            <span class="text-gray-400">Jakarta, Indonesia</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-clock mr-2 text-gray-400"></i>
+                            <span class="text-gray-400">Senin-Jumat, 08:00-17:00</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>© 2025 EduConnect. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+    <script>
+        // Initialize all swipers
+        const swipers = [
+            {
+                el: '.active-courses-swiper',
+                config: {
+                    slidesPerView: 1,
+                    spaceBetween: 20,
+                    pagination: {
+                        el: '.active-courses-swiper .swiper-pagination',
+                        clickable: true,
+                    },
+                    breakpoints: {
+                        640: {
+                            slidesPerView: 2,
+                            spaceBetween: 20,
+                        },
+                        1024: {
+                            slidesPerView: 3,
+                            spaceBetween: 30,
+                        },
+                    }
+                }
+            },
+            {
+                el: '.recommended-courses-swiper',
+                config: {
+                    slidesPerView: 2,
+                    spaceBetween: 15,
+                    pagination: {
+                        el: '.recommended-courses-swiper .swiper-pagination',
+                        clickable: true,
+                    },
+                    breakpoints: {
+                        640: {
+                            slidesPerView: 3,
+                            spaceBetween: 20,
+                        },
+                        1024: {
+                            slidesPerView: 4,
+                            spaceBetween: 30,
+                        },
+                    }
+                }
+            },
+            {
+                el: '.bootcamp-swiper',
+                config: {
+                    slidesPerView: 1,
+                    spaceBetween: 20,
+                    pagination: {
+                        el: '.bootcamp-swiper .swiper-pagination',
+                        clickable: true,
+                    },
+                    breakpoints: {
+                        640: {
+                            slidesPerView: 2,
+                            spaceBetween: 20,
+                        },
+                        1024: {
+                            slidesPerView: 3,
+                            spaceBetween: 30,
+                        },
+                    }
+                }
+            },
+            {
+                el: '.teachers-swiper',
+                config: {
+                    slidesPerView: 3,
+                    spaceBetween: 10,
+                    pagination: {
+                        el: '.teachers-swiper .swiper-pagination',
+                        clickable: true,
+                    },
+                    breakpoints: {
+                        640: {
+                            slidesPerView: 4,
+                            spaceBetween: 15,
+                        },
+                        1024: {
+                            slidesPerView: 6,
+                            spaceBetween: 20,
+                        },
+                    }
+                }
+            }
+        ];
+
+        // Initialize each swiper
+        swipers.forEach(swiper => {
+            new Swiper(swiper.el, swiper.config);
+        });
+
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        // Notification dropdown toggle
+        document.getElementById('notification-button').addEventListener('click', function() {
+            document.getElementById('notification-dropdown').classList.toggle('hidden');
+        });
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.dropdown') && !event.target.closest('#notification-button')) {
+                document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                    menu.classList.add('hidden');
+                });
+                document.getElementById('notification-dropdown').classList.add('hidden');
+            }
+        });
+
+        // Tab functionality
+        const tabs = ['all', 'sd', 'smp', 'sma', 'bootcamp', 'favorite'];
+        tabs.forEach(tab => {
+            document.getElementById(`${tab}-tab`).addEventListener('click', function() {
+                // Update active tab
+                tabs.forEach(t => {
+                    const tabElement = document.getElementById(`${t}-tab`);
+                    if (t === tab) {
+                        tabElement.classList.add('tab-active', 'text-indigo-600', 'border-indigo-600');
+                        tabElement.classList.remove('text-gray-500', 'border-transparent');
+                    } else {
+                        tabElement.classList.remove('tab-active', 'text-indigo-600', 'border-indigo-600');
+                        tabElement.classList.add('text-gray-500', 'border-transparent');
+                    }
+                });
+                
+                // Here you would typically filter the courses based on the selected tab
+                console.log(`Selected tab: ${tab}`);
+                
+                // Show loading skeleton
+                document.querySelectorAll('.course-card').forEach(card => {
+                    card.innerHTML = `
+                        <div class="skeleton w-full h-48"></div>
+                        <div class="p-4">
+                            <div class="skeleton w-3/4 h-6 mb-2"></div>
+                            <div class="skeleton w-1/2 h-4 mb-4"></div>
+                            <div class="skeleton w-full h-2 mb-2"></div>
+                            <div class="skeleton w-1/4 h-4"></div>
+                        </div>
+                    `;
+                });
+                
+                // Simulate loading data
+                setTimeout(() => {
+                    // Replace with actual data loading logic
+                    console.log(`Loading data for ${tab} tab...`);
+                    // After data is loaded, update the UI
+                }, 1000);
+            });
+        });
+
+        // Category chips functionality
+        document.querySelectorAll('.category-chip').forEach(chip => {
+            chip.addEventListener('click', function() {
+                if (this.classList.contains('active')) {
+                    // If "All" is already active, do nothing
+                    if (this.textContent.trim() === 'Semua Kategori') return;
+                    
+                    // Otherwise, activate "All" and deactivate others
+                    document.querySelectorAll('.category-chip').forEach(c => {
+                        c.classList.remove('active', 'bg-indigo-600', 'text-white');
+                        c.classList.add('bg-white', 'text-gray-700', 'border', 'border-gray-300');
+                    });
+                    document.querySelector('.category-chip').classList.add('active', 'bg-indigo-600', 'text-white');
+                } else {
+                    // Deactivate "All" if it's active
+                    if (document.querySelector('.category-chip').classList.contains('active')) {
+                        document.querySelector('.category-chip').classList.remove('active', 'bg-indigo-600', 'text-white');
+                        document.querySelector('.category-chip').classList.add('bg-white', 'text-gray-700', 'border', 'border-gray-300');
+                    }
+                    
+                    // Toggle active state for clicked chip
+                    this.classList.toggle('active');
+                    this.classList.toggle('bg-indigo-600');
+                    this.classList.toggle('text-white');
+                    this.classList.toggle('bg-white');
+                    this.classList.toggle('text-gray-700');
+                    this.classList.toggle('border');
+                    this.classList.toggle('border-gray-300');
+                }
+                
+                // Here you would filter courses by category
+                const activeCategories = Array.from(document.querySelectorAll('.category-chip.active')).map(c => c.textContent.trim());
+                console.log('Active categories:', activeCategories);
+            });
+        });
+
+        // Search functionality
+        const searchInput = document.getElementById('search-input');
+        let searchTimeout;
+        
+        searchInput.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                const searchTerm = this.value.trim();
+                console.log('Searching for:', searchTerm);
+                
+                // Here you would implement the search functionality
+                if (searchTerm.length > 0) {
+                    // Show loading state
+                    document.querySelectorAll('.course-card').forEach(card => {
+                        card.innerHTML = `
+                            <div class="skeleton w-full h-48"></div>
+                            <div class="p-4">
+                                <div class="skeleton w-3/4 h-6 mb-2"></div>
+                                <div class="skeleton w-1/2 h-4 mb-4"></div>
+                                <div class="skeleton w-full h-2 mb-2"></div>
+                                <div class="skeleton w-1/4 h-4"></div>
+                            </div>
+                        `;
+                    });
+                    
+                    // Simulate search
+                    setTimeout(() => {
+                        console.log('Displaying search results for:', searchTerm);
+                        // Update UI with search results
+                    }, 800);
+                }
+            }, 500);
+        });
+
+        // Favorite button functionality
+        document.querySelectorAll('.course-card').forEach(card => {
+            const favButton = card.querySelector('.fa-heart, .fa-heart');
+            if (favButton) {
+                favButton.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    this.classList.toggle('fas');
+                    this.classList.toggle('far');
+                    this.classList.toggle('text-red-500');
+                    
+                    const courseTitle = card.querySelector('h3').textContent;
+                    if (this.classList.contains('fas')) {
+                        console.log(`Added ${courseTitle} to favorites`);
+                    } else {
+                        console.log(`Removed ${courseTitle} from favorites`);
+                    }
+                });
+            }
+        });
+
+        // Progress rings animation
+        document.querySelectorAll('.progress-ring').forEach(ring => {
+            const circle = ring.querySelector('.progress-ring__circle');
+            const radius = circle.r.baseVal.value;
+            const circumference = radius * 2 * Math.PI;
+            const progressText = ring.querySelector('.progress-text');
+            const progress = parseInt(progressText.textContent);
+            
+            circle.style.strokeDasharray = `${circumference} ${circumference}`;
+            circle.style.strokeDashoffset = circumference;
+            
+            const offset = circumference - (progress / 100) * circumference;
+            circle.style.strokeDashoffset = offset;
+            
+            // Animate on scroll
+            const observer = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting) {
+                    circle.style.transition = 'stroke-dashoffset 1s ease-in-out';
+                    circle.style.strokeDashoffset = offset;
+                    observer.unobserve(ring);
+                }
+            }, { threshold: 0.5 });
+            
+            observer.observe(ring);
+        });
+
+        // Course card hover effect
+        document.querySelectorAll('.course-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+                this.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.1)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = '';
+                this.style.boxShadow = '';
+            });
+        });
+
+        // Floating button hover effect
+        const floatingButton = document.querySelector('.floating-button');
+        floatingButton.addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.1)';
+        });
+        
+        floatingButton.addEventListener('mouseleave', function() {
+            this.style.transform = '';
+        });
+        
+        floatingButton.addEventListener('click', function() {
+            alert('Hubungi customer service kami di 1500-123 atau hello@educonnect.id');
+        });
+    </script>
+</body>
+</html>
