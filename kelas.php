@@ -1262,7 +1262,7 @@ require_once('config.php');
             </div>
             
             <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-                <p>© 2025 EduConnect. All rights reserved.</p>
+                <p>© 2025 EduConnect. All rights reserved. designed by Arya Wardhana</p>
             </div>
         </div>
     </footer>
