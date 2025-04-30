@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 $pageTitle = "Masuk ke Akun";
-include('../../includes/header.php');
+// include('../../includes/header.php');
 ?>
 
 
@@ -180,4 +180,6 @@ include('../../includes/header.php');
     </div>
 </div>
 
-<?php include('../../includes/footer.php'); ?>
+<?php 
+// include('../../includes/footer.php');
+ ?>

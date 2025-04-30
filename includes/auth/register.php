@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 $pageTitle = "Daftar Akun";
-include('../../includes/header.php');
+// include('../../includes/header.php');
 ?>
 
 <meta charset="UTF-8">
@@ -192,4 +192,6 @@ include('../../includes/header.php');
     </div>
 </div>
 
-<?php include('../../includes/footer.php'); ?>
+<?php
+//  include('../../includes/footer.php');
+ ?>

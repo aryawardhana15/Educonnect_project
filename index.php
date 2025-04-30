@@ -292,7 +292,7 @@ require_once('config.php');
             <a href="/belanja" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition">
                 <i class="fas fa-shopping-cart mr-2"></i>Belanja
             </a>
-            <a href="/login" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition">
+            <a href="includes/auth/login.php" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition">
                 <i class="fas fa-user-circle mr-2"></i>Login
             </a>
         </div>
@@ -767,7 +767,8 @@ require_once('config.php');
                         <p class="text-gray-600">Buat akun siswa dan lengkapi profil untuk mendapatkan rekomendasi pembelajaran yang sesuai.</p>
                     </div>
                 </div>
-                
+
+            
                 <!-- Step 2 -->
                 <div class="relative transform hover:scale-[1.02] transition duration-300" data-aos="fade-up" data-aos-delay="100">
                     <div class="absolute -left-10 top-0 w-8 h-8 rounded-full bg-secondary flex items-center justify-center border-4 border-white shadow-lg">
