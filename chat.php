@@ -92,6 +92,7 @@ $pageTitle = "Pesan";
                                     <h3 class="font-medium text-gray-900"><?php echo htmlspecialchars($contact['name']); ?></h3>
                                     <p class="text-sm text-gray-500"><?php echo $contact['role'] === 'mentor' ? 'Mentor' : 'Siswa'; ?></p>
                                 </div>
+                                
                                 <!-- Indicator pesan belum dibaca -->
                                 <?php if (false): // Anda perlu query untuk mengecek pesan belum dibaca ?>
                                     <span class="ml-auto bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">3</span>
