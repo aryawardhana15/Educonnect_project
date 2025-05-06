@@ -1,0 +1,22 @@
+{
+    "name": "EduConnect",
+    "short_name": "EduConnect",
+    "description": "Platform pembelajaran digital untuk daerah 3T dengan mentoring interaktif dan pembelajaran adaptif.",
+    "start_url": "/index.php",
+    "display": "standalone",
+    "background_color": "#F3F4F6",
+    "theme_color": "#4F46E5",
+    "icons": [
+        {
+            "src": "/assets/icons/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/assets/icons/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "offline_enabled": true
+}

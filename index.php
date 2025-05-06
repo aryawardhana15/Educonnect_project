@@ -262,7 +262,7 @@ require_once('config.php');
                 <a href="/belanja" class="text-gray-700 hover:text-primary text-xl transition-transform transform hover:scale-110">
                     <i class="fas fa-shopping-cart"></i>
                 </a>
-                <a href="includes/auth/login.php" class="text-gray-700 hover:text-primary text-xl transition-transform transform hover:scale-110">
+                <a href="auth/login.php" class="text-gray-700 hover:text-primary text-xl transition-transform transform hover:scale-110">
                     <i class="fas fa-user-circle"></i>
                 </a>
             </div>
