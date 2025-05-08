@@ -2,62 +2,84 @@
 // profile.php
 require_once('config.php');
 require_once('db_connect.php');
-session_start();
+require_once 'auth/auth.php';
 
-if (!isset($_SESSION['user_id'])) {
+$auth = new Auth();
+$user = $auth->getCurrentUser();
+
+// Redirect jika belum login
+if (!$auth->isLoggedIn()) {
     header('Location: auth/login.php');
     exit;
 }
 
-$user_id = $_SESSION['user_id'];
+$db = db();
+$error = '';
+$success = '';
 
-// Ambil data pengguna
-$stmt = $conn->prepare("SELECT username, email, profile_picture, bio FROM users WHERE user_id = ?");
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$user = $stmt->get_result()->fetch_assoc();
-$stmt->close();
+// Ambil data user
+$query = "
+    SELECT u.*, 
+           COALESCE((SELECT COUNT(*) FROM user_courses WHERE user_id = u.id), 0) as enrolled_courses,
+           COALESCE((SELECT COUNT(*) FROM user_missions WHERE user_id = u.id AND status = 'completed'), 0) as completed_missions,
+           COALESCE((SELECT COUNT(*) FROM community_posts WHERE user_id = u.id), 0) as total_posts
+    FROM users u 
+    WHERE u.id = ?
+";
 
-// Ambil progres kursus
-$stmt = $conn->prepare("SELECT c.title, e.progress FROM enrollments e JOIN courses c ON e.course_id = c.course_id WHERE e.user_id = ?");
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$progress = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-$stmt->close();
+$stmt = $db->prepare($query);
+$stmt->execute([$user['id']]);
+$user_data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Ambil sertifikat
-$stmt = $conn->prepare("SELECT c.certificate_id, c.course_id, c.issue_date, co.title FROM certificates c JOIN courses co ON c.course_id = co.course_id WHERE c.user_id = ?");
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$certificates = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-$stmt->close();
-
-// Proses pembaruan profil
+// Proses update profile
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $full_name = trim($_POST['full_name'] ?? '');
+    $email = trim($_POST['email'] ?? '');
     $bio = trim($_POST['bio'] ?? '');
-    $profile_picture = $user['profile_picture'];
+    $region = trim($_POST['region'] ?? '');
 
-    // Proses unggahan foto
-    if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
-        $upload_dir = 'assets/images/';
-        $ext = pathinfo($_FILES['profile_picture']['name'], PATHINFO_EXTENSION);
-        $filename = 'profile_' . $user_id . '_' . time() . '.' . $ext;
-        $target = $upload_dir . $filename;
-
-        if (move_uploaded_file($_FILES['profile_picture']['tmp_name'], $target)) {
-            $profile_picture = '/' . $target;
+    // Validasi input
+    if (empty($full_name)) {
+        $error = 'Nama lengkap tidak boleh kosong';
+    } elseif (empty($email)) {
+        $error = 'Email tidak boleh kosong';
+    } else {
+        try {
+            // Cek apakah email sudah digunakan oleh user lain
+            $check_email = $db->prepare("SELECT id FROM users WHERE email = ? AND id != ?");
+            $check_email->execute([$email, $user['id']]);
+            if ($check_email->rowCount() > 0) {
+                $error = 'Email sudah digunakan oleh user lain';
+            } else {
+                // Update profil
+                $query = "UPDATE users SET full_name = ?, email = ?, bio = ?, region = ? WHERE id = ?";
+                $stmt = $db->prepare($query);
+                $result = $stmt->execute([$full_name, $email, $bio, $region, $user['id']]);
+                
+                if ($result) {
+                    $success = 'Profil berhasil diperbarui';
+                    
+                    // Refresh data user
+                    $query = "SELECT u.*, 
+                             COALESCE((SELECT COUNT(*) FROM user_courses WHERE user_id = u.id), 0) as enrolled_courses,
+                             COALESCE((SELECT COUNT(*) FROM user_missions WHERE user_id = u.id AND status = 'completed'), 0) as completed_missions,
+                             COALESCE((SELECT COUNT(*) FROM community_posts WHERE user_id = u.id), 0) as total_posts
+                      FROM users u 
+                      WHERE u.id = ?";
+                    $stmt = $db->prepare($query);
+                    $stmt->execute([$user['id']]);
+                    $user_data = $stmt->fetch(PDO::FETCH_ASSOC);
+                    
+                    // Update session data
+                    $_SESSION['user_full_name'] = $full_name;
+                } else {
+                    $error = 'Gagal memperbarui profil';
+                }
+            }
+        } catch (PDOException $e) {
+            $error = 'Terjadi kesalahan saat memperbarui profil: ' . $e->getMessage();
         }
     }
-
-    $stmt = $conn->prepare("UPDATE users SET bio = ?, profile_picture = ? WHERE user_id = ?");
-    $stmt->bind_param("ssi", $bio, $profile_picture, $user_id);
-    if ($stmt->execute()) {
-        header('Location: profile.php?success=1');
-        exit;
-    } else {
-        $error = 'Gagal memperbarui profil.';
-    }
-    $stmt->close();
 }
 ?>
 <!DOCTYPE html>
@@ -66,153 +88,152 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profil - EduConnect</title>
-    <link rel="stylesheet" href="https://cdn.tailwindcss.com">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link rel="manifest" href="/manifest.json">
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #F3F4F6;
-        }
-        .profile-card:hover {
-            transform: scale(1.02);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-        }
-        .progress-bar {
-            transition: width 0.5s ease-in-out;
-        }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="assets/css/style.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100">
-    <!-- Navigation -->
-    <nav class="bg-white shadow-lg sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <div class="flex items-center">
-                    <i class="fas fa-graduation-cap text-primary text-2xl mr-2"></i>
-                    <span class="text-xl font-bold text-dark">EduConnect</span>
-                </div>
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="index.php" class="text-gray-700 hover:text-primary">Beranda</a>
-                    <a href="kelas.php" class="text-gray-700 hover:text-primary">Kelas</a>
-                    <a href="mission.php" class="text-gray-700 hover:text-primary">Misi</a>
-                    <a href="community.php" class="text-gray-700 hover:text-primary">Komunitas</a>
-                    <a href="portfolio.php" class="text-gray-700 hover:text-primary">Portofolio</a>
-                    <a href="profile.php" class="text-gray-700 hover:text-primary font-bold">Profil</a>
-                    <a href="auth/logout.php" class="text-gray-700 hover:text-primary">Logout</a>
-                </div>
-                <div class="md:hidden">
-                    <button id="mobile-menu-button" class="hamburger p-2">
-                        <span class="hamburger-line block w-6 h-0.5 bg-gray-700 mb-1.5"></span>
-                        <span class="hamburger-line block w-6 h-0.5 bg-gray-700 mb-1.5"></span>
-                        <span class="hamburger-line block w-6 h-0.5 bg-gray-700"></span>
-                    </button>
-                </div>
-            </div>
-            <div id="mobile-menu" class="mobile-nav md:hidden bg-white shadow-lg hidden">
-                <div class="px-2 pt-2 pb-4 space-y-1">
-                    <a href="index.php" class="block px-3 py-2 text-gray-700 hover:text-primary">Beranda</a>
-                    <a href="kelas.php" class="block px-3 py-2 text-gray-700 hover:text-primary">Kelas</a>
-                    <a href="mission.php" class="block px-3 py-2 text-gray-700 hover:text-primary">Misi</a>
-                    <a href="community.php" class="block px-3 py-2 text-gray-700 hover:text-primary">Komunitas</a>
-                    <a href="portfolio.php" class="block px-3 py-2 text-gray-700 hover:text-primary">Portofolio</a>
-                    <a href="profile.php" class="block px-3 py-2 text-gray-700 hover:text-primary">Profil</a>
-                    <a href="auth/logout.php" class="block px-3 py-2 text-gray-700 hover:text-primary">Logout</a>
-                </div>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="index.php">EduConnect</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="kelas.php">Kelas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="mission.php">Misi</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="community.php">Komunitas</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle"></i> <?php echo htmlspecialchars($user['full_name']); ?>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item active" href="profile.php">Profil</a></li>
+                            <?php if ($auth->hasRole('admin')): ?>
+                            <li><a class="dropdown-item" href="admin/dashboard.php">Admin Panel</a></li>
+                            <?php endif; ?>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="auth/logout.php">Keluar</a></li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Profil -->
-    <section class="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="mb-8" data-aos="fade-up">
-            <h1 class="text-3xl font-bold text-gray-900">Profil Anda</h1>
-            <p class="text-gray-600">Kelola informasi pribadi dan lihat progres belajar Anda.</p>
-        </div>
-
-        <!-- Informasi Pengguna -->
-        <div class="bg-white p-8 rounded-xl shadow-md profile-card mb-8" data-aos="fade-up" data-aos-delay="100">
-            <div class="flex items-center mb-6">
-                <img src="<?php echo $user['profile_picture'] ?: 'https://via.placeholder.com/100'; ?>" alt="Foto Profil" class="w-24 h-24 rounded-full mr-4 object-cover">
-                <div>
-                    <h2 class="text-2xl font-bold text-gray-900"><?php echo htmlspecialchars($user['username']); ?></h2>
-                    <p class="text-gray-600"><?php echo htmlspecialchars($user['email']); ?></p>
-                </div>
-            </div>
-            <div class="mb-6">
-                <h3 class="text-xl font-semibold text-gray-900 mb-2">Bio</h3>
-                <p class="text-gray-600"><?php echo htmlspecialchars($user['bio'] ?: 'Belum ada bio.'); ?></p>
-            </div>
-        </div>
-
-        <!-- Edit Profil -->
-        <div class="bg-white p-8 rounded-xl shadow-md mb-8" data-aos="fade-up" data-aos-delay="200">
-            <h2 class="text-2xl font-semibold text-gray-900 mb-4">Edit Profil</h2>
-            <?php if (isset($_GET['success'])): ?>
-                <p class="text-green-500 mb-4">Profil berhasil diperbarui!</p>
-            <?php elseif (isset($error)): ?>
-                <p class="text-red-500 mb-4"><?php echo htmlspecialchars($error); ?></p>
-            <?php endif; ?>
-            <form action="profile.php" method="POST" enctype="multipart/form-data">
-                <div class="mb-4">
-                    <label class="block text-gray-700 mb-2">Bio</label>
-                    <textarea name="bio" rows="4" class="w-full p-3 border rounded-lg"><?php echo htmlspecialchars($user['bio'] ?? ''); ?></textarea>
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 mb-2">Foto Profil</label>
-                    <input type="file" name="profile_picture" accept="image/*" class="w-full p-2 border rounded-lg">
-                </div>
-                <button type="submit" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-dark transition">Simpan Perubahan</button>
-            </form>
-        </div>
-
-        <!-- Progres Belajar -->
-        <div class="bg-white p-8 rounded-xl shadow-md mb-8" data-aos="fade-up" data-aos-delay="300">
-            <h2 class="text-2xl font-semibold text-gray-900 mb-4">Progres Belajar</h2>
-            <div class="space-y-4">
-                <?php foreach ($progress as $course): ?>
-                    <div>
-                        <p class="font-semibold text-gray-900"><?php echo htmlspecialchars($course['title']); ?></p>
-                        <div class="w-full bg-gray-200 rounded-full h-4 mt-2">
-                            <div class="bg-primary h-4 rounded-full progress-bar" style="width: <?php echo $course['progress']; ?>%"></div>
+    <!-- Main Content -->
+    <div class="container py-5">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <img src="<?php echo $user_data['profile_picture'] ?? 'assets/images/default-avatar.jpg'; ?>" 
+                             class="rounded-circle mb-3" width="120" height="120" alt="Profile Picture">
+                        <h2 class="h4 mb-1"><?php echo htmlspecialchars($user_data['full_name']); ?></h2>
+                        <p class="text-muted mb-3"><?php echo ucfirst($user_data['role']); ?></p>
+                        
+                        <div class="row text-center g-3">
+                            <div class="col">
+                                <div class="h5 mb-0"><?php echo $user_data['enrolled_courses'] ?? 0; ?></div>
+                                <small class="text-muted">Kelas</small>
+                            </div>
+                            <div class="col">
+                                <div class="h5 mb-0"><?php echo $user_data['completed_missions'] ?? 0; ?></div>
+                                <small class="text-muted">Misi</small>
+                            </div>
+                            <div class="col">
+                                <div class="h5 mb-0"><?php echo $user_data['total_posts'] ?? 0; ?></div>
+                                <small class="text-muted">Post</small>
+                            </div>
                         </div>
-                        <p class="text-sm text-gray-600 mt-1"><?php echo $course['progress']; ?>% selesai</p>
                     </div>
-                <?php endforeach; ?>
+                </div>
+            </div>
+
+            <!-- Profile Form -->
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h1 class="h3 mb-4">Edit Profil</h1>
+
+                        <?php if ($error): ?>
+                        <div class="alert alert-danger"><?php echo $error; ?></div>
+                        <?php endif; ?>
+
+                        <?php if ($success): ?>
+                        <div class="alert alert-success"><?php echo $success; ?></div>
+                        <?php endif; ?>
+
+                        <form method="POST" action="">
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="username" 
+                                       value="<?php echo htmlspecialchars($user_data['username']); ?>" disabled>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="full_name" class="form-label">Nama Lengkap</label>
+                                <input type="text" class="form-control" id="full_name" name="full_name" 
+                                       value="<?php echo htmlspecialchars($user_data['full_name']); ?>" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" 
+                                       value="<?php echo htmlspecialchars($user_data['email']); ?>" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="bio" class="form-label">Bio</label>
+                                <textarea class="form-control" id="bio" name="bio" rows="3"><?php echo htmlspecialchars($user_data['bio'] ?? ''); ?></textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="region" class="form-label">Daerah</label>
+                                <input type="text" class="form-control" id="region" name="region" 
+                                       value="<?php echo htmlspecialchars($user_data['region'] ?? ''); ?>">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Statistik</label>
+                                <div class="row g-3">
+                                    <div class="col">
+                                        <div class="p-3 border rounded text-center">
+                                            <div class="h4 mb-0"><?php echo $user_data['points'] ?? 0; ?></div>
+                                            <small class="text-muted">Poin</small>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="p-3 border rounded text-center">
+                                            <div class="h4 mb-0"><?php echo $user_data['experience'] ?? 0; ?></div>
+                                            <small class="text-muted">XP</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save"></i> Simpan Perubahan
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
+    </div>
 
-        <!-- Sertifikat -->
-        <div class="bg-white p-8 rounded-xl shadow-md" data-aos="fade-up" data-aos-delay="400">
-            <h2 class="text-2xl font-semibold text-gray-900 mb-4">Sertifikat</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <?php foreach ($certificates as $certificate): ?>
-                    <div class="p-4 bg-gray-50 rounded-lg">
-                        <p class="font-semibold text-gray-900"><?php echo htmlspecialchars($certificate['title']); ?></p>
-                        <p class="text-sm text-gray-600">Diterbitkan: <?php echo date('d M Y', strtotime($certificate['issue_date'])); ?></p>
-                        <a href="certificate.php?id=<?php echo $certificate['certificate_id']; ?>" class="text-primary hover:text-primary-dark">Lihat Sertifikat</a>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-        </div>
-    </section>
-
-    <script>
-        AOS.init();
-        document.getElementById('mobile-menu-button').addEventListener('click', () => {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
-            menu.classList.toggle('scale-y-100');
-        });
-
-        // Registrasi Service Worker
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/service-worker.js')
-                .then(reg => console.log('Service Worker registered', reg))
-                .catch(err => console.log('Service Worker registration failed', err));
-        }
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+

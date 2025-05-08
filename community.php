@@ -1,5 +1,5 @@
 <?php
-// mission.php
+// community.php
 require_once('config.php');
 require_once('db_connect.php');
 require_once 'auth/auth.php';
@@ -16,26 +16,25 @@ if (!$auth->isLoggedIn()) {
 $db = db();
 $role = $user['role'];
 
-// Query untuk mengambil misi
+// Query untuk mengambil post
 $query = "
-    SELECT m.*, u.full_name as mentor_name,
-           CASE WHEN um.user_id IS NOT NULL THEN um.status ELSE 'not_started' END as user_status
-    FROM missions m
-    JOIN users u ON m.mentor_id = u.id
-    LEFT JOIN user_missions um ON m.id = um.mission_id AND um.user_id = ?
-    ORDER BY m.created_at DESC
+    SELECT cp.*, u.full_name as author_name, u.profile_picture,
+           (SELECT COUNT(*) FROM comments WHERE post_id = cp.id) as comment_count
+    FROM community_posts cp
+    JOIN users u ON cp.user_id = u.id
+    ORDER BY cp.created_at DESC
 ";
 
 $stmt = $db->prepare($query);
-$stmt->execute([$user['id']]);
-$missions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$stmt->execute();
+$posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Misi - EduConnect</title>
+    <title>Komunitas - EduConnect</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
     <link href="assets/css/style.css" rel="stylesheet">
@@ -54,10 +53,10 @@ $missions = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <a class="nav-link" href="kelas.php">Kelas</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="mission.php">Misi</a>
+                        <a class="nav-link" href="mission.php">Misi</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="community.php">Komunitas</a>
+                        <a class="nav-link active" href="community.php">Komunitas</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
@@ -83,58 +82,44 @@ $missions = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="container py-5">
         <div class="row mb-4">
             <div class="col-md-8">
-                <h1 class="h2 mb-0">Misi</h1>
-                <p class="text-muted">Selesaikan misi untuk mendapatkan poin dan pengalaman</p>
+                <h1 class="h2 mb-0">Komunitas</h1>
+                <p class="text-muted">Diskusikan dan berbagi pengalaman dengan sesama pengguna</p>
             </div>
-            <?php if ($role === 'mentor'): ?>
             <div class="col-md-4 text-end">
-                <a href="mission/create.php" class="btn btn-primary">
-                    <i class="bi bi-plus-lg"></i> Buat Misi
+                <a href="community/create.php" class="btn btn-primary">
+                    <i class="bi bi-plus-lg"></i> Buat Post
                 </a>
             </div>
-            <?php endif; ?>
         </div>
 
-        <!-- Mission List -->
+        <!-- Post List -->
         <div class="row g-4">
-            <?php foreach ($missions as $mission): ?>
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100">
+            <?php foreach ($posts as $post): ?>
+            <div class="col-12">
+                <div class="card">
                     <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <h5 class="card-title mb-0"><?php echo htmlspecialchars($mission['title']); ?></h5>
-                            <span class="badge bg-primary"><?php echo $mission['points']; ?> Poin</span>
-                        </div>
-                        <p class="card-text text-muted"><?php echo htmlspecialchars($mission['description']); ?></p>
-                        <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="<?php echo $post['profile_picture'] ?? 'assets/images/default-avatar.jpg'; ?>" 
+                                 class="rounded-circle me-2" width="40" height="40" alt="Profile Picture">
                             <div>
+                                <h5 class="card-title mb-0"><?php echo htmlspecialchars($post['title']); ?></h5>
                                 <small class="text-muted">
-                                    <i class="bi bi-person"></i> <?php echo htmlspecialchars($mission['mentor_name']); ?>
-                                </small>
-                                <br>
-                                <small class="text-muted">
-                                    <i class="bi bi-clock"></i> Deadline: <?php echo date('d M Y', strtotime($mission['deadline'])); ?>
+                                    Oleh <?php echo htmlspecialchars($post['author_name']); ?> • 
+                                    <?php echo date('d M Y H:i', strtotime($post['created_at'])); ?>
                                 </small>
                             </div>
-                            <?php if ($role === 'student'): ?>
-                                <?php if ($mission['user_status'] === 'not_started'): ?>
-                                <a href="mission/start.php?id=<?php echo $mission['id']; ?>" class="btn btn-outline-primary">
-                                    <i class="bi bi-play-fill"></i> Mulai
-                                </a>
-                                <?php elseif ($mission['user_status'] === 'in_progress'): ?>
-                                <a href="mission/submit.php?id=<?php echo $mission['id']; ?>" class="btn btn-primary">
-                                    <i class="bi bi-send"></i> Kirim
-                                </a>
-                                <?php else: ?>
-                                <button class="btn btn-success" disabled>
-                                    <i class="bi bi-check-circle"></i> Selesai
-                                </button>
-                                <?php endif; ?>
-                            <?php else: ?>
-                                <a href="mission/view.php?id=<?php echo $mission['id']; ?>" class="btn btn-primary">
-                                    <i class="bi bi-eye"></i> Lihat
-                                </a>
-                            <?php endif; ?>
+                        </div>
+                        <p class="card-text"><?php echo nl2br(htmlspecialchars($post['content'])); ?></p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="badge bg-primary"><?php echo htmlspecialchars($post['category']); ?></span>
+                                <small class="text-muted ms-2">
+                                    <i class="bi bi-chat"></i> <?php echo $post['comment_count']; ?> Komentar
+                                </small>
+                            </div>
+                            <a href="community/post.php?id=<?php echo $post['id']; ?>" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-eye"></i> Lihat Diskusi
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -145,4 +130,4 @@ $missions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html>
+</html> 
