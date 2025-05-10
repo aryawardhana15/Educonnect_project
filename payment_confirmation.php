@@ -20,12 +20,13 @@ if (!$transaction_id) {
 }
 
 // Ambil data transaksi
+$db = db();
 $query = "SELECT t.*, c.title as course_title, c.price, u.full_name as mentor_name 
           FROM transactions t 
           JOIN courses c ON t.course_id = c.id 
           JOIN users u ON c.mentor_id = u.id 
           WHERE t.transaction_id = ? AND t.user_id = ?";
-$stmt = $auth->db->prepare($query);
+$stmt = $db->prepare($query);
 $stmt->execute([$transaction_id, $_SESSION['user_id']]);
 $transaction = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -74,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                   payment_proof = ?,
                   updated_at = NOW()
                   WHERE transaction_id = ?";
-        $stmt = $auth->db->prepare($query);
+        $stmt = $db->prepare($query);
         $stmt->execute([$upload_path, $transaction_id]);
 
         // Redirect ke halaman sukses

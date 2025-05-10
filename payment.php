@@ -23,12 +23,15 @@ if (!$course_id) {
 $user_id = $_SESSION['user_id'];
 $user_data = $auth->getUserById($user_id);
 
+// Ganti ini:
+$db = db(); // gunakan koneksi global
+
 // Ambil detail kelas
 $query = "SELECT c.*, u.full_name as mentor_name 
           FROM courses c 
           JOIN users u ON c.mentor_id = u.id 
           WHERE c.id = ? AND c.type = 'premium'";
-$stmt = $auth->db->prepare($query);
+$stmt = $db->prepare($query);
 $stmt->execute([$course_id]);
 $course = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -39,7 +42,7 @@ if (!$course) {
 
 // Cek apakah user sudah terdaftar di kelas ini
 $query = "SELECT * FROM user_courses WHERE user_id = ? AND course_id = ?";
-$stmt = $auth->db->prepare($query);
+$stmt = $db->prepare($query);
 $stmt->execute([$user_id, $course_id]);
 $enrollment = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -64,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Simpan transaksi ke database
         $query = "INSERT INTO transactions (user_id, course_id, amount, payment_method, transaction_id, status) 
                   VALUES (?, ?, ?, ?, ?, 'pending')";
-        $stmt = $auth->db->prepare($query);
+        $stmt = $db->prepare($query);
         $stmt->execute([$user_id, $course_id, $amount, $payment_method, $transaction_id]);
         
         // Redirect ke halaman konfirmasi pembayaran

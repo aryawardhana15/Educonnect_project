@@ -285,14 +285,32 @@ if (!isset($bootcamps) || !is_array($bootcamps)) {
                                 </a>
                             <?php else: ?>
                                 <?php if ($user['role'] === 'student'): ?>
+                                    <?php
+                                    // Cek status enroll user pada kelas ini
+                                    $enrollStmt = $db->prepare("SELECT id FROM user_courses WHERE user_id = ? AND course_id = ?");
+                                    $enrollStmt->execute([$user['id'], $course['id']]);
+                                    $is_enrolled = $enrollStmt->fetchColumn();
+                                    ?>
                                     <?php if ($course['type'] === 'free'): ?>
-                                        <a href="course/enroll.php?id=<?php echo $course['id']; ?>" class="w-full block bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg text-center transition duration-300">
-                                            Mulai Belajar
-                                        </a>
+                                        <?php if ($is_enrolled): ?>
+                                            <button class="w-full block bg-green-500 text-white font-medium py-2 px-4 rounded-lg text-center cursor-not-allowed opacity-70" disabled>
+                                                Kelas Sudah Diambil
+                                            </button>
+                                        <?php else: ?>
+                                            <a href="course/enroll.php?id=<?php echo $course['id']; ?>" class="w-full block bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg text-center transition duration-300">
+                                                Mulai Belajar
+                                            </a>
+                                        <?php endif; ?>
                                     <?php else: ?>
-                                        <a href="course/payment.php?id=<?php echo $course['id']; ?>" class="w-full block bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg text-center transition duration-300">
-                                            Daftar Kelas
-                                        </a>
+                                        <?php if ($is_enrolled): ?>
+                                            <button class="w-full block bg-green-500 text-white font-medium py-2 px-4 rounded-lg text-center cursor-not-allowed opacity-70" disabled>
+                                                Kelas Sudah Diambil
+                                            </button>
+                                        <?php else: ?>
+                                            <a href="payment.php?course_id=<?php echo $course['id']; ?>" class="w-full block bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg text-center transition duration-300">
+                                                Daftar Kelas
+                                            </a>
+                                        <?php endif; ?>
                                     <?php endif; ?>
                                 <?php else: ?>
                                     <a href="course/detail.php?id=<?php echo $course['id']; ?>" class="w-full block bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg text-center transition duration-300">
