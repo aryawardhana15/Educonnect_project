@@ -1,3 +1,24 @@
+<?php
+require_once('config.php');
+require_once('db_connect.php');
+require_once('auth/auth.php');
+
+$auth = new Auth();
+$isLoggedIn = $auth->isLoggedIn();
+$user = $isLoggedIn ? $auth->getCurrentUser() : null;
+
+$db = db();
+
+// Query semua kelas (tanpa filter enroll)
+$stmt = $db->prepare("SELECT c.*, u.full_name as mentor_name FROM courses c JOIN users u ON c.mentor_id = u.id ORDER BY c.created_at DESC");
+$stmt->execute();
+$courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Pastikan $bootcamps selalu didefinisikan
+if (!isset($bootcamps) || !is_array($bootcamps)) {
+    $bootcamps = [];
+}
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -82,12 +103,13 @@
                 </div>
                 
                 <div class="flex items-center space-x-4">
+                    <?php if ($isLoggedIn && $user): ?>
                     <div class="relative group">
                         <button class="flex items-center space-x-2 focus:outline-none">
                             <div class="w-8 h-8 rounded-full bg-primary-400 flex items-center justify-center">
                                 <i class="fas fa-user text-white"></i>
                             </div>
-                            <span class="hidden md:inline font-medium"><?php echo htmlspecialchars($user['full_name']); ?></span>
+                            <span class="hidden md:inline font-medium"><?php echo htmlspecialchars($user['full_name'] ?? ''); ?></span>
                             <i class="fas fa-chevron-down text-xs"></i>
                         </button>
                         <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 hidden group-hover:block">
@@ -99,6 +121,11 @@
                             <a href="auth/logout.php" class="block px-4 py-2 text-gray-800 hover:bg-primary-100">Keluar</a>
                         </div>
                     </div>
+                    <?php else: ?>
+                    <a href="auth/login.php" class="px-5 py-2 bg-white text-primary-600 font-bold rounded-lg shadow hover:bg-primary-100 transition-all duration-300">
+                        <i class="fas fa-sign-in-alt mr-2"></i> Masuk
+                    </a>
+                    <?php endif; ?>
                     <button class="md:hidden focus:outline-none">
                         <i class="fas fa-bars text-xl"></i>
                     </button>
@@ -252,24 +279,26 @@
                                 </div>
                             </div>
                             
-                            <?php if ($course['user_status'] === 'not_started'): ?>
-                                <?php if ($course['type'] === 'free'): ?>
-                                <a href="course/enroll.php?id=<?php echo $course['id']; ?>" class="w-full block bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg text-center transition duration-300">
-                                    Mulai Belajar
-                                </a>
-                                <?php else: ?>
-                                <a href="course/payment.php?id=<?php echo $course['id']; ?>" class="w-full block bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg text-center transition duration-300">
-                                    Daftar Kelas
-                                </a>
-                                <?php endif; ?>
-                            <?php elseif ($course['user_status'] === 'in_progress'): ?>
-                                <a href="course/learn.php?id=<?php echo $course['id']; ?>" class="w-full block bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg text-center transition duration-300">
-                                    Lanjutkan Belajar
+                            <?php if (!$isLoggedIn): ?>
+                                <a href="auth/login.php" class="w-full block bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg text-center transition duration-300">
+                                    Login untuk Bergabung
                                 </a>
                             <?php else: ?>
-                                <a href="course/learn.php?id=<?php echo $course['id']; ?>" class="w-full block bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg text-center transition duration-300">
-                                    Lihat Materi
-                                </a>
+                                <?php if ($user['role'] === 'student'): ?>
+                                    <?php if ($course['type'] === 'free'): ?>
+                                        <a href="course/enroll.php?id=<?php echo $course['id']; ?>" class="w-full block bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg text-center transition duration-300">
+                                            Mulai Belajar
+                                        </a>
+                                    <?php else: ?>
+                                        <a href="course/payment.php?id=<?php echo $course['id']; ?>" class="w-full block bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg text-center transition duration-300">
+                                            Daftar Kelas
+                                        </a>
+                                    <?php endif; ?>
+                                <?php else: ?>
+                                    <a href="course/detail.php?id=<?php echo $course['id']; ?>" class="w-full block bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg text-center transition duration-300">
+                                        Lihat Detail
+                                    </a>
+                                <?php endif; ?>
                             <?php endif; ?>
                         </div>
                     </div>

@@ -271,7 +271,9 @@ if ($auth->isLoggedIn()) {
 
             <!-- Menu utama (Desktop) -->
             <div class="hidden md:flex items-center space-x-8">
-                <?php if ($auth->isLoggedIn()): ?>
+                <?php if (
+                    $auth->isLoggedIn()
+                ): ?>
                     <?php
                     $is_dashboard = basename($_SERVER['PHP_SELF']) === 'dashboardadmin.php' || basename($_SERVER['PHP_SELF']) === 'dashboardmentor.php' || basename($_SERVER['PHP_SELF']) === 'dashboardstudent.php';
                     ?>
@@ -282,7 +284,7 @@ if ($auth->isLoggedIn()) {
                     <a href="<?php echo $misi_link; ?>" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">Misi</a>
                     <a href="community.php" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">Komunitas</a>
                 <?php else: ?>
-                    <a href="kelas.php" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">Kelas</a>
+                    <a href="daftar_kelas.php" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">Kelas</a>
                     <a href="mission.php" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">Misi</a>
                     <a href="community.php" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">Komunitas</a>
                 <?php endif; ?>
