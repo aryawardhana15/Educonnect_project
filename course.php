@@ -86,7 +86,22 @@ $discussions = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     </a>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <a href="/dashboard/student/index.php" class="text-gray-700 hover:text-primary">
+                    <?php
+                    $user = $auth->getCurrentUser();
+                    switch ($user['role']) {
+                        case 'admin':
+                            echo '<a href="dashboardadmin.php" class="text-gray-700 hover:text-primary">';
+                            break;
+                        case 'mentor':
+                            echo '<a href="dashboardmentor.php" class="text-gray-700 hover:text-primary">';
+                            break;
+                        case 'student':
+                            echo '<a href="dashboardstudent.php" class="text-gray-700 hover:text-primary">';
+                            break;
+                        default:
+                            echo '<a href="dashboard.php" class="text-gray-700 hover:text-primary">';
+                    }
+                    ?>
                         <i class="fas fa-user-circle text-xl"></i>
                     </a>
                     <a href="/auth/logout.php" class="text-gray-700 hover:text-primary">

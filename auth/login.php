@@ -12,16 +12,16 @@ if ($auth->isLoggedIn()) {
     $user_data = $auth->getUserById($_SESSION['user_id']);
     switch ($user_data['role']) {
         case 'admin':
-            header('Location: /dashboard/admin/index.php');
+            header('Location: ../dashboardadmin.php');
             break;
         case 'mentor':
-            header('Location: /dashboard/mentor/index.php');
+            header('Location: ../dashboardmentor.php');
             break;
         case 'student':
-            header('Location: /dashboard/student/index.php');
+            header('Location: ../dashboardstudent.php');
             break;
         default:
-            header('Location: /index.php');
+            header('Location: ../index.php');
     }
     exit;
 }
@@ -61,16 +61,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $user_data = $auth->getUserById($_SESSION['user_id']);
                 switch ($user_data['role']) {
                     case 'admin':
-                        header('Location: /dashboard/admin/index.php');
+                        header('Location: ../dashboardadmin.php');
                         break;
                     case 'mentor':
-                        header('Location: /dashboard/mentor/index.php');
+                        header('Location: ../dashboardmentor.php');
                         break;
                     case 'student':
-                        header('Location: /dashboard/student/index.php');
+                        header('Location: ../dashboardstudent.php');
                         break;
                     default:
-                        header('Location: /index.php');
+                        header('Location: ../index.php');
                 }
                 exit;
             } else {

@@ -14,6 +14,17 @@ if (!isset($conn)) {
 
 // Inisialisasi objek Auth
 $auth = new Auth($conn);
+
+$kelas_link = 'kelas.php';
+$misi_link = 'mission.php';
+if ($auth->isLoggedIn()) {
+    $user = $auth->getCurrentUser();
+    if ($user['role'] === 'mentor') {
+        $kelas_link = 'mentor_classes.php';
+        $misi_link = 'mentor_missions.php';
+    }
+    // Jika admin ingin diarahkan ke halaman khusus, tambahkan else if di sini
+}
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -260,23 +271,50 @@ $auth = new Auth($conn);
 
             <!-- Menu utama (Desktop) -->
             <div class="hidden md:flex items-center space-x-8">
-                <a href="kelas.php" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">Kelas</a>
-                <a href="mission.php" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">Misi</a>
-                <a href="community.php" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">Komunitas</a>
                 <?php if ($auth->isLoggedIn()): ?>
-                    <a href="profile.php" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">Profil</a>
+                    <?php
+                    $is_dashboard = basename($_SERVER['PHP_SELF']) === 'dashboardadmin.php' || basename($_SERVER['PHP_SELF']) === 'dashboardmentor.php' || basename($_SERVER['PHP_SELF']) === 'dashboardstudent.php';
+                    ?>
+                    <a href="<?php echo $is_dashboard ? 'index.php' : ($user['role'] === 'admin' ? 'dashboardadmin.php' : ($user['role'] === 'mentor' ? 'dashboardmentor.php' : 'dashboardstudent.php')); ?>" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">
+                        <?php echo $is_dashboard ? 'Landing Page' : 'Dashboard'; ?>
+                    </a>
+                    <a href="<?php echo $kelas_link; ?>" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">Kelas</a>
+                    <a href="<?php echo $misi_link; ?>" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">Misi</a>
+                    <a href="community.php" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">Komunitas</a>
+                <?php else: ?>
+                    <a href="kelas.php" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">Kelas</a>
+                    <a href="mission.php" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">Misi</a>
+                    <a href="community.php" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">Komunitas</a>
                 <?php endif; ?>
             </div>
 
             <!-- Ikon Kelas, Keranjang, dan Login -->
-            <div class="hidden md:flex items-center space-x-4">
+            <div class="hidden md:flex items-center space-x-4 relative">
                 <?php if ($auth->isLoggedIn()): ?>
-                    <a href="kelas.php" class="text-gray-700 hover:text-primary text-xl transition-transform transform hover:scale-110">
-                        <i class="fas fa-chalkboard-teacher"></i>
-                    </a>
-                    <a href="auth/logout.php" class="text-gray-700 hover:text-primary text-xl transition-transform transform hover:scale-110">
-                        <i class="fas fa-sign-out-alt"></i>
-                    </a>
+                    <?php $user = $auth->getCurrentUser(); ?>
+                    <div class="relative group" id="profileDropdown">
+                        <button type="button" class="focus:outline-none flex items-center" id="avatarBtn">
+                            <img src="<?php echo $user['profile_picture'] ?? 'assets/images/default-avatar.png'; ?>" class="rounded-full w-8 h-8 border-2 border-primary" alt="Avatar">
+                        </button>
+                        <div id="dropdownMenu" class="hidden absolute right-0 mt-2 w-44 bg-white rounded-lg shadow-lg py-2 z-50 border border-gray-100">
+
+                            <a href="profile.php" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Profil</a>
+                            <div class="border-t my-1"></div>
+                            <a href="auth/logout.php" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Keluar</a>
+                        </div>
+                    </div>
+                    <script>
+                    // Dropdown logic
+                    const avatarBtn = document.getElementById('avatarBtn');
+                    const dropdownMenu = document.getElementById('dropdownMenu');
+                    document.addEventListener('click', function(e) {
+                        if (avatarBtn.contains(e.target)) {
+                            dropdownMenu.classList.toggle('hidden');
+                        } else if (!dropdownMenu.contains(e.target)) {
+                            dropdownMenu.classList.add('hidden');
+                        }
+                    });
+                    </script>
                 <?php else: ?>
                     <a href="auth/login.php" class="text-gray-700 hover:text-primary text-xl transition-transform transform hover:scale-110">
                         <i class="fas fa-user-circle"></i>

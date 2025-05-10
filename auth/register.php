@@ -9,7 +9,8 @@ $auth = new Auth();
 
 // Jika sudah login, redirect ke dashboard
 if ($auth->isLoggedIn()) {
-    header('Location: /dashboard/student/index.php');
+    $user_data = $auth->getUserById($_SESSION['user_id']);
+    header('Location: index.php');
     exit;
 }
 

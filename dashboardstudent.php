@@ -1,0 +1,413 @@
+<?php
+require_once 'config.php';
+require_once 'db_connect.php';
+require_once 'auth/auth.php';
+
+$auth = new Auth();
+
+// Cek apakah user sudah login
+if (!$auth->isLoggedIn()) {
+    header('Location: auth/login.php');
+    exit;
+}
+
+$user = $auth->getCurrentUser();
+$db = db(); // Inisialisasi koneksi database
+
+// Cek apakah user adalah siswa
+if ($user['role'] !== 'student') {
+    header('Location: dashboard.php');
+    exit;
+}
+?>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Siswa - EduConnect</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        secondary: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                        },
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .sidebar {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .active-nav {
+            background-color: #e0f2fe;
+            color: #0369a1;
+            border-left: 4px solid #0ea5e9;
+        }
+        .progress-bar {
+            height: 8px;
+            border-radius: 4px;
+            background-color: #e0f2fe;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            background-color: #0ea5e9;
+            transition: width 0.5s ease;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Top Navigation -->
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <!-- Mobile menu button -->
+                    <button id="mobile-menu-button" class="md:hidden text-gray-500 hover:text-gray-900 focus:outline-none">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <!-- Logo -->
+                    <div class="flex-shrink-0 flex items-center">
+                        <span class="text-xl font-bold text-primary-600">EduConnect</span>
+                    </div>
+                </div>
+                
+                <div class="hidden md:ml-6 md:flex md:items-center md:space-x-4">
+                    <a href="dashboardstudent.php" class="px-3 py-2 rounded-md text-sm font-medium text-primary-600 bg-primary-50">
+                        <i class="fas fa-tachometer-alt mr-1"></i> Dashboard
+                    </a>
+                    <a href="kelas.php" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">
+                        <i class="fas fa-book-open mr-1"></i> Kelas
+                    </a>
+                    <a href="mission.php" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">
+                        <i class="fas fa-tasks mr-1"></i> Misi
+                    </a>
+                    <a href="community.php" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">
+                        <i class="fas fa-users mr-1"></i> Komunitas
+                    </a>
+                </div>
+                
+                <div class="ml-4 flex items-center md:ml-6">
+                    <!-- Profile dropdown -->
+                    <div class="ml-3 relative">
+                        <div>
+                            <button id="user-menu-button" class="max-w-xs flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                                <img class="h-8 w-8 rounded-full" src="<?php echo $user['profile_picture'] ?? 'assets/images/default-avatar.png'; ?>" alt="<?php echo htmlspecialchars($user['full_name']); ?>">
+                                <span class="ml-2 hidden md:inline text-sm font-medium text-gray-700"><?php echo htmlspecialchars($user['full_name']); ?></span>
+                                <i class="fas fa-chevron-down ml-1 text-xs text-gray-500"></i>
+                            </button>
+                        </div>
+                        <!-- Dropdown menu -->
+                        <div id="user-menu" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+                            <a href="dashboardstudent.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
+                            </a>
+                            <a href="profile.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-user mr-2"></i> Profil
+                            </a>
+                            <div class="border-t border-gray-200"></div>
+                            <a href="auth/logout.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-sign-out-alt mr-2"></i> Keluar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="dashboardstudent.php" class="block px-3 py-2 rounded-md text-base font-medium text-primary-600 bg-primary-50">
+                    <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
+                </a>
+                <a href="kelas.php" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">
+                    <i class="fas fa-book-open mr-2"></i> Kelas
+                </a>
+                <a href="mission.php" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">
+                    <i class="fas fa-tasks mr-2"></i> Misi
+                </a>
+                <a href="community.php" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">
+                    <i class="fas fa-users mr-2"></i> Komunitas
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div class="flex flex-col md:flex-row gap-6">
+            <!-- Sidebar -->
+            <div class="w-full md:w-64 flex-shrink-0">
+                <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <div class="p-6 text-center">
+                        <img class="h-24 w-24 rounded-full mx-auto border-4 border-primary-100" src="<?php echo $user['profile_picture'] ?? 'assets/images/default-avatar.png'; ?>" alt="<?php echo htmlspecialchars($user['full_name']); ?>">
+                        <h3 class="mt-4 text-lg font-medium text-gray-900"><?php echo htmlspecialchars($user['full_name']); ?></h3>
+                        <p class="text-sm text-primary-600 font-medium">Siswa</p>
+                        
+                        <div class="mt-6">
+                            <a href="profile.php" class="w-full inline-flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                                <i class="fas fa-user-edit mr-2"></i> Edit Profil
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="border-t border-gray-200 px-4 py-5">
+                        <h4 class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-4">Statistik</h4>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="font-medium text-gray-600">Poin</span>
+                                    <span class="font-bold text-primary-600"><?php echo $user['points']; ?></span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: <?php echo min(($user['points'] / 1000) * 100, 100); ?>%"></div>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">Menuju level berikutnya</p>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="font-medium text-gray-600">Pengalaman</span>
+                                    <span class="font-bold text-green-600"><?php echo $user['experience']; ?> XP</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: <?php echo min(($user['experience'] / 5000) * 100, 100); ?>%; background-color: #10b981;"></div>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1"><?php echo (5000 - $user['experience']) > 0 ? (5000 - $user['experience']) . ' XP lagi' : 'Level maksimal!'; ?></p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="border-t border-gray-200 px-4 py-5">
+                        <div class="space-y-1">
+                            <a href="dashboardstudent.php" class="group flex items-center px-3 py-2 text-sm font-medium rounded-md active-nav">
+                                <i class="fas fa-tachometer-alt mr-3 text-primary-600"></i>
+                                <span class="truncate">Dashboard</span>
+                            </a>
+                            <a href="kelas.php" class="group flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                                <i class="fas fa-book-open mr-3 text-gray-400 group-hover:text-gray-500"></i>
+                                <span class="truncate">Kelas Saya</span>
+                            </a>
+                            <a href="mission.php" class="group flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                                <i class="fas fa-tasks mr-3 text-gray-400 group-hover:text-gray-500"></i>
+                                <span class="truncate">Misi Saya</span>
+                            </a>
+                            <a href="community.php" class="group flex items-center px-3 py-2 text-sm font-medium rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-50">
+                                <i class="fas fa-users mr-3 text-gray-400 group-hover:text-gray-500"></i>
+                                <span class="truncate">Komunitas</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Main Content Area -->
+            <div class="flex-1">
+                <!-- Welcome Banner -->
+                <div class="bg-gradient-to-r from-primary-500 to-primary-600 rounded-xl p-6 mb-6 text-white">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                        <div>
+                            <h2 class="text-2xl font-bold mb-2">Halo, <?php echo htmlspecialchars($user['full_name']); ?>!</h2>
+                            <p class="opacity-90">Apa yang ingin kamu pelajari hari ini?</p>
+                        </div>
+                        <div class="mt-4 md:mt-0">
+                            <a href="kelas.php" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-primary-600 bg-white hover:bg-gray-50">
+                                <i class="fas fa-search mr-2"></i> Jelajahi Kelas
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Kelas Saya Section -->
+                <div class="bg-white shadow rounded-lg overflow-hidden mb-6">
+                    <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+                        <div class="flex items-center justify-between flex-wrap sm:flex-nowrap">
+                            <div>
+                                <h3 class="text-lg leading-6 font-medium text-gray-900">
+                                    <i class="fas fa-book-open mr-2 text-primary-600"></i> Kelas Saya
+                                </h3>
+                            </div>
+                            <div class="mt-4 sm:mt-0">
+                                <a href="kelas.php" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                                    <i class="fas fa-plus-circle mr-2"></i> Cari Kelas Baru
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white overflow-hidden">
+                        <?php
+                        $stmt = $db->prepare("
+                            SELECT c.*, u.full_name as mentor_name 
+                            FROM courses c 
+                            JOIN user_courses uc ON c.id = uc.course_id 
+                            JOIN users u ON c.mentor_id = u.id 
+                            WHERE uc.user_id = ?
+                        ");
+                        $stmt->execute([$user['id']]);
+                        $courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        
+                        if (empty($courses)): ?>
+                            <div class="p-12 text-center">
+                                <i class="fas fa-book-open text-4xl text-gray-300 mb-4"></i>
+                                <h3 class="text-lg font-medium text-gray-900">Anda belum mengikuti kelas apapun</h3>
+                                <p class="mt-1 text-sm text-gray-500">Mulai dengan menjelajahi kelas yang tersedia.</p>
+                                <div class="mt-6">
+                                    <a href="kelas.php" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                                        <i class="fas fa-search mr-2"></i> Jelajahi Kelas
+                                    </a>
+                                </div>
+                            </div>
+                        <?php else: ?>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
+                                <?php foreach ($courses as $course): ?>
+                                    <div class="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm card-hover">
+                                        <img class="w-full h-40 object-cover" src="<?php echo $course['image'] ?? 'assets/images/default-course.jpg'; ?>" alt="<?php echo htmlspecialchars($course['title']); ?>">
+                                        <div class="p-4">
+                                            <h4 class="font-bold text-lg text-gray-900 mb-2"><?php echo htmlspecialchars($course['title']); ?></h4>
+                                            <p class="text-gray-600 text-sm mb-4">
+                                                <i class="fas fa-chalkboard-teacher text-primary-500 mr-1"></i> 
+                                                <?php echo htmlspecialchars($course['mentor_name']); ?>
+                                            </p>
+                                            <div class="flex justify-end">
+                                                <a href="course.php?id=<?php echo $course['id']; ?>" class="inline-flex items-center px-3 py-1 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-primary-600 hover:bg-primary-700">
+                                                    Lanjutkan Belajar <i class="fas fa-chevron-right ml-1 text-xs"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                
+                <!-- Misi Aktif Section -->
+                <div class="bg-white shadow rounded-lg overflow-hidden">
+                    <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+                        <div class="flex items-center justify-between flex-wrap sm:flex-nowrap">
+                            <div>
+                                <h3 class="text-lg leading-6 font-medium text-gray-900">
+                                    <i class="fas fa-tasks mr-2 text-primary-600"></i> Misi Aktif
+                                </h3>
+                            </div>
+                            <div class="mt-4 sm:mt-0">
+                                <a href="mission.php" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                                    <i class="fas fa-plus-circle mr-2"></i> Lihat Semua Misi
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white overflow-hidden">
+                        <?php
+                        $stmt = $db->prepare("
+                            SELECT m.*, um.status 
+                            FROM missions m 
+                            JOIN user_missions um ON m.id = um.mission_id 
+                            WHERE um.user_id = ? AND um.status != 'completed'
+                        ");
+                        $stmt->execute([$user['id']]);
+                        $missions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        
+                        if (empty($missions)): ?>
+                            <div class="p-12 text-center">
+                                <i class="fas fa-tasks text-4xl text-gray-300 mb-4"></i>
+                                <h3 class="text-lg font-medium text-gray-900">Tidak ada misi aktif</h3>
+                                <p class="mt-1 text-sm text-gray-500">Mulai dengan menjelajahi misi yang tersedia.</p>
+                                <div class="mt-6">
+                                    <a href="mission.php" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                                        <i class="fas fa-search mr-2"></i> Jelajahi Misi
+                                    </a>
+                                </div>
+                            </div>
+                        <?php else: ?>
+                            <ul class="divide-y divide-gray-200">
+                                <?php foreach ($missions as $mission): ?>
+                                    <li class="px-6 py-4 hover:bg-gray-50 transition duration-150 ease-in-out">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex-1 min-w-0">
+                                                <p class="text-sm font-medium text-primary-600 truncate">
+                                                    <?php echo htmlspecialchars($mission['title']); ?>
+                                                </p>
+                                                <p class="text-sm text-gray-500 truncate">
+                                                    <?php echo htmlspecialchars($mission['description']); ?>
+                                                </p>
+                                            </div>
+                                            <div class="ml-4 flex-shrink-0 flex items-center">
+                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <?php echo $mission['status'] === 'in_progress' ? 'bg-yellow-100 text-yellow-800' : 'bg-blue-100 text-blue-800'; ?>">
+                                                    <?php echo ucfirst(str_replace('_', ' ', $mission['status'])); ?>
+                                                </span>
+                                                <a href="mission.php?id=<?php echo $mission['id']; ?>" class="ml-2 inline-flex items-center px-3 py-1 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                                                    Lihat <i class="fas fa-chevron-right ml-1 text-xs"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        // User menu toggle
+        document.getElementById('user-menu-button').addEventListener('click', function() {
+            document.getElementById('user-menu').classList.toggle('hidden');
+        });
+
+        // Close menus when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('#user-menu-button') && !event.target.closest('#user-menu')) {
+                document.getElementById('user-menu').classList.add('hidden');
+            }
+            if (!event.target.closest('#mobile-menu-button') && !event.target.closest('#mobile-menu')) {
+                document.getElementById('mobile-menu').classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
