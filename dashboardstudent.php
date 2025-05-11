@@ -108,17 +108,17 @@ if ($user['role'] !== 'student') {
                 </div>
                 
                 <div class="hidden md:ml-6 md:flex md:items-center md:space-x-4">
+                    <a href="index.php" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">
+                        <i class="fas fa-home mr-1"></i> Landing Page
+                    </a>
                     <a href="dashboardstudent.php" class="px-3 py-2 rounded-md text-sm font-medium text-primary-600 bg-primary-50">
                         <i class="fas fa-tachometer-alt mr-1"></i> Dashboard
                     </a>
-                    <a href="kelas.php" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">
-                        <i class="fas fa-book-open mr-1"></i> Kelas
+                    <a href="student_courses.php" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">
+                        <i class="fas fa-book-open mr-1"></i> Kelas Saya
                     </a>
-                    <a href="mission.php" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">
-                        <i class="fas fa-tasks mr-1"></i> Misi
-                    </a>
-                    <a href="community.php" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">
-                        <i class="fas fa-users mr-1"></i> Komunitas
+                    <a href="mentoring.php" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">
+                        <i class="fas fa-chalkboard-teacher mr-1"></i> Mentoring
                     </a>
                 </div>
                 
@@ -153,17 +153,17 @@ if ($user['role'] !== 'student') {
         <!-- Mobile menu -->
         <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
             <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="index.php" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">
+                    <i class="fas fa-home mr-2"></i> Landing Page
+                </a>
                 <a href="dashboardstudent.php" class="block px-3 py-2 rounded-md text-base font-medium text-primary-600 bg-primary-50">
                     <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
                 </a>
-                <a href="kelas.php" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">
-                    <i class="fas fa-book-open mr-2"></i> Kelas
+                <a href="student_courses.php" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">
+                    <i class="fas fa-book-open mr-2"></i> Kelas Saya
                 </a>
-                <a href="mission.php" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">
-                    <i class="fas fa-tasks mr-2"></i> Misi
-                </a>
-                <a href="community.php" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">
-                    <i class="fas fa-users mr-2"></i> Komunitas
+                <a href="mentoring.php" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">
+                    <i class="fas fa-chalkboard-teacher mr-2"></i> Mentoring
                 </a>
             </div>
         </div>

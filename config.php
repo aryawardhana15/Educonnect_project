@@ -53,7 +53,7 @@ define('DB_PASS', 'hafiz1180');
 define('DB_NAME', 'educonnect');
 
 // Konfigurasi API
-define('GROQ_API_KEY', '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');
+define('GROQ_API_KEY', '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');
 define('GROQ_API_URL', 'https://api.groq.com/openai/v1/chat/completions');
 define('MODEL_NAME', 'mixtral-8x7b-32768'); // atau 'llama3-70b-8192' untuk model terbaru
 

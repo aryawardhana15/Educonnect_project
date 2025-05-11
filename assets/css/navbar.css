@@ -1,0 +1,100 @@
+/* Navbar Styles */
+:root {
+    --primary: #4F46E5;
+    --primary-dark: #4338CA;
+    --primary-light: #818CF8;
+}
+
+/* Transisi untuk mobile menu */
+#mobile-menu {
+    transition: all 0.3s ease-in-out;
+}
+
+/* Animasi untuk hamburger menu */
+.hamburger-line {
+    transition: all 0.3s ease;
+}
+
+/* Hover effects */
+.nav-link {
+    position: relative;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    background-color: var(--primary);
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+/* Dropdown menu animation */
+.dropdown-menu {
+    transform-origin: top;
+    transition: all 0.2s ease;
+}
+
+.dropdown-menu.show {
+    transform: scaleY(1);
+    opacity: 1;
+}
+
+/* Mobile menu styles */
+@media (max-width: 768px) {
+    #mobile-menu {
+        max-height: 0;
+        overflow: hidden;
+    }
+
+    #mobile-menu.show {
+        max-height: 500px;
+    }
+
+    .mobile-menu-item {
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: all 0.3s ease;
+    }
+
+    #mobile-menu.show .mobile-menu-item {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Active state */
+.nav-link.active {
+    color: var(--primary);
+}
+
+.nav-link.active::after {
+    width: 100%;
+}
+
+/* User menu styles */
+.user-menu-button {
+    transition: all 0.2s ease;
+}
+
+.user-menu-button:hover {
+    transform: translateY(-1px);
+}
+
+/* Shadow effect */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Glassmorphism effect */
+.navbar-glass {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+} 

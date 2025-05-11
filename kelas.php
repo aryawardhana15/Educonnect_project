@@ -83,10 +83,15 @@ if (!isset($bootcamps) || !is_array($bootcamps)) {
     <nav class="bg-gradient-to-r from-primary-700 to-primary-600 text-white shadow-lg">
         <div class="container mx-auto px-4 py-3">
             <div class="flex justify-between items-center">
+                <!-- Logo dan Brand -->
                 <div class="flex items-center space-x-4">
-                    <a href="index.php" class="text-2xl font-bold">EduConnect</a>
+                    <a href="index.php" class="text-2xl font-bold flex items-center">
+                        <i class="fas fa-graduation-cap mr-2"></i>
+                        EduConnect
+                    </a>
                 </div>
                 
+                <!-- Desktop Menu -->
                 <div class="hidden md:flex items-center space-x-6">
                     <a href="kelas.php" class="font-semibold hover:text-primary-200 flex items-center space-x-1">
                         <i class="fas fa-graduation-cap"></i>
@@ -100,36 +105,94 @@ if (!isset($bootcamps) || !is_array($bootcamps)) {
                         <i class="fas fa-users"></i>
                         <span>Komunitas</span>
                     </a>
-                </div>
-                
-                <div class="flex items-center space-x-4">
-                    <?php if ($isLoggedIn && $user): ?>
+                    <?php if (isset($_SESSION['user_id'])): ?>
+                        <a href="<?php
+                            if ($_SESSION['role'] === 'admin') echo 'dashboardadmin.php';
+                            elseif ($_SESSION['role'] === 'mentor') echo 'dashboardmentor.php';
+                            else echo 'dashboardstudent.php';
+                        ?>" class="font-semibold hover:text-primary-200 flex items-center space-x-1">
+                            <i class="fas fa-th-large"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    <?php endif; ?>
+                    <?php if (isset($_SESSION['user_id'])): ?>
+                    <!-- User Menu -->
                     <div class="relative group">
-                        <button class="flex items-center space-x-2 focus:outline-none">
-                            <div class="w-8 h-8 rounded-full bg-primary-400 flex items-center justify-center">
-                                <i class="fas fa-user text-white"></i>
-                            </div>
-                            <span class="hidden md:inline font-medium"><?php echo htmlspecialchars($user['full_name'] ?? ''); ?></span>
+                        <button class="flex items-center space-x-2 text-white hover:text-primary-200 focus:outline-none">
+                            <i class="fas fa-user-circle text-xl"></i>
+                            <span class="hidden lg:inline"><?php echo htmlspecialchars($_SESSION['full_name']); ?></span>
                             <i class="fas fa-chevron-down text-xs"></i>
                         </button>
-                        <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 hidden group-hover:block">
-                            <a href="profile.php" class="block px-4 py-2 text-gray-800 hover:bg-primary-100">Profil</a>
-                            <?php if ($auth->hasRole('admin')): ?>
-                            <a href="admin/dashboard.php" class="block px-4 py-2 text-gray-800 hover:bg-primary-100">Admin Panel</a>
+                        <!-- Dropdown Menu -->
+                        <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden group-hover:block">
+                            <a href="/profile.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-user mr-2"></i>Profil
+                            </a>
+                            <?php if ($_SESSION['role'] === 'admin'): ?>
+                            <a href="/dashboardadmin.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-cog mr-2"></i>Admin Panel
+                            </a>
                             <?php endif; ?>
-                            <div class="border-t border-gray-200"></div>
-                            <a href="auth/logout.php" class="block px-4 py-2 text-gray-800 hover:bg-primary-100">Keluar</a>
+                            <hr class="my-1">
+                            <a href="/auth/logout.php" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
+                                <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                            </a>
                         </div>
                     </div>
                     <?php else: ?>
-                    <a href="auth/login.php" class="px-5 py-2 bg-white text-primary-600 font-bold rounded-lg shadow hover:bg-primary-100 transition-all duration-300">
-                        <i class="fas fa-sign-in-alt mr-2"></i> Masuk
+                    <a href="/auth/login.php" class="font-semibold hover:text-primary-200 flex items-center space-x-1">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span>Login</span>
                     </a>
                     <?php endif; ?>
-                    <button class="md:hidden focus:outline-none">
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-button" class="text-white hover:text-primary-200 focus:outline-none">
                         <i class="fas fa-bars text-xl"></i>
                     </button>
                 </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-primary-700 border-t border-primary-600">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="kelas.php" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600">
+                    <i class="fas fa-graduation-cap mr-2"></i>Kelas
+                </a>
+                <a href="mission.php" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600">
+                    <i class="fas fa-tasks mr-2"></i>Misi
+                </a>
+                <a href="community.php" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600">
+                    <i class="fas fa-users mr-2"></i>Komunitas
+                </a>
+                <?php if (isset($_SESSION['user_id'])): ?>
+                <a href="<?php
+                    if ($_SESSION['role'] === 'admin') echo 'dashboardadmin.php';
+                    elseif ($_SESSION['role'] === 'mentor') echo 'dashboardmentor.php';
+                    else echo 'dashboardstudent.php';
+                ?>" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600">
+                    <i class="fas fa-th-large mr-2"></i>Dashboard
+                </a>
+                <hr class="my-2 border-primary-600">
+                <a href="/profile.php" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600">
+                    <i class="fas fa-user mr-2"></i>Profil
+                </a>
+                <?php if ($_SESSION['role'] === 'admin'): ?>
+                <a href="/dashboardadmin.php" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600">
+                    <i class="fas fa-cog mr-2"></i>Admin Panel
+                </a>
+                <?php endif; ?>
+                <a href="/auth/logout.php" class="block px-3 py-2 rounded-md text-base font-medium text-red-300 hover:bg-primary-600">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                </a>
+                <?php else: ?>
+                <a href="/auth/login.php" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Login
+                </a>
+                <?php endif; ?>
             </div>
         </div>
     </nav>
@@ -442,7 +505,12 @@ if (!isset($bootcamps) || !is_array($bootcamps)) {
     <script>
         // Mobile menu toggle functionality would go here
         document.addEventListener('DOMContentLoaded', function() {
-            // You can add any JavaScript interactions here
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            mobileMenuButton.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
         });
     </script>
 </body>

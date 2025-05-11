@@ -19,6 +19,78 @@ if ($user['role'] !== 'mentor') {
     header('Location: dashboard.php');
     exit;
 }
+
+// Query: Daftar booking sesi mentoring (sesi terjadwal)
+$stmt = $db->prepare("SELECT ms.*, u.full_name as student_name, u.profile_picture as student_image
+    FROM mentoring_sessions ms
+    JOIN users u ON ms.student_id = u.id
+    WHERE ms.mentor_id = ? AND ms.status = 'scheduled'
+    ORDER BY ms.session_date ASC, ms.session_time ASC");
+$stmt->execute([$user['id']]);
+$scheduled_sessions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Query: Daftar pertanyaan masuk dari siswa
+$stmt = $db->prepare("SELECT mq.*, u.full_name as student_name, u.profile_picture as student_image
+    FROM mentoring_questions mq
+    JOIN users u ON mq.student_id = u.id
+    WHERE mq.mentor_id = ?
+    ORDER BY mq.created_at DESC");
+$stmt->execute([$user['id']]);
+$incoming_questions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Handle balasan pertanyaan
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'answer_question') {
+    $question_id = (int)$_POST['question_id'];
+    $answer = trim($_POST['answer']);
+    if ($answer !== '') {
+        $stmt = $db->prepare("UPDATE mentoring_questions SET answer = ? WHERE id = ? AND mentor_id = ?");
+        $stmt->execute([$answer, $question_id, $user['id']]);
+        header('Location: dashboardmentor.php');
+        exit;
+    }
+}
+
+// Statistik mentoring
+// Total sesi mentoring
+$stmt = $db->prepare("SELECT COUNT(*) FROM mentoring_sessions WHERE mentor_id = ?");
+$stmt->execute([$user['id']]);
+$total_sessions = $stmt->fetchColumn() ?? 0;
+// Sesi selesai
+$stmt = $db->prepare("SELECT COUNT(*) FROM mentoring_sessions WHERE mentor_id = ? AND status = 'completed'");
+$stmt->execute([$user['id']]);
+$completed_sessions = $stmt->fetchColumn() ?? 0;
+// Rata-rata rating
+$stmt = $db->prepare("SELECT AVG(overall_rating) FROM mentoring_ratings WHERE mentor_id = ?");
+$stmt->execute([$user['id']]);
+$avg_rating = $stmt->fetchColumn();
+if ($avg_rating === null) $avg_rating = 0.0;
+// Total penilaian
+$stmt = $db->prepare("SELECT COUNT(*) FROM mentoring_ratings WHERE mentor_id = ?");
+$stmt->execute([$user['id']]);
+$total_ratings = $stmt->fetchColumn() ?? 0;
+// Slot tersedia minggu ini
+$stmt = $db->prepare("SELECT COUNT(*) FROM mentor_schedules WHERE mentor_id = ? AND status = 'available' AND session_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 7 DAY)");
+$stmt->execute([$user['id']]);
+$available_slots = $stmt->fetchColumn() ?? 0;
+// Total pertanyaan
+$stmt = $db->prepare("SELECT COUNT(*) FROM mentoring_questions WHERE mentor_id = ?");
+$stmt->execute([$user['id']]);
+$total_questions = $stmt->fetchColumn() ?? 0;
+// Pertanyaan terjawab
+$stmt = $db->prepare("SELECT COUNT(*) FROM mentoring_questions WHERE mentor_id = ? AND answer IS NOT NULL AND answer != ''");
+$stmt->execute([$user['id']]);
+$answered_questions = $stmt->fetchColumn() ?? 0;
+// Rata-rata rating detail
+$stmt = $db->prepare("SELECT AVG(communication_rating) as comm, AVG(knowledge_rating) as know, AVG(teaching_rating) as teach FROM mentoring_ratings WHERE mentor_id = ?");
+$stmt->execute([$user['id']]);
+$rating_detail = $stmt->fetch(PDO::FETCH_ASSOC);
+$communication_rating = $rating_detail['comm'] ?? 0.0;
+$knowledge_rating = $rating_detail['know'] ?? 0.0;
+$teaching_rating = $rating_detail['teach'] ?? 0.0;
+// Tag populer
+$stmt = $db->prepare("SELECT tag, COUNT(*) as count FROM mentoring_rating_tags WHERE rating_id IN (SELECT id FROM mentoring_ratings WHERE mentor_id = ?) GROUP BY tag ORDER BY count DESC LIMIT 10");
+$stmt->execute([$user['id']]);
+$popular_tags = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -106,6 +178,9 @@ if ($user['role'] !== 'mentor') {
                     <a href="mentor_classes.php" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">
                         <i class="fas fa-book-open mr-1"></i> Kelas Saya
                     </a>
+                    <a href="mentoring.php" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">
+                        <i class="fas fa-chalkboard-teacher mr-1"></i> Mentoring
+                    </a>
                 </div>
                 
                 <div class="ml-4 flex items-center md:ml-6">
@@ -147,6 +222,9 @@ if ($user['role'] !== 'mentor') {
                 </a>
                 <a href="mentor_classes.php" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">
                     <i class="fas fa-book-open mr-2"></i> Kelas Saya
+                </a>
+                <a href="mentoring.php" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">
+                    <i class="fas fa-chalkboard-teacher mr-2"></i> Mentoring
                 </a>
             </div>
         </div>
@@ -286,6 +364,82 @@ if ($user['role'] !== 'mentor') {
                     </div>
                 </div>
                 
+                <!-- Statistik Mentoring -->
+                <div class="bg-white rounded-xl shadow p-6 mb-6">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                        <i class="fas fa-chart-line mr-2 text-primary-500"></i>Statistik Mentoring
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                        <div class="bg-primary-50 rounded-lg p-4">
+                            <div class="text-sm text-primary-600 mb-1">Total Sesi</div>
+                            <div class="text-2xl font-bold text-primary-700"><?= $total_sessions ?></div>
+                            <div class="text-xs text-primary-500"><?= $completed_sessions ?> selesai</div>
+                        </div>
+                        <div class="bg-green-50 rounded-lg p-4">
+                            <div class="text-sm text-green-600 mb-1">Rating Rata-rata</div>
+                            <div class="text-2xl font-bold text-green-700"><?= number_format($avg_rating, 1) ?></div>
+                            <div class="text-xs text-green-500">dari <?= $total_ratings ?> penilaian</div>
+                        </div>
+                        <div class="bg-blue-50 rounded-lg p-4">
+                            <div class="text-sm text-blue-600 mb-1">Slot Tersedia</div>
+                            <div class="text-2xl font-bold text-blue-700"><?= $available_slots ?></div>
+                            <div class="text-xs text-blue-500">untuk minggu ini</div>
+                        </div>
+                        <div class="bg-purple-50 rounded-lg p-4">
+                            <div class="text-sm text-purple-600 mb-1">Pertanyaan</div>
+                            <div class="text-2xl font-bold text-purple-700"><?= $total_questions ?></div>
+                            <div class="text-xs text-purple-500"><?= $answered_questions ?> terjawab</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Grafik Rating -->
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-3">Detail Rating</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="bg-white border rounded-lg p-4">
+                                <div class="text-sm text-gray-600 mb-2">Komunikasi</div>
+                                <div class="flex items-center">
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                        <div class="bg-primary-600 h-2.5 rounded-full" style="width: <?= $communication_rating * 20 ?>%"></div>
+                                    </div>
+                                    <span class="ml-2 text-sm font-medium text-gray-700"><?= number_format($communication_rating, 1) ?></span>
+                                </div>
+                            </div>
+                            <div class="bg-white border rounded-lg p-4">
+                                <div class="text-sm text-gray-600 mb-2">Pengetahuan</div>
+                                <div class="flex items-center">
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                        <div class="bg-primary-600 h-2.5 rounded-full" style="width: <?= $knowledge_rating * 20 ?>%"></div>
+                                    </div>
+                                    <span class="ml-2 text-sm font-medium text-gray-700"><?= number_format($knowledge_rating, 1) ?></span>
+                                </div>
+                            </div>
+                            <div class="bg-white border rounded-lg p-4">
+                                <div class="text-sm text-gray-600 mb-2">Mengajar</div>
+                                <div class="flex items-center">
+                                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                        <div class="bg-primary-600 h-2.5 rounded-full" style="width: <?= $teaching_rating * 20 ?>%"></div>
+                                    </div>
+                                    <span class="ml-2 text-sm font-medium text-gray-700"><?= number_format($teaching_rating, 1) ?></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tag Populer -->
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-700 mb-3">Tag Populer</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <?php foreach ($popular_tags as $tag): ?>
+                            <span class="bg-primary-100 text-primary-700 px-3 py-1 rounded-full text-sm">
+                                <?= $tag['tag'] ?> (<?= $tag['count'] ?>)
+                            </span>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+                
                 <!-- Kelas Saya Section -->
                 <div class="bg-white shadow rounded-lg overflow-hidden mb-6">
                     <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
@@ -404,6 +558,81 @@ if ($user['role'] !== 'mentor') {
                             </ul>
                         <?php endif; ?>
                     </div>
+                </div>
+
+                <!-- Booking Sesi Mentoring Masuk -->
+                <div class="bg-white rounded-xl shadow p-6 mb-6">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                        <i class="fas fa-calendar-alt mr-2 text-primary-500"></i> Booking Sesi Masuk
+                    </h2>
+                    <?php if (empty($scheduled_sessions)): ?>
+                        <div class="text-gray-500">Belum ada sesi yang dibooking siswa.</div>
+                    <?php else: ?>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead>
+                                    <tr>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Siswa</th>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Topik</th>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Tanggal</th>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Jam</th>
+                                        <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <?php foreach ($scheduled_sessions as $s): ?>
+                                    <tr>
+                                        <td class="px-4 py-2 flex items-center gap-2">
+                                            <img src="<?= $s['student_image'] ?? 'assets/images/default-avatar.png' ?>" class="w-8 h-8 rounded-full">
+                                            <?= $s['student_name'] ?? '-' ?>
+                                        </td>
+                                        <td class="px-4 py-2"><?= $s['topic'] ?></td>
+                                        <td class="px-4 py-2"><?= $s['session_date'] ?></td>
+                                        <td class="px-4 py-2"><?= $s['session_time'] ?></td>
+                                        <td class="px-4 py-2">
+                                            <a href="<?= $s['link'] ?>" target="_blank" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs"><i class="fas fa-video mr-1"></i>Join</a>
+                                            <!-- Tambahkan aksi lain jika perlu -->
+                                        </td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php endif; ?>
+                </div>
+
+                <!-- Pertanyaan Masuk dari Siswa -->
+                <div class="bg-white rounded-xl shadow p-6 mb-6">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                        <i class="fas fa-question-circle mr-2 text-primary-500"></i> Pertanyaan Masuk dari Siswa
+                    </h2>
+                    <?php if (empty($incoming_questions)): ?>
+                        <div class="text-gray-500">Belum ada pertanyaan dari siswa.</div>
+                    <?php else: ?>
+                        <div class="space-y-4">
+                            <?php foreach ($incoming_questions as $q): ?>
+                            <div class="border rounded-lg p-4">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <img src="<?= $q['student_image'] ?? 'assets/images/default-avatar.png' ?>" class="w-8 h-8 rounded-full">
+                                    <span class="font-bold text-primary-700"><?= $q['student_name'] ?? '-' ?></span>
+                                    <span class="text-xs text-gray-400 ml-2"><?= $q['created_at'] ?></span>
+                                </div>
+                                <div class="mb-1"><b>Topik:</b> <?= $q['topic'] ?></div>
+                                <div class="mb-2"><b>Pertanyaan:</b> <?= $q['question'] ?></div>
+                                <?php if (!empty($q['file'])): ?>
+                                <div class="mb-2"><a href="<?= $q['file'] ?>" target="_blank" class="text-blue-600 underline text-xs">Lihat Lampiran</a></div>
+                                <?php endif; ?>
+                                <div class="mb-2"><b>Jawaban Anda:</b> <?= $q['answer'] ? $q['answer'] : '<span class="text-red-500">Belum dijawab</span>' ?></div>
+                                <form method="POST" class="flex gap-2 mt-2">
+                                    <input type="hidden" name="action" value="answer_question">
+                                    <input type="hidden" name="question_id" value="<?= $q['id'] ?>">
+                                    <input type="text" name="answer" class="flex-1 px-3 py-2 border border-gray-300 rounded-lg" placeholder="Tulis jawaban..." required>
+                                    <button type="submit" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg">Kirim</button>
+                                </form>
+                            </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

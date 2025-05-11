@@ -171,6 +171,121 @@ CREATE TABLE IF NOT EXISTS payments (
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
+-- Tabel untuk jadwal mentor
+CREATE TABLE mentor_schedules (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    mentor_id INT NOT NULL,
+    session_date DATE NOT NULL,
+    session_time TIME NOT NULL,
+    duration INT NOT NULL COMMENT 'Durasi dalam menit',
+    status ENUM('available', 'booked', 'cancelled') NOT NULL DEFAULT 'available',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (mentor_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Tabel untuk sesi mentoring
+CREATE TABLE mentoring_sessions (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    mentor_id INT NOT NULL,
+    student_id INT NOT NULL,
+    session_date DATE NOT NULL,
+    session_time TIME NOT NULL,
+    topic VARCHAR(255) NOT NULL,
+    link VARCHAR(255) COMMENT 'Link meeting (Google Meet/Zoom)',
+    note TEXT COMMENT 'Catatan dari mentor',
+    feedback TEXT COMMENT 'Feedback dari siswa',
+    rating DECIMAL(2,1) COMMENT 'Rating dari siswa (1-5)',
+    status ENUM('scheduled', 'completed', 'cancelled') NOT NULL DEFAULT 'scheduled',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (mentor_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Tabel untuk pertanyaan mentoring
+CREATE TABLE mentoring_questions (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    mentor_id INT NOT NULL,
+    student_id INT NOT NULL,
+    topic VARCHAR(255) NOT NULL,
+    question TEXT NOT NULL,
+    answer TEXT,
+    file VARCHAR(255) COMMENT 'Path file lampiran',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (mentor_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Tabel untuk rating detail
+CREATE TABLE mentoring_ratings (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    session_id INT NOT NULL,
+    student_id INT NOT NULL,
+    mentor_id INT NOT NULL,
+    overall_rating DECIMAL(2,1) NOT NULL,
+    communication_rating DECIMAL(2,1) NOT NULL,
+    knowledge_rating DECIMAL(2,1) NOT NULL,
+    teaching_rating DECIMAL(2,1) NOT NULL,
+    review_text TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (session_id) REFERENCES mentoring_sessions(id) ON DELETE CASCADE,
+    FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (mentor_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Tabel untuk tag rating
+CREATE TABLE mentoring_rating_tags (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    rating_id INT NOT NULL,
+    tag VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (rating_id) REFERENCES mentoring_ratings(id) ON DELETE CASCADE
+);
+
+-- Tabel untuk grup mentoring
+CREATE TABLE mentoring_groups (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    mentor_id INT NOT NULL,
+    title VARCHAR(100) NOT NULL,
+    description TEXT,
+    max_students INT DEFAULT 5,
+    price DECIMAL(10,2) DEFAULT 0.00,
+    schedule VARCHAR(100) COMMENT 'Contoh: Setiap Senin, 19:00-20:00',
+    start_date DATE,
+    end_date DATE,
+    status ENUM('upcoming', 'ongoing', 'completed') DEFAULT 'upcoming',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (mentor_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Tabel untuk anggota grup mentoring
+CREATE TABLE mentoring_group_members (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    group_id INT NOT NULL,
+    student_id INT NOT NULL,
+    status ENUM('registered', 'active', 'completed') DEFAULT 'registered',
+    payment_status ENUM('pending', 'paid', 'failed') DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (group_id) REFERENCES mentoring_groups(id) ON DELETE CASCADE,
+    FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Tabel untuk sesi grup mentoring
+CREATE TABLE mentoring_group_sessions (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    group_id INT NOT NULL,
+    session_date DATE NOT NULL,
+    session_time TIME NOT NULL,
+    topic VARCHAR(255) NOT NULL,
+    link VARCHAR(255) COMMENT 'Link meeting (Google Meet/Zoom)',
+    recording_url VARCHAR(255) COMMENT 'Link rekaman sesi',
+    materials TEXT COMMENT 'Materi yang dibagikan',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (group_id) REFERENCES mentoring_groups(id) ON DELETE CASCADE
+);
+
 -- Insert sample data
 INSERT INTO users (username, password, email, full_name, role) VALUES
 ('admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin@example.com', 'Admin User', 'admin'),
@@ -253,6 +368,51 @@ INSERT INTO comments (post_id, user_id, content) VALUES
 (2, 3, 'Coba periksa dokumentasi React...'),
 (3, 4, 'Menurut saya AI akan sangat membantu...'),
 (4, 2, 'Project yang keren!');
+
+-- Insert sample data untuk mentoring
+INSERT INTO mentor_schedules (mentor_id, session_date, session_time, duration, status) VALUES
+(2, '2024-03-25', '10:00:00', 60, 'available'),
+(2, '2024-03-25', '14:00:00', 60, 'available'),
+(2, '2024-03-26', '09:00:00', 60, 'available'),
+(3, '2024-03-25', '13:00:00', 60, 'available'),
+(3, '2024-03-26', '15:00:00', 60, 'available');
+
+INSERT INTO mentoring_sessions (mentor_id, student_id, session_date, session_time, topic, link, note, feedback, rating, status) VALUES
+(2, 4, '2024-03-20', '10:00:00', 'Dasar HTML', 'https://meet.google.com/abc-defg-hij', 'Materi HTML dasar dan struktur dokumen', 'Sesi sangat membantu untuk memahami dasar HTML', 4.5, 'completed'),
+(3, 4, '2024-03-21', '14:00:00', 'CSS Lanjutan', 'https://meet.google.com/xyz-uvw-123', 'Flexbox dan Grid Layout', 'Penjelasan yang sangat detail dan mudah dipahami', 5.0, 'completed'),
+(2, 5, '2024-03-24', '09:00:00', 'JavaScript Dasar', 'https://meet.google.com/def-ghi-jkl', NULL, NULL, NULL, 'scheduled');
+
+INSERT INTO mentoring_questions (mentor_id, student_id, topic, question, answer, created_at) VALUES
+(2, 4, 'JavaScript Dasar', 'Bagaimana cara kerja event loop?', 'Event loop adalah mekanisme yang memungkinkan JavaScript melakukan operasi asynchronous...', '2024-03-19 15:30:00'),
+(3, 5, 'CSS Layout', 'Apa perbedaan antara Flexbox dan Grid?', 'Flexbox dirancang untuk layout satu dimensi (row atau column), sementara Grid untuk layout dua dimensi...', '2024-03-20 10:15:00'),
+(2, 4, 'HTML Semantics', 'Kapan sebaiknya menggunakan tag article vs section?', 'Tag article digunakan untuk konten yang berdiri sendiri dan dapat didistribusikan secara independen...', '2024-03-21 14:45:00');
+
+-- Insert sample data untuk rating
+INSERT INTO mentoring_ratings (session_id, student_id, mentor_id, overall_rating, communication_rating, knowledge_rating, teaching_rating, review_text) VALUES
+(1, 4, 2, 4.5, 4.0, 5.0, 4.5, 'Sesi mentoring yang sangat membantu. Mentor sangat menguasai materi dan bisa menjelaskan dengan baik.'),
+(2, 4, 3, 5.0, 5.0, 5.0, 5.0, 'Penjelasan yang sangat detail dan mudah dipahami. Mentor sangat ramah dan sabar.');
+
+INSERT INTO mentoring_rating_tags (rating_id, tag) VALUES
+(1, 'Penjelasan Jelas'),
+(1, 'Materi Lengkap'),
+(2, 'Ramah'),
+(2, 'Sabar'),
+(2, 'Detail');
+
+-- Insert sample data untuk grup mentoring
+INSERT INTO mentoring_groups (mentor_id, title, description, max_students, price, schedule, start_date, end_date) VALUES
+(2, 'Grup Belajar JavaScript Dasar', 'Belajar JavaScript dari dasar hingga mahir dalam grup kecil', 5, 299000.00, 'Setiap Senin & Kamis, 19:00-20:00', '2024-04-01', '2024-05-30'),
+(3, 'Grup Belajar UI/UX Design', 'Workshop design thinking dan UI/UX untuk pemula', 5, 399000.00, 'Setiap Selasa & Jumat, 20:00-21:00', '2024-04-02', '2024-05-31');
+
+INSERT INTO mentoring_group_members (group_id, student_id, status, payment_status) VALUES
+(1, 4, 'active', 'paid'),
+(1, 5, 'active', 'paid'),
+(2, 4, 'registered', 'pending');
+
+INSERT INTO mentoring_group_sessions (group_id, session_date, session_time, topic, link) VALUES
+(1, '2024-04-01', '19:00:00', 'Pengenalan JavaScript', 'https://meet.google.com/abc-defg-hij'),
+(1, '2024-04-04', '19:00:00', 'Variabel dan Tipe Data', 'https://meet.google.com/xyz-uvw-123'),
+(2, '2024-04-02', '20:00:00', 'Design Thinking Basics', 'https://meet.google.com/def-ghi-jkl');
 
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'hafiz1180';
 FLUSH PRIVILEGES; 
