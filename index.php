@@ -271,9 +271,7 @@ if ($auth->isLoggedIn()) {
 
             <!-- Menu utama (Desktop) -->
             <div class="hidden md:flex items-center space-x-8">
-                <?php if (
-                    $auth->isLoggedIn()
-                ): ?>
+                <?php if ($auth->isLoggedIn()): ?>
                     <?php
                     $is_dashboard = basename($_SERVER['PHP_SELF']) === 'dashboardadmin.php' || basename($_SERVER['PHP_SELF']) === 'dashboardmentor.php' || basename($_SERVER['PHP_SELF']) === 'dashboardstudent.php';
                     ?>
@@ -299,23 +297,22 @@ if ($auth->isLoggedIn()) {
                             <img src="<?php echo $user['profile_picture'] ?? 'assets/images/default-avatar.png'; ?>" class="rounded-full w-8 h-8 border-2 border-primary" alt="Avatar">
                         </button>
                         <div id="dropdownMenu" class="hidden absolute right-0 mt-2 w-44 bg-white rounded-lg shadow-lg py-2 z-50 border border-gray-100">
-
                             <a href="profile.php" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Profil</a>
                             <div class="border-t my-1"></div>
                             <a href="auth/logout.php" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Keluar</a>
                         </div>
                     </div>
                     <script>
-                    // Dropdown logic
-                    const avatarBtn = document.getElementById('avatarBtn');
-                    const dropdownMenu = document.getElementById('dropdownMenu');
-                    document.addEventListener('click', function(e) {
-                        if (avatarBtn.contains(e.target)) {
-                            dropdownMenu.classList.toggle('hidden');
-                        } else if (!dropdownMenu.contains(e.target)) {
-                            dropdownMenu.classList.add('hidden');
-                        }
-                    });
+                        // Dropdown logic
+                        const avatarBtn = document.getElementById('avatarBtn');
+                        const dropdownMenu = document.getElementById('dropdownMenu');
+                        document.addEventListener('click', function(e) {
+                            if (avatarBtn.contains(e.target)) {
+                                dropdownMenu.classList.toggle('hidden');
+                            } else if (!dropdownMenu.contains(e.target)) {
+                                dropdownMenu.classList.add('hidden');
+                            }
+                        });
                     </script>
                 <?php else: ?>
                     <a href="auth/login.php" class="text-gray-700 hover:text-primary text-xl transition-transform transform hover:scale-110">

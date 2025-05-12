@@ -114,7 +114,7 @@ if ($user['role'] !== 'student') {
                     <a href="dashboardstudent.php" class="px-3 py-2 rounded-md text-sm font-medium text-primary-600 bg-primary-50">
                         <i class="fas fa-tachometer-alt mr-1"></i> Dashboard
                     </a>
-                    <a href="student_courses.php" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">
+                    <a href="kelas.php" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">
                         <i class="fas fa-book-open mr-1"></i> Kelas Saya
                     </a>
                     <a href="mentoring.php" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">
@@ -156,7 +156,7 @@ if ($user['role'] !== 'student') {
                 <a href="index.php" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">
                     <i class="fas fa-home mr-2"></i> Landing Page
                 </a>
-                <a href="dashboardstudent.php" class="block px-3 py-2 rounded-md text-base font-medium text-primary-600 bg-primary-50">
+                <a href="kelas.php" class="block px-3 py-2 rounded-md text-base font-medium text-primary-600 bg-primary-50">
                     <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
                 </a>
                 <a href="student_courses.php" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">
