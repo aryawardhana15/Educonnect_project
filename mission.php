@@ -196,10 +196,7 @@ if ($role === 'student') {
                         <i class="fas fa-graduation-cap"></i>
                         <span>Kelas</span>
                     </a>
-                    <a href="mission.php" class="font-semibold hover:text-primary-200 flex items-center space-x-1">
-                        <i class="fas fa-tasks"></i>
-                        <span>Misi</span>
-                    </a>
+                    <a href="leaderboard.php" class="hover:text-gray-200">Leaderboard</a>
                     <a href="community.php" class="font-semibold hover:text-primary-200 flex items-center space-x-1">
                         <i class="fas fa-users"></i>
                         <span>Komunitas</span>

@@ -335,26 +335,75 @@ if ($role === 'mentor') {
 </head>
 <body class="bg-gray-50 min-h-screen">
     <!-- Navbar sederhana dengan tombol logout -->
-    <nav class="bg-white shadow-lg sticky top-0 z-50 mb-6">
-        <div class="max-w-7xl mx-auto px-4 flex justify-between h-16 items-center">
-            <div class="flex items-center">
-                <a href="index.php" class="flex items-center">
-                    <i class="fas fa-graduation-cap text-primary text-2xl mr-2"></i>
-                    <span class="text-xl font-bold">EduConnect</span>
-                </a>
-            </div>
-            <div class="flex items-center gap-4 relative">
-                <span class="text-gray-700 font-medium hidden sm:inline">Halo, <?= htmlspecialchars($user['full_name']) ?></span>
-                <!-- Dropdown User -->
-                <button id="userDropdownBtn" class="text-gray-700 hover:text-primary focus:outline-none flex items-center">
-                    <i class="fas fa-user-circle text-2xl"></i>
-                    <i class="fas fa-chevron-down ml-1 text-xs"></i>
-                </button>
-                <div id="userDropdownMenu" class="hidden absolute right-0 mt-12 w-44 bg-white rounded-lg shadow-lg py-2 z-50 border border-gray-100">
-                    <a href="profile.php" class="block px-4 py-2 text-gray-700 hover:bg-gray-100"><i class="fas fa-user mr-2"></i>Profil</a>
-                    <div class="border-t my-1"></div>
-                    <a href="auth/logout.php" class="block px-4 py-2 text-gray-700 hover:bg-gray-100"><i class="fas fa-sign-out-alt mr-2"></i>Logout</a>
+    
+    <nav class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <!-- Mobile menu button -->
+                    <button id="mobile-menu-button" class="md:hidden text-gray-500 hover:text-gray-900 focus:outline-none">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <!-- Logo -->
+                    <div class="flex-shrink-0 flex items-center">
+                        <span class="text-xl font-bold text-primary-600">EduConnect</span>
+                    </div>
                 </div>
+                
+                <div class="hidden md:ml-6 md:flex md:items-center md:space-x-4">
+                    <a href="index.php" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">
+                        <i class="fas fa-home mr-1"></i> Landing Page
+                    </a>
+                    <a href="dashboardstudent.php" class="px-3 py-2 rounded-md text-sm font-medium text-primary-600 bg-primary-50">
+                        <i class="fas fa-tachometer-alt mr-1"></i> Dashboard
+                    </a>
+                    <a href="kelas.php" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">
+                        <i class="fas fa-book-open mr-1"></i> Kelas Saya
+                    </a>
+              
+                </div>
+                
+                <div class="ml-4 flex items-center md:ml-6">
+                    <!-- Profile dropdown -->
+                    <div class="ml-3 relative">
+                        <div>
+                            <button id="user-menu-button" class="max-w-xs flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                                <img class="h-8 w-8 rounded-full" src="<?php echo $user['profile_picture'] ?? 'assets/images/default-avatar.png'; ?>" alt="<?php echo htmlspecialchars($user['full_name']); ?>">
+                                <span class="ml-2 hidden md:inline text-sm font-medium text-gray-700"><?php echo htmlspecialchars($user['full_name']); ?></span>
+                                <i class="fas fa-chevron-down ml-1 text-xs text-gray-500"></i>
+                            </button>
+                        </div>
+                        <!-- Dropdown menu -->
+                        <div id="user-menu" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+                            <a href="dashboardstudent.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
+                            </a>
+                            <a href="profile.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-user mr-2"></i> Profil
+                            </a>
+                            <div class="border-t border-gray-200"></div>
+                            <a href="auth/logout.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-sign-out-alt mr-2"></i> Keluar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="index.php" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">
+                    <i class="fas fa-home mr-2"></i> Landing Page
+                </a>
+                <a href="dashboardstudent.php" class="block px-3 py-2 rounded-md text-base font-medium text-primary-600 bg-primary-50">
+                    <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
+                </a>
+                <a href="kelas.php" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">
+                    <i class="fas fa-book-open mr-2"></i> Kelas Saya
+                </a>
+               
             </div>
         </div>
     </nav>
