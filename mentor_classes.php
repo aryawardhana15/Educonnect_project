@@ -28,11 +28,14 @@ $courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <!-- Navbar -->
 <nav class="bg-white shadow sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
+        <!-- Logo -->
         <a href="index.php" class="flex items-center space-x-2">
             <i class="fas fa-graduation-cap text-primary text-2xl"></i>
             <span class="font-bold text-xl text-gray-800">EduConnect</span>
         </a>
-        <div class="flex items-center space-x-6">
+
+        <!-- Menu utama (Desktop) -->
+        <div class="hidden md:flex items-center space-x-6">
             <a href="mentor_classes.php" class="text-primary font-semibold hover:underline">Kelas</a>
             <a href="mentor_missions.php" class="text-gray-700 hover:text-primary">Misi</a>
             <a href="dashboardmentor.php" class="text-gray-700 hover:text-primary">Dashboard</a>
@@ -48,19 +51,47 @@ $courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
             </div>
         </div>
+
+        <!-- Tombol hamburger (Mobile) -->
+        <div class="md:hidden">
+            <button id="mobile-menu-button" class="hamburger p-2 rounded-md text-gray-700 hover:text-primary focus:outline-none">
+                <span class="block w-6 h-0.5 bg-gray-700 mb-1.5"></span>
+                <span class="block w-6 h-0.5 bg-gray-700 mb-1.5"></span>
+                <span class="block w-6 h-0.5 bg-gray-700"></span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Menu mobile -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg">
+        <div class="px-4 py-2 space-y-2">
+            <a href="mentor_classes.php" class="block text-gray-700 hover:text-primary px-3 py-2 rounded-md">Kelas</a>
+            <a href="mentor_missions.php" class="block text-gray-700 hover:text-primary px-3 py-2 rounded-md">Misi</a>
+            <a href="dashboardmentor.php" class="block text-gray-700 hover:text-primary px-3 py-2 rounded-md">Dashboard</a>
+            <a href="profile.php" class="block text-gray-700 hover:text-primary px-3 py-2 rounded-md">Profil</a>
+            <a href="auth/logout.php" class="block text-gray-700 hover:text-primary px-3 py-2 rounded-md">Keluar</a>
+        </div>
     </div>
 </nav>
+
 <script>
-// Dropdown logic
-const avatarBtn = document.getElementById('avatarBtn');
-const dropdownMenu = document.getElementById('dropdownMenu');
-document.addEventListener('click', function(e) {
-    if (avatarBtn && avatarBtn.contains(e.target)) {
-        dropdownMenu.classList.toggle('hidden');
-    } else if (dropdownMenu && !dropdownMenu.contains(e.target)) {
-        dropdownMenu.classList.add('hidden');
-    }
-});
+    // Dropdown logic
+    const avatarBtn = document.getElementById('avatarBtn');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+    document.addEventListener('click', function (e) {
+        if (avatarBtn && avatarBtn.contains(e.target)) {
+            dropdownMenu.classList.toggle('hidden');
+        } else if (dropdownMenu && !dropdownMenu.contains(e.target)) {
+            dropdownMenu.classList.add('hidden');
+        }
+    });
+
+    // Mobile menu logic
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    mobileMenuButton.addEventListener('click', function () {
+        mobileMenu.classList.toggle('hidden');
+    });
 </script>
 
 <div class="max-w-7xl mx-auto px-4 py-10">
