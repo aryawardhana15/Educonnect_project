@@ -178,7 +178,7 @@ if ($user['role'] !== 'student') {
                             <i class="fas fa-chevron-down text-xs"></i>
                         </button>
                         <!-- Dropdown Menu -->
-                        <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden group-hover:block">
+                        <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden group-hover:block z-10">
                             <a href="/profile.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                 <i class="fas fa-user mr-2"></i>Profil
                             </a>
@@ -566,6 +566,15 @@ if ($user['role'] !== 'student') {
         document.getElementById('mobile-menu-button').addEventListener('click', function() {
             document.getElementById('mobile-menu').classList.toggle('hidden');
         });
+
+          document.getElementById('user-menu-button').addEventListener('click', function(e) {
+        e.stopPropagation();
+        document.getElementById('user-menu').classList.toggle('hidden');
+    });
+
+           document.getElementById('user-menu').addEventListener('click', function(e) {
+        e.stopPropagation();
+    });
 
         // User menu toggle
         document.getElementById('user-menu-button').addEventListener('click', function() {
