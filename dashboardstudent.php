@@ -78,7 +78,7 @@ if ($user['role'] !== 'student') {
         }
     </script>
     <style>
-        .sidebar {
+      .sidebar {
             transition: all 0.3s ease;
         }
         .card-hover {
@@ -129,33 +129,103 @@ if ($user['role'] !== 'student') {
             opacity: 0;
             z-index: 10;
         }
+        /* Navbar-specific styles */
+        .mobile-menu {
+            transition: all 0.3s ease;
+        }
+        .mobile-menu-hidden {
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+        .mobile-menu-visible {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .user-menu {
+            transition: all 0.2s ease;
+        }
+        .user-menu-hidden {
+            transform: translateY(-10px);
+            opacity: 0;
+            pointer-events: none;
+        }
+        .user-menu-visible {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+     
+        .progress-bar {
+            height: 8px;
+            border-radius: 4px;
+            background-color: #e0f2fe;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            background-color: #0ea5e9;
+            transition: width 0.5s ease;
+        }
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            opacity: 0;
+        }
+        .avatar-hover:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.3);
+        }
+        .emoji-float {
+            position: absolute;
+            font-size: 1.5rem;
+            opacity: 0;
+            z-index: 10;
+        }
     </style>
 </head>
 <body class="bg-gray-50 font-sans">
     <!-- Top Navigation (unchanged as requested) -->
- 
-  <nav class="bg-gradient-to-r from-primary-700 to-primary-600 text-white shadow-lg">
+    <nav class="bg-gradient-to-r from-primary-700 to-primary-600 text-white shadow-lg fixed w-full top-0 z-50">
         <div class="container mx-auto px-4 py-3">
             <div class="flex justify-between items-center">
                 <!-- Logo dan Brand -->
-                <div class="flex items-center space-x-4">
-                    <a href="index.php" class="text-2xl font-bold flex items-center">
-                        <i class="fas fa-graduation-cap mr-2"></i>
+                <div class="flex items-center space-x-3">
+                    <a href="index.php" class="text-xl sm:text-2xl font-bold flex items-center" aria-label="EduConnect Home">
+                        <i class="fas fa-graduation-cap mr-2 text-primary-200"></i>
                         EduConnect
                     </a>
                 </div>
                 
                 <!-- Desktop Menu -->
-                <div class="hidden md:flex items-center space-x-6">
-                    <a href="kelas.php" class="font-semibold hover:text-primary-200 flex items-center space-x-1">
+                <div class="hidden lg:flex items-center space-x-6">
+                    <a href="kelas.php" class="font-semibold hover:text-primary-200 flex items-center space-x-1 transition-colors duration-200" aria-label="Kelas">
                         <i class="fas fa-graduation-cap"></i>
                         <span>Kelas</span>
                     </a>
-                    <a href="mission.php" class="font-semibold hover:text-primary-200 flex items-center space-x-1">
+                    <a href="mission.php" class="font-semibold hover:text-primary-200 flex items-center space-x-1 transition-colors duration-200" aria-label="Misi">
                         <i class="fas fa-tasks"></i>
                         <span>Misi</span>
                     </a>
-                    <a href="community.php" class="font-semibold hover:text-primary-200 flex items-center space-x-1">
+                    <a href="community.php" class="font-semibold hover:text-primary-200 flex items-center space-x-1 transition-colors duration-200" aria-label="Komunitas">
                         <i class="fas fa-users"></i>
                         <span>Komunitas</span>
                     </a>
@@ -164,37 +234,37 @@ if ($user['role'] !== 'student') {
                             if ($_SESSION['role'] === 'admin') echo 'dashboardadmin.php';
                             elseif ($_SESSION['role'] === 'mentor') echo 'dashboardmentor.php';
                             else echo 'dashboardstudent.php';
-                        ?>" class="font-semibold hover:text-primary-200 flex items-center space-x-1">
+                        ?>" class="font-semibold hover:text-primary-200 flex items-center space-x-1 transition-colors duration-200" aria-label="Dashboard">
                             <i class="fas fa-th-large"></i>
                             <span>Dashboard</span>
                         </a>
                     <?php endif; ?>
                     <?php if (isset($_SESSION['user_id'])): ?>
                     <!-- User Menu -->
-                    <div class="relative group">
-                        <button class="flex items-center space-x-2 text-white hover:text-primary-200 focus:outline-none">
+                    <div class="relative">
+                        <button id="user-menu-button" class="flex items-center space-x-2 text-white hover:text-primary-200 focus:outline-none" aria-haspopup="true" aria-expanded="false" aria-label="User menu">
                             <i class="fas fa-user-circle text-xl"></i>
-                            <span class="hidden lg:inline"><?php echo htmlspecialchars($_SESSION['full_name']); ?></span>
-                            <i class="fas fa-chevron-down text-xs"></i>
+                            <span class="hidden xl:inline"><?php echo htmlspecialchars($_SESSION['full_name']); ?></span>
+                            <i class="fas fa-chevron-down text-xs transition-transform duration-200"></i>
                         </button>
                         <!-- Dropdown Menu -->
-                        <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden group-hover:block z-10">
-                            <a href="/profile.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        <div id="user-menu" class="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl py-2 user-menu user-menu-hidden z-50">
+                            <a href="profile.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 flex items-center">
                                 <i class="fas fa-user mr-2"></i>Profil
                             </a>
                             <?php if ($_SESSION['role'] === 'admin'): ?>
-                            <a href="/dashboardadmin.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            <a href="/dashboardadmin.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700 flex items-center">
                                 <i class="fas fa-cog mr-2"></i>Admin Panel
                             </a>
                             <?php endif; ?>
-                            <hr class="my-1">
-                            <a href="/auth/logout.php" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
+                            <hr class="my-1 border-gray-200">
+                            <a href="/auth/logout.php" class="block px-4 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 flex items-center">
                                 <i class="fas fa-sign-out-alt mr-2"></i>Logout
                             </a>
                         </div>
                     </div>
                     <?php else: ?>
-                    <a href="/auth/login.php" class="font-semibold hover:text-primary-200 flex items-center space-x-1">
+                    <a href="/auth/login.php" class="font-semibold hover:text-primary-200 flex items-center space-x-1 transition-colors duration-200" aria-label="Login">
                         <i class="fas fa-sign-in-alt"></i>
                         <span>Login</span>
                     </a>
@@ -202,49 +272,53 @@ if ($user['role'] !== 'student') {
                 </div>
 
                 <!-- Mobile Menu Button -->
-                <div class="md:hidden flex items-center">
-                    <button id="mobile-menu-button" class="text-white hover:text-primary-200 focus:outline-none">
-                        <i class="fas fa-bars text-xl"></i>
+                <div class="lg:hidden flex items-center">
+                    <button id="mobile-menu-button" class="text-white hover:text-primary-200 focus:outline-none" aria-label="Toggle mobile menu" aria-expanded="false">
+                        <i id="menu-icon" class="fas fa-bars text-xl"></i>
                     </button>
                 </div>
             </div>
         </div>
 
         <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden md:hidden bg-primary-700 border-t border-primary-600">
-            <div class="px-2 pt-2 pb-3 space-y-1">
-                <a href="kelas.php" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600">
-                    <i class="fas fa-graduation-cap mr-2"></i>Kelas
+        <div id="mobile-menu" class="lg:hidden bg-primary-700 border-t border-primary-600 mobile-menu mobile-menu-hidden shadow-lg">
+            <div class="px-4 pt-4 pb-6 space-y-2 max-h-[calc(100vh-80px)] overflow-y-auto">
+                <a href="kelas.php" class="block px-4 py-3 rounded-lg text-base font-medium text-white hover:bg-primary-600 hover:shadow-md transition-all duration-200 flex items-center">
+                    <i class="fas fa-graduation-cap mr-3"></i>Kelas
                 </a>
-                <a href="mission.php" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600">
-                    <i class="fas fa-tasks mr-2"></i>Misi
+                <a href="mission.php" class="block px-4 py-3 rounded-lg text-base font-medium text-white hover:bg-primary-600 hover:shadow-md transition-all duration-200 flex items-center">
+                    <i class="fas fa-tasks mr-3"></i>Misi
                 </a>
-                <a href="community.php" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600">
-                    <i class="fas fa-users mr-2"></i>Komunitas
+                <a href="community.php" class="block px-4 py-3 rounded-lg text-base font-medium text-white hover:bg-primary-600 hover:shadow-md transition-all duration-200 flex items-center">
+                    <i class="fas fa-users mr-3"></i>Komunitas
                 </a>
                 <?php if (isset($_SESSION['user_id'])): ?>
                 <a href="<?php
                     if ($_SESSION['role'] === 'admin') echo 'dashboardadmin.php';
                     elseif ($_SESSION['role'] === 'mentor') echo 'dashboardmentor.php';
                     else echo 'dashboardstudent.php';
-                ?>" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600">
-                    <i class="fas fa-th-large mr-2"></i>Dashboard
+                ?>" class="block px-4 py-3 rounded-lg text-base font-medium text-white hover:bg-primary-600 hover:shadow-md transition-all duration-200 flex items-center">
+                    <i class="fas fa-th-large mr-3"></i>Dashboard
                 </a>
-                <hr class="my-2 border-primary-600">
-                <a href="/profile.php" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600">
-                    <i class="fas fa-user mr-2"></i>Profil
+                <hr class="my-3 border-primary-600">
+                <div class="px-4 py-2 text-sm text-primary-200 font-semibold flex items-center">
+                    <i class="fas fa-user-circle mr-2"></i>
+                    <?php echo htmlspecialchars($_SESSION['full_name']); ?>
+                </div>
+                <a href="profile.php" class="block px-4 py-3 rounded-lg text-base font-medium text-white hover:bg-primary-600 hover:shadow-md transition-all duration-200 flex items-center">
+                    <i class="fas fa-user mr-3"></i>Profil
                 </a>
                 <?php if ($_SESSION['role'] === 'admin'): ?>
-                <a href="/dashboardadmin.php" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600">
-                    <i class="fas fa-cog mr-2"></i>Admin Panel
+                <a href="/dashboardadmin.php" class="block px-4 py-3 rounded-lg text-base font-medium text-white hover:bg-primary-600 hover:shadow-md transition-all duration-200 flex items-center">
+                    <i class="fas fa-cog mr-3"></i>Admin Panel
                 </a>
                 <?php endif; ?>
-                <a href="/auth/logout.php" class="block px-3 py-2 rounded-md text-base font-medium text-red-300 hover:bg-primary-600">
-                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                </a>
+                <a href="/auth/logout.php" class="block px-4 py-3 rounded-lg text-base font-medium text-red-300 hover:bg-red-600 hover:text-white hover:shadow-md transition-all duration-200 flex items-center">
+                    <i class="fas fa-sign-out-alt mr-3"></i>Logout
+                </a superpower: </a>
                 <?php else: ?>
-                <a href="/auth/login.php" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600">
-                    <i class="fas fa-sign-in-alt mr-2"></i>Login
+                <a href="/auth/login.php" class="block px-4 py-3 rounded-lg text-base font-medium text-white hover:bg-primary-600 hover:shadow-md transition-all duration-200 flex items-center">
+                    <i class="fas fa-sign-in-alt mr-3"></i>Login
                 </a>
                 <?php endif; ?>
             </div>
@@ -562,34 +636,67 @@ if ($user['role'] !== 'student') {
     </div>
 
     <script>
-        // Mobile menu toggle
-        document.getElementById('mobile-menu-button').addEventListener('click', function() {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
-        });
+          // Navbar functionality
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = document.getElementById('menu-icon');
+        const userMenuButton = document.getElementById('user-menu-button');
+        const userMenu = document.getElementById('user-menu');
 
-          document.getElementById('user-menu-button').addEventListener('click', function(e) {
-        e.stopPropagation();
-        document.getElementById('user-menu').classList.toggle('hidden');
-    });
-
-           document.getElementById('user-menu').addEventListener('click', function(e) {
-        e.stopPropagation();
-    });
-
-        // User menu toggle
-        document.getElementById('user-menu-button').addEventListener('click', function() {
-            document.getElementById('user-menu').classList.toggle('hidden');
-        });
-
-        // Close menus when clicking outside
-        document.addEventListener('click', function(event) {
-            if (!event.target.closest('#user-menu-button') && !event.target.closest('#user-menu')) {
-                document.getElementById('user-menu').classList.add('hidden');
-            }
-            if (!event.target.closest('#mobile-menu-button') && !event.target.closest('#mobile-menu')) {
-                document.getElementById('mobile-menu').classList.add('hidden');
+        // Toggle mobile menu
+        mobileMenuButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isOpen = !mobileMenu.classList.contains('mobile-menu-hidden');
+            mobileMenu.classList.toggle('mobile-menu-hidden', isOpen);
+            mobileMenu.classList.toggle('mobile-menu-visible', !isOpen);
+            menuIcon.className = isOpen ? 'fas fa-bars text-xl' : 'fas fa-times text-xl';
+            mobileMenuButton.setAttribute('aria-expanded', !isOpen);
+            if (userMenu) {
+                userMenu.classList.add('user-menu-hidden');
+                userMenu.classList.remove('user-menu-visible');
+                userMenuButton.setAttribute('aria-expanded', false);
             }
         });
+
+        // Toggle user menu
+        if (userMenuButton && userMenu) {
+            userMenuButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isOpen = !userMenu.classList.contains('user-menu-hidden');
+                userMenu.classList.toggle('user-menu-hidden', isOpen);
+                userMenu.classList.toggle('user-menu-visible', !isOpen);
+                userMenuButton.setAttribute('aria-expanded', !isOpen);
+                userMenuButton.querySelector('.fa-chevron-down').style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+                if (!isOpen) {
+                    mobileMenu.classList.add('mobile-menu-hidden');
+                    mobileMenu.classList.remove('mobile-menu-visible');
+                    menuIcon.className = 'fas fa-bars text-xl';
+                    mobileMenuButton.setAttribute('aria-expanded', false);
+                }
+            });
+        }
+
+        // Close menus on outside click
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#mobile-menu-button') && !e.target.closest('#mobile-menu')) {
+                mobileMenu.classList.add('mobile-menu-hidden');
+                mobileMenu.classList.remove('mobile-menu-visible');
+                menuIcon.className = 'fas fa-bars text-xl';
+                mobileMenuButton.setAttribute('aria-expanded', false);
+            }
+            if (userMenu && !e.target.closest('#user-menu-button') && !e.target.closest('#user-menu')) {
+                userMenu.classList.add('user-menu-hidden');
+                userMenu.classList.remove('user-menu-visible');
+                userMenuButton.setAttribute('aria-expanded', false);
+                userMenuButton.querySelector('.fa-chevron-down').style.transform = 'rotate(0deg)';
+            }
+        });
+
+        // Prevent clicks within menus from closing them
+        mobileMenu.addEventListener('click', (e) => e.stopPropagation());
+        if (userMenu) {
+            userMenu.addEventListener('click', (e) => e.stopPropagation());
+        }
 
         // Motivational quotes
         const quotes = [
@@ -658,6 +765,7 @@ if ($user['role'] !== 'student') {
                 createFloatingEmojis(['👋', '😊', '🎓', '📖'], 5);
             }, 1000);
         });
+    </script>
     </script>
 </body>
 </html>
