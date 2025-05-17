@@ -315,9 +315,12 @@ if ($auth->isLoggedIn()) {
                         });
                     </script>
                 <?php else: ?>
-                    <a href="auth/login.php" class="text-gray-700 hover:text-primary text-xl transition-transform transform hover:scale-110">
-                        <i class="fas fa-user-circle"></i>
-                    </a>
+                     <a href="auth/login.php" class="mobile-menu-item block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Masuk
+                </a>
+                <a href="auth/register.php" class="mobile-menu-item block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition">
+                    <i class="fas fa-user-plus mr-2"></i>Daftar
+                </a>
                 <?php endif; ?>
             </div>
 

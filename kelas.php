@@ -97,6 +97,9 @@ if (!isset($bootcamps) || !is_array($bootcamps)) {
                         <i class="fas fa-graduation-cap"></i>
                         <span>Kelas</span>
                     </a>
+                      <a href ="index.php" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600">
+                    <i class="fas fa-home mr-2"></i>Beranda
+                </a>
                     <a href="mission.php" class="font-semibold hover:text-primary-200 flex items-center space-x-1">
                         <i class="fas fa-tasks"></i>
                         <span>Misi</span>
@@ -114,6 +117,7 @@ if (!isset($bootcamps) || !is_array($bootcamps)) {
                             <i class="fas fa-th-large"></i>
                             <span>Dashboard</span>
                         </a>
+                        
                     <?php endif; ?>
                     <?php if (isset($_SESSION['user_id'])): ?>
                     <!-- User Menu -->
@@ -152,6 +156,7 @@ if (!isset($bootcamps) || !is_array($bootcamps)) {
                     <button id="mobile-menu-button" class="text-white hover:text-primary-200 focus:outline-none">
                         <i class="fas fa-bars text-xl"></i>
                     </button>
+
                 </div>
             </div>
         </div>
@@ -167,6 +172,9 @@ if (!isset($bootcamps) || !is_array($bootcamps)) {
                 </a>
                 <a href="community.php" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600">
                     <i class="fas fa-users mr-2"></i>Komunitas
+                </a>
+                <a href ="index.php" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600">
+                    <i class="fas fa-home mr-2"></i>Beranda
                 </a>
                 <?php if (isset($_SESSION['user_id'])): ?>
                 <a href="<?php

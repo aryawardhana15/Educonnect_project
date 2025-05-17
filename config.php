@@ -19,6 +19,7 @@ if (!file_exists(PROFILE_IMAGE_PATH)) {
     mkdir(PROFILE_IMAGE_PATH, 0777, true);
 }
 
+
 // Fungsi helper untuk URL
 function url($path = '') {
     return BASE_URL . '/' . ltrim($path, '/');
@@ -56,6 +57,7 @@ define('DB_NAME', 'educonnect');
 define('GROQ_API_KEY', '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');
 define('GROQ_API_URL', 'https://api.groq.com/openai/v1/chat/completions');
 define('MODEL_NAME', 'mixtral-8x7b-32768'); // atau 'llama3-70b-8192' untuk model terbaru
+
 
 // Konfigurasi Aplikasi
 define('APP_NAME', 'EduConnect');
