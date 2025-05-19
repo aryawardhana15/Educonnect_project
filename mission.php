@@ -531,7 +531,7 @@ if ($role === 'student') {
                     <div class="mt-auto">
                         <?php if ($role === 'student'): ?>
                             <?php if ($mission['user_status'] === 'not_started'): ?>
-                            <a href="mission/start.php?id=<?php echo $mission['id']; ?>" class="block w-full text-center px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 font-semibold transition transform hover:scale-[1.02] shadow-md">
+                            <a href="start_mission.php?id=<?php echo $mission['id']; ?>" class="block w-full text-center px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 font-semibold transition transform hover:scale-[1.02] shadow-md">
                                 <i class="fas fa-play mr-2"></i> Mulai Misi
                             </a>
                             <?php elseif ($mission['user_status'] === 'in_progress'): ?>
