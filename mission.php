@@ -358,6 +358,9 @@ if ($role === 'student') {
                 ?>" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600">
                     <i class="fas fa-th-large mr-2"></i>Dashboard
                 </a>
+                <a href="leaderboard.php" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600">
+                    <i class="fas fa-trophy mr-2"></i>Leaderboard
+                </a>
                 <hr class="my-2 border-primary-600">
                 <a href="/profile.php" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600">
                     <i class="fas fa-user mr-2"></i>Profil
