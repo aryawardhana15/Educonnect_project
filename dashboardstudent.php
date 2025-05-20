@@ -78,7 +78,51 @@ if ($user['role'] !== 'student') {
         }
     </script>
     <style>
+        .chat-bubble {
+    animation: float 6s ease-in-out infinite;
+}
+#chat-button.bg-primary {
+    background-color: #4F46E5 !important;
+}
+#chat-popup .bg-primary {
+    background-color: #4F46E5 !important;
+}
+
+#chat-box-popup::-webkit-scrollbar {
+    width: 6px;
+}
+
+#chat-box-popup::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+#chat-box-popup::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+#chat-box-popup::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.user-message {
+    background-color: #E0E7FF;
+    border-radius: 1rem 1rem 0 1rem;
+    animation: fadeInUp 0.3s ease-out;
+}
+
+.ai-message {
+    background-color: #D1FAE5;
+    border-radius: 1rem 1rem 1rem 0;
+    animation: fadeInUp 0.3s ease-out 0.1s backwards;
+}
         /* Improved mobile-first styles */
+        body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+        
         .sidebar {
             transition: all 0.3s ease;
             width: 100%;
@@ -155,9 +199,12 @@ if ($user['role'] !== 'student') {
             }
         }
         
-        /* Improved responsive behavior */
+        /* Better responsive behavior */
         .responsive-container {
             width: 100%;
+            max-width: 1280px;
+            margin-left: auto;
+            margin-right: auto;
             padding-left: 1rem;
             padding-right: 1rem;
         }
@@ -180,6 +227,20 @@ if ($user['role'] !== 'student') {
         .mobile-menu-content {
             max-height: calc(100vh - 5rem);
             overflow-y: auto;
+        }
+
+        /* Mission section truncation */
+        .mission-description {
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        @media (min-width: 640px) {
+            .mission-description {
+                max-width: 300px;
+            }
         }
     </style>
 </head>
@@ -583,7 +644,10 @@ if ($user['role'] !== 'student') {
                             </div>
                         <?php else: ?>
                             <ul class="divide-y divide-gray-200">
-                                <?php foreach ($missions as $mission): ?>
+                                <?php foreach ($missions as $mission): 
+                                    // Truncate description to 50 characters
+                                    $description = strlen($mission['description']) > 50 ? substr($mission['description'], 0, 50) . '...' : $mission['description'];
+                                ?>
                                     <li class="px-6 py-4 hover:bg-gray-50 transition duration-150 ease-in-out group">
                                         <div class="flex items-center justify-between">
                                             <div class="flex-1 min-w-0">
@@ -597,8 +661,8 @@ if ($user['role'] !== 'student') {
                                                         <?php echo htmlspecialchars($mission['title']); ?>
                                                     </p>
                                                 </div>
-                                                <p class="text-sm text-gray-500 truncate pl-6">
-                                                    <?php echo htmlspecialchars($mission['description']); ?>
+                                                <p class="text-sm text-gray-500 truncate mission-description pl-6">
+                                                    <?php echo htmlspecialchars($description); ?>
                                                 </p>
                                             </div>
                                             <div class="ml-4 flex-shrink-0 flex items-center">
@@ -632,6 +696,37 @@ if ($user['role'] !== 'student') {
             </div>
         </div>
     </div>
+
+    <div class="fixed bottom-6 right-6 z-50 flex flex-col space-y-3">
+    <button id="chat-button" class="bg-primary text-white p-4 rounded-full shadow-lg hover:bg-primary-dark transition duration-300 transform hover:scale-110 group relative">
+        <i class="fas fa-comment-dots text-xl"></i>
+        <span class="absolute right-full top-1/2 transform -translate-y-1/2 mr-2 bg-primary text-white text-sm px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+            Butuh Bantuan?
+        </span>
+    </button>
+</div>
+<div id="chat-popup" class="fixed bottom-24 right-6 w-80 bg-white rounded-xl shadow-xl z-50 hidden transform transition-all duration-300 origin-bottom-right">
+    <div class="bg-primary text-white p-4 rounded-t-xl flex justify-between items-center">
+        <h3 class="font-semibold">AI Assistant EduConnect</h3>
+        <button id="close-chat" class="text-white hover:text-gray-200">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <div id="chat-box-popup" class="p-4 h-64 overflow-y-auto">
+        <div class="ai-message p-3 mb-3 max-w-xs">
+            <p class="font-medium">🤖 AI Assistant:</p>
+            <p>Hai! Ada yang bisa saya bantu?</p>
+        </div>
+    </div>
+    <div class="p-4 border-t border-gray-200">
+        <div class="flex items-center">
+            <textarea id="user-message-popup" placeholder="Ketik pesan..." rows="2" class="flex-grow px-4 py-2 rounded-l-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"></textarea>
+            <button onclick="sendMessagePopup()" class="bg-primary text-white px-4 py-2 rounded-r-lg hover:bg-primary-dark transition duration-300 h-full hover:scale-105">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+</div>
 
     <script>
         // Improved mobile menu functionality
@@ -740,6 +835,7 @@ if ($user['role'] !== 'student') {
                 });
             }
             
+            
             // Create floating emojis effect
             function createFloatingEmojis(emojis, count) {
                 const container = document.getElementById('emoji-container');
@@ -775,7 +871,86 @@ if ($user['role'] !== 'student') {
                     }, 100);
                 }
             }
-            
+            // Chat popup toggle
+const chatButton = document.getElementById('chat-button');
+const chatPopup = document.getElementById('chat-popup');
+const closeChat = document.getElementById('close-chat');
+
+chatButton.addEventListener('click', () => {
+    chatPopup.classList.toggle('hidden');
+    chatPopup.classList.toggle('animate__animated', 'animate__fadeInUp');
+});
+
+closeChat.addEventListener('click', () => {
+    chatPopup.classList.add('hidden');
+});
+
+// Enhanced chat functionality
+function appendMessage(message, sender, chatBoxId = 'chat-box') {
+    const chatBox = document.getElementById(chatBoxId);
+    const div = document.createElement('div');
+    div.classList.add(sender === 'user' ? 'user-message' : 'ai-message');
+    div.classList.add('p-3', 'mb-3', 'max-w-xs');
+
+    if (sender === 'user') {
+        div.classList.add('ml-auto');
+        div.innerHTML = `<p class="font-medium">👤 Anda:</p><p>${message}</p>`;
+    } else {
+        div.classList.add('mr-auto');
+        div.innerHTML = `<p class="font-medium">🤖 AI Assistant:</p><p>${message}</p>`;
+    }
+
+    chatBox.appendChild(div);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function sendMessage(chatBoxId = 'chat-box', inputId = 'user-message') {
+    const message = document.getElementById(inputId).value.trim();
+    if (message === '') return;
+
+    appendMessage(message, 'user', chatBoxId);
+    document.getElementById(inputId).value = '';
+
+    // Show typing indicator
+    const chatBox = document.getElementById(chatBoxId);
+    const typingDiv = document.createElement('div');
+    typingDiv.classList.add('ai-message', 'p-3', 'mb-3', 'max-w-xs', 'mr-auto');
+    typingDiv.innerHTML = '<div class="flex space-x-1"><div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div><div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce animation-delay-150"></div><div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce animation-delay-300"></div></div>';
+    chatBox.appendChild(typingDiv);
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    // Simulate AI thinking delay
+    setTimeout(() => {
+        // Remove typing indicator
+        chatBox.removeChild(typingDiv);
+
+        // Kirim pesan ke server
+        fetch('chat-process.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: message })
+        })
+        .then(response => response.json())
+        .then(data => {
+            appendMessage(data.response, 'ai', chatBoxId);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            appendMessage('Maaf, terjadi kesalahan. Silakan coba lagi.', 'ai', chatBoxId);
+        });
+    }, 1500);
+}
+
+function sendMessagePopup() {
+    sendMessage('chat-box-popup', 'user-message-popup');
+}
+
+document.getElementById('user-message-popup').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessagePopup();
+    }
+});
             // Add some emojis when page loads
             window.addEventListener('load', function() {
                 setTimeout(() => {

@@ -6,57 +6,23 @@ require_once('auth/auth.php');
 // Inisialisasi Auth
 $auth = new Auth();
 
-// Cek login
-if (!$auth->isLoggedIn()) {
+// Cek login dan role mentor
+if (!$auth->isLoggedIn() || $auth->getCurrentUser()['role'] !== 'mentor') {
     header('Location: /auth/login.php');
     exit;
 }
 
-// Ambil ID kelas dari URL
-$course_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+// Ambil ID mentor dari sesi
+$mentor_id = $_SESSION['user_id'];
 
-// Ambil detail kelas
-$query = "SELECT c.*, u.full_name as mentor_name, u.profile_image as mentor_image
-          FROM courses c
-          JOIN users u ON c.mentor_id = u.id
-          WHERE c.id = ?";
-$stmt = $auth->db->prepare($query);
-$stmt->execute([$course_id]);
-$course = $stmt->fetch(PDO::FETCH_ASSOC);
+// Initialize database connection
+$db = db();
 
-if (!$course) {
-    header('Location: /');
-    exit;
-}
-
-// Cek status enrollment
-$user_id = $_SESSION['user_id'];
-$query = "SELECT * FROM user_courses WHERE user_id = ? AND course_id = ?";
-$stmt = $auth->db->prepare($query);
-$stmt->execute([$user_id, $course_id]);
-$enrollment = $stmt->fetch(PDO::FETCH_ASSOC);
-
-// Ambil materi
-$query = "SELECT * FROM materials WHERE course_id = ? ORDER BY sequence ASC";
-$stmt = $auth->db->prepare($query);
-$stmt->execute([$course_id]);
-$materials = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// Ambil kuis
-$query = "SELECT * FROM quizzes WHERE course_id = ? ORDER BY created_at DESC";
-$stmt = $auth->db->prepare($query);
-$stmt->execute([$course_id]);
-$quizzes = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// Ambil diskusi
-$query = "SELECT d.*, u.full_name, u.profile_image
-          FROM discussions d
-          JOIN users u ON d.user_id = u.id
-          WHERE d.course_id = ?
-          ORDER BY d.created_at DESC";
-$stmt = $auth->db->prepare($query);
-$stmt->execute([$course_id]);
-$discussions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Ambil daftar kelas yang dimiliki mentor
+$query = "SELECT * FROM courses WHERE mentor_id = ?";
+$stmt = $db->prepare($query);
+$stmt->execute([$mentor_id]);
+$courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -64,7 +30,7 @@ $discussions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($course['title']); ?> - EduConnect</title>
+    <title>Kelola Kelas - EduConnect</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -86,22 +52,7 @@ $discussions = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     </a>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <?php
-                    $user = $auth->getCurrentUser();
-                    switch ($user['role']) {
-                        case 'admin':
-                            echo '<a href="dashboardadmin.php" class="text-gray-700 hover:text-primary">';
-                            break;
-                        case 'mentor':
-                            echo '<a href="dashboardmentor.php" class="text-gray-700 hover:text-primary">';
-                            break;
-                        case 'student':
-                            echo '<a href="dashboardstudent.php" class="text-gray-700 hover:text-primary">';
-                            break;
-                        default:
-                            echo '<a href="dashboard.php" class="text-gray-700 hover:text-primary">';
-                    }
-                    ?>
+                    <a href="dashboardmentor.php" class="text-gray-700 hover:text-primary">
                         <i class="fas fa-user-circle text-xl"></i>
                     </a>
                     <a href="/auth/logout.php" class="text-gray-700 hover:text-primary">
@@ -114,204 +65,182 @@ $discussions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <!-- Main Content -->
     <div class="max-w-7xl mx-auto px-4 py-8">
-        <!-- Course Header -->
-        <div class="bg-white rounded-xl shadow-md p-6 mb-8">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
-                <div>
-                    <h1 class="text-2xl font-bold text-gray-900 mb-2"><?php echo htmlspecialchars($course['title']); ?></h1>
-                    <p class="text-gray-600 mb-4"><?php echo htmlspecialchars($course['description']); ?></p>
-                    <div class="flex items-center">
-                        <img src="<?php echo $course['mentor_image'] ?: '/assets/images/default-avatar.png'; ?>" 
-                             alt="<?php echo htmlspecialchars($course['mentor_name']); ?>"
-                             class="w-10 h-10 rounded-full mr-3">
-                        <div>
-                            <p class="text-sm font-medium text-gray-900"><?php echo htmlspecialchars($course['mentor_name']); ?></p>
-                            <p class="text-sm text-gray-500">Mentor</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-4 md:mt-0">
-                    <?php if ($course['type'] === 'premium'): ?>
-                        <?php if ($enrollment): ?>
-                            <a href="/course.php?id=<?php echo $course['id']; ?>" class="inline-flex items-center px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition">
-                                <i class="fas fa-play mr-2"></i>
-                                Masuk Kelas
-                            </a>
-                        <?php else: ?>
-                            <a href="/payment.php?course_id=<?php echo $course['id']; ?>" class="inline-flex items-center px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition">
-                                <i class="fas fa-shopping-cart mr-2"></i>
-                                Daftar Kelas
-                                <span class="ml-2 font-medium">Rp <?php echo number_format($course['price']); ?></span>
-                            </a>
-                        <?php endif; ?>
-                    <?php else: ?>
-                        <a href="/course.php?id=<?php echo $course['id']; ?>" class="inline-flex items-center px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition">
-                            <i class="fas fa-play mr-2"></i>
-                            Masuk Kelas
-                        </a>
-                    <?php endif; ?>
-                </div>
+        <h1 class="text-3xl font-bold text-gray-900 mb-6">Kelola Kelas</h1>
+
+        <!-- Notifikasi -->
+        <?php if (isset($_GET['status'])): ?>
+            <div class="mb-4 p-4 rounded-lg <?php echo $_GET['status'] === 'deleted' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'; ?>">
+                <?php echo $_GET['status'] === 'deleted' ? 'Kelas berhasil dihapus.' : 'Gagal menghapus kelas. Silakan coba lagi.'; ?>
             </div>
-        </div>
-
-        <?php if ($enrollment): ?>
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Main Content -->
-            <div class="lg:col-span-2 space-y-8">
-                <!-- Materials -->
-                <div class="bg-white rounded-xl shadow-md p-6">
-                    <h2 class="text-lg font-semibold text-gray-900 mb-4">Materi Pembelajaran</h2>
-                    <div class="space-y-4">
-                        <?php foreach ($materials as $material): ?>
-                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                            <div class="flex items-center">
-                                <div class="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center">
-                                    <i class="fas fa-file-alt text-gray-500"></i>
-                                </div>
-                                <div class="ml-3">
-                                    <p class="text-sm font-medium text-gray-900"><?php echo htmlspecialchars($material['title']); ?></p>
-                                    <p class="text-sm text-gray-500"><?php echo htmlspecialchars($material['description']); ?></p>
-                                </div>
-                            </div>
-                            <a href="/material.php?id=<?php echo $material['id']; ?>" 
-                               class="px-4 py-2 bg-primary text-white text-sm rounded-lg hover:bg-primary-dark transition">
-                                Pelajari
-                            </a>
-                        </div>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-
-                <!-- Quizzes -->
-                <div class="bg-white rounded-xl shadow-md p-6">
-                    <h2 class="text-lg font-semibold text-gray-900 mb-4">Kuis</h2>
-                    <div class="space-y-4">
-                        <?php foreach ($quizzes as $quiz): ?>
-                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                            <div class="flex items-center">
-                                <div class="w-10 h-10 rounded-lg bg-gray-200 flex items-center justify-center">
-                                    <i class="fas fa-question-circle text-gray-500"></i>
-                                </div>
-                                <div class="ml-3">
-                                    <p class="text-sm font-medium text-gray-900"><?php echo htmlspecialchars($quiz['title']); ?></p>
-                                    <p class="text-sm text-gray-500"><?php echo $quiz['question_count']; ?> Pertanyaan</p>
-                                </div>
-                            </div>
-                            <a href="/quiz.php?id=<?php echo $quiz['id']; ?>" 
-                               class="px-4 py-2 bg-primary text-white text-sm rounded-lg hover:bg-primary-dark transition">
-                                Mulai Kuis
-                            </a>
-                        </div>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-
-                <!-- Discussions -->
-                <div class="bg-white rounded-xl shadow-md p-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-lg font-semibold text-gray-900">Diskusi</h2>
-                        <button onclick="showDiscussionForm()" 
-                                class="px-4 py-2 bg-primary text-white text-sm rounded-lg hover:bg-primary-dark transition">
-                            <i class="fas fa-plus mr-2"></i>Buat Diskusi
-                        </button>
-                    </div>
-                    <div class="space-y-4">
-                        <?php foreach ($discussions as $discussion): ?>
-                        <div class="p-4 bg-gray-50 rounded-lg">
-                            <div class="flex items-center mb-3">
-                                <img src="<?php echo $discussion['profile_image'] ?: '/assets/images/default-avatar.png'; ?>" 
-                                     alt="<?php echo htmlspecialchars($discussion['full_name']); ?>"
-                                     class="w-8 h-8 rounded-full mr-3">
-                                <div>
-                                    <p class="text-sm font-medium text-gray-900"><?php echo htmlspecialchars($discussion['full_name']); ?></p>
-                                    <p class="text-xs text-gray-500"><?php echo date('d M Y H:i', strtotime($discussion['created_at'])); ?></p>
-                                </div>
-                            </div>
-                            <p class="text-gray-700 mb-3"><?php echo nl2br(htmlspecialchars($discussion['content'])); ?></p>
-                            <div class="flex items-center space-x-4 text-sm text-gray-500">
-                                <button class="flex items-center hover:text-primary">
-                                    <i class="far fa-thumbs-up mr-1"></i>
-                                    Suka
-                                </button>
-                                <button class="flex items-center hover:text-primary">
-                                    <i class="far fa-comment mr-1"></i>
-                                    Balas
-                                </button>
-                            </div>
-                        </div>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Sidebar -->
-            <div class="space-y-8">
-                <!-- Progress -->
-                <div class="bg-white rounded-xl shadow-md p-6">
-                    <h2 class="text-lg font-semibold text-gray-900 mb-4">Progress Pembelajaran</h2>
-                    <div class="space-y-4">
-                        <div>
-                            <div class="flex justify-between text-sm mb-2">
-                                <span class="text-gray-600">Progress Keseluruhan</span>
-                                <span class="font-medium text-gray-900"><?php echo $enrollment['progress']; ?>%</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-primary h-2 rounded-full" style="width: <?php echo $enrollment['progress']; ?>%"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between text-sm mb-2">
-                                <span class="text-gray-600">Materi Selesai</span>
-                                <span class="font-medium text-gray-900">
-                                    <?php 
-                                    $completed = 0;
-                                    foreach ($materials as $material) {
-                                        if ($material['is_completed']) $completed++;
-                                    }
-                                    echo $completed . '/' . count($materials);
-                                    ?>
-                                </span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-primary h-2 rounded-full" 
-                                     style="width: <?php echo count($materials) ? ($completed / count($materials) * 100) : 0; ?>%"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Course Info -->
-                <div class="bg-white rounded-xl shadow-md p-6">
-                    <h2 class="text-lg font-semibold text-gray-900 mb-4">Informasi Kelas</h2>
-                    <div class="space-y-3">
-                        <div class="flex items-center text-gray-600">
-                            <i class="fas fa-clock w-5"></i>
-                            <span class="ml-2">Durasi: <?php echo $course['duration']; ?> jam</span>
-                        </div>
-                        <div class="flex items-center text-gray-600">
-                            <i class="fas fa-users w-5"></i>
-                            <span class="ml-2"><?php echo $course['student_count']; ?> Siswa</span>
-                        </div>
-                        <div class="flex items-center text-gray-600">
-                            <i class="fas fa-star w-5"></i>
-                            <span class="ml-2">Rating: <?php echo number_format($course['rating'], 1); ?>/5.0</span>
-                        </div>
-                        <div class="flex items-center text-gray-600">
-                            <i class="fas fa-calendar w-5"></i>
-                            <span class="ml-2">Terakhir diperbarui: <?php echo date('d M Y', strtotime($course['updated_at'])); ?></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
         <?php endif; ?>
+
+        <!-- Daftar Kelas -->
+        <div class="bg-white rounded-xl shadow-md p-6 mb-8">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold text-gray-900">Daftar Kelas Anda</h2>
+                <a href="/create_course.php" class="inline-flex items-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition">
+                    <i class="fas fa-plus mr-2"></i>Buat Kelas Baru
+                </a>
+            </div>
+            <div class="space-y-4">
+                <?php if (empty($courses)): ?>
+                    <p class="text-gray-500 text-center">Belum ada kelas yang dibuat.</p>
+                <?php else: ?>
+                    <?php foreach ($courses as $course): ?>
+                        <div class="p-4 bg-gray-50 rounded-lg">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <h3 class="text-lg font-medium text-gray-900"><?php echo htmlspecialchars($course['title']); ?></h3>
+                                    <p class="text-sm text-gray-500"><?php echo htmlspecialchars($course['description']); ?></p>
+                                    <p class="text-sm text-gray-500">Tipe: <?php echo ucfirst($course['type']); ?> | Level: <?php echo ucfirst($course['level']); ?></p>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <a href="/edit_course.php?id=<?php echo $course['id']; ?>" class="px-3 py-2 bg-yellow-500 text-white text-sm rounded-lg hover:bg-yellow-600 transition">
+                                        <i class="fas fa-edit mr-1"></i>Edit
+                                    </a>
+                                    <a href="/delete_course.php?id=<?php echo $course['id']; ?>" 
+                                       onclick="return confirm('Apakah Anda yakin ingin menghapus kelas ini? Semua data terkait akan dihapus.')" 
+                                       class="px-3 py-2 bg-red-500 text-white text-sm rounded-lg hover:bg-red-600 transition">
+                                        <i class="fas fa-trash mr-1"></i>Hapus
+                                    </a>
+                                    <button onclick="showManageOptions(<?php echo $course['id']; ?>)" 
+                                            class="px-3 py-2 bg-primary text-white text-sm rounded-lg hover:bg-primary-dark transition">
+                                        <i class="fas fa-cog mr-1"></i>Kelola
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Opsi Pengelolaan (Materi, Kuis, Diskusi, Progress Siswa) -->
+                            <div id="manage-options-<?php echo $course['id']; ?>" class="hidden mt-4 p-4 bg-gray-100 rounded-lg">
+                                <div class="flex flex-wrap gap-3 mb-4">
+                                    <button onclick="showAddMaterial(<?php echo $course['id']; ?>)" 
+                                            class="px-4 py-2 bg-green-500 text-white text-sm rounded-lg hover:bg-green-600 transition">
+                                        <i class="fas fa-plus mr-2"></i>Tambah Materi
+                                    </button>
+                                    <button onclick="showAddQuiz(<?php echo $course['id']; ?>)" 
+                                            class="px-4 py-2 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600 transition">
+                                        <i class="fas fa-plus mr-2"></i>Tambah Kuis
+                                    </button>
+                                    <button onclick="showAddDiscussion(<?php echo $course['id']; ?>)" 
+                                            class="px-4 py-2 bg-purple-500 text-white text-sm rounded-lg hover:bg-purple-600 transition">
+                                        <i class="fas fa-plus mr-2"></i>Tambah Diskusi
+                                    </button>
+                                    <button onclick="showStudentProgress(<?php echo $course['id']; ?>)" 
+                                            class="px-4 py-2 bg-indigo-500 text-white text-sm rounded-lg hover:bg-indigo-600 transition">
+                                        <i class="fas fa-users mr-2"></i>Lihat Progress Siswa
+                                    </button>
+                                </div>
+
+                                <!-- Form Tambah Materi -->
+                                <div id="add-material-<?php echo $course['id']; ?>" class="hidden mb-4">
+                                    <form action="/add_material.php" method="POST" class="space-y-3">
+                                        <input type="hidden" name="course_id" value="<?php echo $course['id']; ?>">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700">Judul Materi</label>
+                                            <input type="text" name="title" class="w-full p-2 border rounded-lg" required>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700">Konten</label>
+                                            <textarea name="content" class="w-full p-2 border rounded-lg" rows="3"></textarea>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700">Tipe</label>
+                                            <select name="type" class="w-full p-2 border rounded-lg">
+                                                <option value="video">Video</option>
+                                                <option value="document">Dokumen</option>
+                                                <option value="quiz">Kuis</option>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition">
+                                            Simpan Materi
+                                        </button>
+                                    </form>
+                                </div>
+
+                                <!-- Form Tambah Kuis (Placeholder) -->
+                                <div id="add-quiz-<?php echo $course['id']; ?>" class="hidden mb-4">
+                                    <p class="text-gray-500">Fitur tambah kuis akan segera hadir!</p>
+                                </div>
+
+                                <!-- Form Tambah Diskusi (Placeholder) -->
+                                <div id="add-discussion-<?php echo $course['id']; ?>" class="hidden mb-4">
+                                    <p class="text-gray-500">Fitur tambah diskusi akan segera hadir!</p>
+                                </div>
+
+                                <!-- Progress Siswa -->
+                                <div id="student-progress-<?php echo $course['id']; ?>" class="hidden">
+                                    <?php
+                                    $query = "SELECT u.full_name, uc.progress 
+                                             FROM user_courses uc 
+                                             JOIN users u ON uc.user_id = u.id 
+                                             WHERE uc.course_id = ?";
+                                    $stmt = $db->prepare($query);
+                                    $stmt->execute([$course['id']]);
+                                    $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                    ?>
+                                    <h4 class="text-lg font-semibold text-gray-900 mb-2">Progress Siswa</h4>
+                                    <?php if (empty($students)): ?>
+                                        <p class="text-gray-500">Belum ada siswa yang terdaftar di kelas ini.</p>
+                                    <?php else: ?>
+                                        <table class="w-full text-sm text-gray-700">
+                                            <thead>
+                                                <tr class="bg-gray-200">
+                                                    <th class="p-2 text-left">Nama Siswa</th>
+                                                    <th class="p-2 text-left">Progress</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach ($students as $student): ?>
+                                                    <tr>
+                                                        <td class="p-2"><?php echo htmlspecialchars($student['full_name']); ?></td>
+                                                        <td class="p-2"><?php echo ($student['progress'] ?? 0); ?>%</td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+        </div>
     </div>
 
     <script>
-    function showDiscussionForm() {
-        // Implementasi form diskusi
-        alert('Fitur diskusi akan segera hadir!');
+    function showManageOptions(courseId) {
+        const manageOptions = document.getElementById(`manage-options-${courseId}`);
+        manageOptions.classList.toggle('hidden');
+    }
+
+    function showAddMaterial(courseId) {
+        document.getElementById(`add-material-${courseId}`).classList.toggle('hidden');
+        document.getElementById(`add-quiz-${courseId}`).classList.add('hidden');
+        document.getElementById(`add-discussion-${courseId}`).classList.add('hidden');
+        document.getElementById(`student-progress-${courseId}`).classList.add('hidden');
+    }
+
+    function showAddQuiz(courseId) {
+        document.getElementById(`add-quiz-${courseId}`).classList.toggle('hidden');
+        document.getElementById(`add-material-${courseId}`).classList.add('hidden');
+        document.getElementById(`add-discussion-${courseId}`).classList.add('hidden');
+        document.getElementById(`student-progress-${courseId}`).classList.add('hidden');
+    }
+
+    function showAddDiscussion(courseId) {
+        document.getElementById(`add-discussion-${courseId}`).classList.toggle('hidden');
+        document.getElementById(`add-material-${courseId}`).classList.add('hidden');
+        document.getElementById(`add-quiz-${courseId}`).classList.add('hidden');
+        document.getElementById(`student-progress-${courseId}`).classList.add('hidden');
+    }
+
+    function showStudentProgress(courseId) {
+        document.getElementById(`student-progress-${courseId}`).classList.toggle('hidden');
+        document.getElementById(`add-material-${courseId}`).classList.add('hidden');
+        document.getElementById(`add-quiz-${courseId}`).classList.add('hidden');
+        document.getElementById(`add-discussion-${courseId}`).classList.add('hidden');
     }
     </script>
 </body>
-</html> 
+</html>

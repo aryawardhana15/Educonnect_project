@@ -331,82 +331,198 @@ if ($role === 'mentor') {
                 }
             }
         }
+
+            tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        secondary: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                        },
+                    },
+                    animation: {
+                        'bounce-slow': 'bounce 3s infinite',
+                        'wiggle': 'wiggle 1s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        wiggle: {
+                            '0%, 100%': { transform: 'rotate(-3deg)' },
+                            '50%': { transform: 'rotate(3deg)' },
+                        }
+                    }
+                }
+            }
+        }
     </script>
 </head>
 <body class="bg-gray-50 min-h-screen">
     <!-- Navbar sederhana dengan tombol logout -->
-    
-    <nav class="bg-white shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <!-- Mobile menu button -->
-                    <button id="mobile-menu-button" class="md:hidden text-gray-500 hover:text-gray-900 focus:outline-none">
-                        <i class="fas fa-bars"></i>
+    <!-- Navbar -->
+    <nav class="bg-gradient-to-r from-primary-700 to-primary-600 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <!-- Logo dan Brand -->
+                <div class="flex items-center space-x-4">
+                    <a href="index.php" class="text-2xl font-bold flex items-center">
+                        <i class="fas fa-graduation-cap mr-2"></i>
+                        EduConnect
+                    </a>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="kelas.php" class="font-semibold hover:text-primary-200 flex items-center space-x-1">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>Kelas</span>
+                    </a>
+                    <a href="mission.php" class="font-semibold hover:text-primary-200 flex items-center space-x-1">
+                        <i class="fas fa-tasks"></i>
+                        <span>Misi</span>
+                    </a>
+                    <a href="community.php" class="font-semibold hover:text-primary-200 flex items-center space-x-1">
+                        <i class="fas fa-users"></i>
+                        <span>Komunitas</span>
+                    </a>
+                    <?php if (isset($_SESSION['user_id'])): ?>
+                        <a href="<?php
+                            if ($_SESSION['role'] === 'admin') echo 'dashboardadmin.php';
+                            elseif ($_SESSION['role'] === 'mentor') echo 'dashboardmentor.php';
+                            else echo 'dashboardstudent.php';
+                        ?>" class="font-semibold hover:text-primary-200 flex items-center space-x-1">
+                            <i class="fas fa-th-large"></i>
+                            <span>Dashboard</span>
+                        </a>
+                        
+                    <?php endif; ?>
+                    <?php if (isset($_SESSION['user_id'])): ?>
+                    <!-- User Menu -->
+                    <div class="relative group">
+                        <button class="flex items-center space-x-2 text-white hover:text-primary-200 focus:outline-none">
+                            <i class="fas fa-user-circle text-xl"></i>
+                            <span class="hidden lg:inline"><?php echo htmlspecialchars($_SESSION['full_name']); ?></span>
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
+                        <!-- Dropdown Menu -->
+                        <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden group-hover:block">
+                            <a href="/profile.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-user mr-2"></i>Profil
+                            </a>
+                            <?php if ($_SESSION['role'] === 'admin'): ?>
+                            <a href="/dashboardadmin.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-cog mr-2"></i>Admin Panel
+                            </a>
+                            <?php endif; ?>
+                            <hr class="my-1">
+                            <a href="/auth/logout.php" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100">
+                                <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                            </a>
+                        </div>
+                    </div>
+                    <?php else: ?>
+                    <a href="/auth/login.php" class="font-semibold hover:text-primary-200 flex items-center space-x-1">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span>Login</span>
+                    </a>
+                    <?php endif; ?>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-button" class="text-white hover:text-primary-200 focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
                     </button>
-                    <!-- Logo -->
-                    <div class="flex-shrink-0 flex items-center">
-                        <span class="text-xl font-bold text-primary-600">EduConnect</span>
-                    </div>
-                </div>
-                
-                <div class="hidden md:ml-6 md:flex md:items-center md:space-x-4">
-                    <a href="index.php" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">
-                        <i class="fas fa-home mr-1"></i> Landing Page
-                    </a>
-                    <a href="dashboardstudent.php" class="px-3 py-2 rounded-md text-sm font-medium text-primary-600 bg-primary-50">
-                        <i class="fas fa-tachometer-alt mr-1"></i> Dashboard
-                    </a>
-                    <a href="kelas.php" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">
-                        <i class="fas fa-book-open mr-1"></i> Kelas Saya
-                    </a>
-              
-                </div>
-                
-                <div class="ml-4 flex items-center md:ml-6">
-                    <!-- Profile dropdown -->
-                    <div class="ml-3 relative">
-                        <div>
-                            <button id="user-menu-button" class="max-w-xs flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
-                                <img class="h-8 w-8 rounded-full" src="<?php echo $user['profile_picture'] ?? 'assets/images/default-avatar.png'; ?>" alt="<?php echo htmlspecialchars($user['full_name']); ?>">
-                                <span class="ml-2 hidden md:inline text-sm font-medium text-gray-700"><?php echo htmlspecialchars($user['full_name']); ?></span>
-                                <i class="fas fa-chevron-down ml-1 text-xs text-gray-500"></i>
-                            </button>
-                        </div>
-                        <!-- Dropdown menu -->
-                        <div id="user-menu" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
-                            <a href="dashboardstudent.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
-                            </a>
-                            <a href="profile.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                <i class="fas fa-user mr-2"></i> Profil
-                            </a>
-                            <div class="border-t border-gray-200"></div>
-                            <a href="auth/logout.php" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                <i class="fas fa-sign-out-alt mr-2"></i> Keluar
-                            </a>
-                        </div>
-                    </div>
+
                 </div>
             </div>
         </div>
-        
-        <!-- Mobile menu -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-primary-700 border-t border-primary-600">
             <div class="px-2 pt-2 pb-3 space-y-1">
-                <a href="index.php" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">
-                    <i class="fas fa-home mr-2"></i> Landing Page
+                <a href="kelas.php" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600">
+                    <i class="fas fa-graduation-cap mr-2"></i>Kelas
                 </a>
-                <a href="dashboardstudent.php" class="block px-3 py-2 rounded-md text-base font-medium text-primary-600 bg-primary-50">
-                    <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
+                <a href="mission.php" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600">
+                    <i class="fas fa-tasks mr-2"></i>Misi
                 </a>
-                <a href="kelas.php" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50">
-                    <i class="fas fa-book-open mr-2"></i> Kelas Saya
+                <a href="community.php" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600">
+                    <i class="fas fa-users mr-2"></i>Komunitas
                 </a>
-               
+                <a href="mentoring.php" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600">
+                    <i class="fas fa-chalkboard-teacher mr-2"></i>Mentoring
+                </a>
+                <a href="index.php" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600"><i class="fas fa-home mr-2"></i> beranda</a>
+                <?php if (isset($_SESSION['user_id'])): ?>
+                <a href="<?php
+                    if ($_SESSION['role'] === 'admin') echo 'dashboardadmin.php';
+                    elseif ($_SESSION['role'] === 'mentor') echo 'dashboardmentor.php';
+                    else echo 'dashboardstudent.php';
+                ?>" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600">
+                    <i class="fas fa-th-large mr-2"></i>Dashboard
+                </a>
+
+                <hr class="my-2 border-primary-600">
+                <a href="/profile.php" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600">
+                    <i class="fas fa-user mr-2"></i>Profil
+                </a>
+                <?php if ($_SESSION['role'] === 'admin'): ?>
+                <a href="/dashboardadmin.php" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600">
+                    <i class="fas fa-cog mr-2"></i>Admin Panel
+                </a>
+                <?php endif; ?>
+                <a href="/auth/logout.php" class="block px-3 py-2 rounded-md text-base font-medium text-red-300 hover:bg-primary-600">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                </a>
+                <?php else: ?>
+                <a href="/auth/login.php" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Login
+                </a>
+                <?php endif; ?>
             </div>
         </div>
     </nav>
+
+<script>
+    // Dropdown logic
+    const avatarBtn = document.getElementById('avatarBtn');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+    document.addEventListener('click', function (e) {
+        if (avatarBtn && avatarBtn.contains(e.target)) {
+            dropdownMenu.classList.toggle('hidden');
+        } else if (dropdownMenu && !dropdownMenu.contains(e.target)) {
+            dropdownMenu.classList.add('hidden');
+        }
+    });
+
+    // Mobile menu logic
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    mobileMenuButton.addEventListener('click', function () {
+        mobileMenu.classList.toggle('hidden');
+    });
+</script>
+
     <div class="max-w-6xl mx-auto px-4 py-8">
         <!-- 1. Header/Overview Mentoring -->
         <div class="bg-gradient-to-r from-primary-500 to-primary-600 rounded-xl p-6 mb-8 text-white flex flex-col md:flex-row md:items-center md:justify-between gap-6 shadow-lg">

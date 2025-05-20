@@ -16,7 +16,7 @@ $error = '';
 $success = '';
 
 if (!$mission_id) {
-    header('Location: missions.php');
+    header('Location: mission.php');
     exit;
 }
 
@@ -28,7 +28,7 @@ $mission = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$mission) {
     $error = "Misi tidak ditemukan.";
-    header('Location: missions.php');
+    header('Location: mission.php');
     exit;
 }
 
@@ -39,12 +39,12 @@ $user_mission = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if ($user_mission && $user_mission['status'] === 'in_progress') {
     // Misi sudah dimulai, redirect ke halaman submit
-    header('Location: mission_submit.php?id=' . $mission_id);
+    header('Location: submit_mission.php?id=' . $mission_id);
     exit;
 } elseif ($user_mission && $user_mission['status'] === 'completed') {
     // Misi sudah selesai
     $error = "Misi ini sudah selesai.";
-    header('Refresh: 2; url=missions.php');
+    header('Refresh: 2; url=mission.php');
 }
 
 // Tangani mulai misi
@@ -52,16 +52,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$error) {
     try {
         // Insert atau update user_missions
         if ($user_mission) {
-            $stmt = $db->prepare("UPDATE user_missions SET status = 'in_progress', started_at = NOW() WHERE user_id = ? AND mission_id = ?");
+            $stmt = $db->prepare("UPDATE user_missions SET status = 'in_progress', started_at = NOW(), updated_at = NOW() WHERE user_id = ? AND mission_id = ?");
             $stmt->execute([$user['id'], $mission_id]);
         } else {
-            $stmt = $db->prepare("INSERT INTO user_missions (user_id, mission_id, status, started_at) VALUES (?, ?, 'in_progress', NOW())");
+            $stmt = $db->prepare("INSERT INTO user_missions (user_id, mission_id, status, started_at, created_at, updated_at) VALUES (?, ?, 'in_progress', NOW(), NOW(), NOW())");
             $stmt->execute([$user['id'], $mission_id]);
         }
         $success = "Misi berhasil dimulai! Anda akan diarahkan ke halaman pengumpulan misi.";
-        header("Refresh: 2; url=mission_submit.php?id=" . $mission_id);
+        header("Refresh: 2; url=submit_mission.php?id=" . $mission_id);
     } catch (PDOException $e) {
         $error = "Error: " . htmlspecialchars($e->getMessage());
+        error_log("Start mission error: " . $e->getMessage());
     }
 }
 ?>
@@ -87,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$error) {
     </style>
 </head>
 <body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen">
-    <!-- Navbar (Sama seperti missions.php) -->
+    <!-- Navbar -->
     <nav class="bg-gradient-to-r from-blue-700 to-blue-600 text-white shadow-lg">
         <div class="container mx-auto px-4 py-3">
             <div class="flex justify-between items-center">
@@ -114,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$error) {
                     <div class="relative group">
                         <button class="flex items-center space-x-2 text-white hover:text-blue-200 focus:outline-none">
                             <i class="fas fa-user-circle text-xl"></i>
-                            <span class="hidden lg:inline"><?php echo htmlspecialchars($user['full_name']); ?></span>
+                            <span class="hidden lg:inline"><?php echo htmlspecialchars($user['full_name'] ?? $user['username']); ?></span>
                             <i class="fas fa-chevron-down text-xs"></i>
                         </button>
                         <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden group-hover:block">
@@ -140,7 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$error) {
                 <a href="kelas.php" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-blue-600">
                     <i class="fas fa-graduation-cap mr-2"></i>Kelas
                 </a>
-                <a href="missions.php" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-blue-600">
+                <a href="mission.php" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-blue-600">
                     <i class="fas fa-tasks mr-2"></i>Misi
                 </a>
                 <a href="community.php" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-blue-600">
@@ -197,7 +198,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$error) {
         </div>
     </div>
 
-    <!-- Footer (Sama seperti missions.php) -->
+    <!-- Footer -->
     <footer class="bg-gray-800 text-white py-8">
         <div class="container mx-auto px-4">
             <div class="flex flex-col md:flex-row justify-between items-center">
@@ -211,11 +212,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$error) {
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
                     <div>
                         <h3 class="text-lg font-semibold mb-4">Tautan Cepat</h3>
-                        <ul class="space-y-2
-
-">
+                        <ul class="space-y-2">
                             <li><a href="kelas.php" class="text-gray-400 hover:text-white transition">Kelas</a></li>
-                            <li><a href="missions.php" class="text-gray-400 hover:text-white transition">Misi</a></li>
+                            <li><a href="mission.php" class="text-gray-400 hover:text-white transition">Misi</a></li>
                             <li><a href="community.php" class="text-gray-400 hover:text-white transition">Komunitas</a></li>
                         </ul>
                     </div>
