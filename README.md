@@ -133,7 +133,6 @@ Berisi pembuatan tabel `users` dan lainnya untuk autentikasi serta manajemen pen
 
 ---
 
-## 📄 MIT License
 
 
 
