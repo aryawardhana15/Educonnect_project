@@ -1,5 +1,4 @@
 
-
 ## 📘 EduConnect
 
 **EduConnect** adalah platform pembelajaran daring yang mendukung interaksi antara mentor dan peserta melalui kursus, forum komunitas, dan sistem chat internal. Proyek ini dikembangkan untuk mendukung kolaborasi pembelajaran digital, cocok untuk kompetisi inovasi pendidikan maupun pengembangan platform e-learning mandiri.
@@ -130,11 +129,11 @@ Berisi pembuatan tabel `users` dan lainnya untuk autentikasi serta manajemen pen
 
 ## 👤 Contributors
 
-* **Dikembangkan oleh:** *\[Nama Kamu]*
+* **Dikembangkan oleh:** *Arya Wardhana*
 
 ---
 
-## 📄 License
+## 📄 MIT License
 
-Lisensi default: **Proyek ini bersifat pribadi**. Untuk penggunaan publik, tambahkan lisensi terbuka seperti MIT atau GPL.
+
 
