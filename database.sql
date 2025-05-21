@@ -1,4 +1,4 @@
-gini isinya : USE edux6882_educonnect;
+USE edux6882_educonnect;
 
 
 CREATE TABLE bootcamp (
