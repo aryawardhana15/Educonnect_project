@@ -1,7 +1,9 @@
 
 ## 📘 EduConnect
 
-**EduConnect** adalah platform pembelajaran daring yang mendukung interaksi antara mentor dan peserta melalui kursus, forum komunitas, dan sistem chat internal. Proyek ini dikembangkan untuk mendukung kolaborasi pembelajaran digital, cocok untuk kompetisi inovasi pendidikan maupun pengembangan platform e-learning mandiri.
+EduConnect adalah platform pembelajaran daring yang mendukung interaksi antara mentor dan peserta melalui kursus, forum komunitas, dan sistem chat internal. Proyek ini dikembangkan untuk mendukung kolaborasi pembelajaran digital, cocok untuk kompetisi inovasi pendidikan maupun pengembangan platform e-learning mandiri.
+
+📢 EduConnect turut serta dalam ajang **International Youth Innovation Submit (IYIS)** yang diselenggarakan di **Singapura** sebagai representasi inovasi di bidang pendidikan digital.
 
 ---
 
