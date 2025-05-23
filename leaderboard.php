@@ -74,7 +74,7 @@ $current_user_profile_picture = $current_user_data['profile_picture'] ?? 'assets
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Leaderboard - EduConnect</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -86,7 +86,6 @@ $current_user_profile_picture = $current_user_data['profile_picture'] ?? 'assets
             font-family: 'Inter', sans-serif;
             background: #f3f4f6;
             overflow-x: hidden;
-            position: relative;
             -webkit-tap-highlight-color: transparent;
         }
 
@@ -109,25 +108,207 @@ $current_user_profile_picture = $current_user_data['profile_picture'] ?? 'assets
             100% { background-position: 0% 50%; }
         }
 
-        /* Navbar */
+        /* Mobile-first styles */
         .navbar {
-            transition: all 0.3s ease;
+            padding: 0.75rem 1rem;
         }
-        .mobile-menu {
-            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
-            max-height: 0;
-            opacity: 0;
-            overflow: hidden;
+        
+        .mobile-menu a {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
         }
-        .mobile-menu.open {
-            max-height: 500px;
-            opacity: 1;
-        }
+        
         .user-dropdown {
-            transition: all 0.2s ease-in-out;
+            width: 160px;
+        }
+        
+        .user-dropdown a {
+            font-size: 0.85rem;
+        }
+        
+        /* Podium */
+        .podium {
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .podium-item {
+            width: 30%;
+            min-width: 90px;
+        }
+        
+        .podium-1 {
+            height: 160px;
+        }
+        
+        .podium-2 {
+            height: 120px;
+        }
+        
+        .podium-3 {
+            height: 80px;
+        }
+        
+        .podium-avatar {
+            width: 40px;
+            height: 40px;
+            margin-top: -20px;
+        }
+        
+        .podium-rank {
+            font-size: 18px;
+        }
+        
+        .podium-name {
+            font-size: 0.8rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 90%;
+        }
+        
+        .podium-points {
+            font-size: 0.75rem;
+        }
+        
+        /* Leaderboard card */
+        .leaderboard-card {
+            padding: 0.75rem;
+        }
+        
+        .leaderboard-card img {
+            width: 32px;
+            height: 32px;
+        }
+        
+        .leaderboard-card span.text-lg {
+            font-size: 0.9rem;
+        }
+        
+        .leaderboard-card span.text-sm {
+            font-size: 0.75rem;
+        }
+        
+        /* Progress bar */
+        .progress-bar {
+            height: 8px;
+        }
+        
+        /* Motivational section */
+        .motivational-section {
+            padding: 1.5rem;
+        }
+        
+        .motivational-section h2 {
+            font-size: 1.5rem;
+        }
+        
+        .motivational-section p {
+            font-size: 0.9rem;
+        }
+        
+        .motivational-section a {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9rem;
+        }
+        
+        /* Table styles for mobile */
+        .table-container {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        table {
+            min-width: 600px;
+        }
+        
+        /* Desktop styles */
+        @media (min-width: 768px) {
+            .navbar {
+                padding: 1rem 2rem;
+            }
+            
+            .podium {
+                gap: 12px;
+                margin-bottom: 32px;
+            }
+            
+            .podium-item {
+                width: 120px;
+            }
+            
+            .podium-1 {
+                height: 200px;
+            }
+            
+            .podium-2 {
+                height: 160px;
+            }
+            
+            .podium-3 {
+                height: 120px;
+            }
+            
+            .podium-avatar {
+                width: 60px;
+                height: 60px;
+                margin-top: -30px;
+            }
+            
+            .podium-rank {
+                font-size: 24px;
+            }
+            
+            .podium-name {
+                font-size: 1rem;
+            }
+            
+            .podium-points {
+                font-size: 0.9rem;
+            }
+            
+            .leaderboard-card {
+                padding: 1rem;
+            }
+            
+            .leaderboard-card img {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .progress-bar {
+                height: 10px;
+            }
         }
 
-        /* Leaderboard Card */
+        /* Special effects */
+        .rank-1::before {
+            content: '👑';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            opacity: 0.5;
+        }
+        
+        .rank-2::before {
+            content: '🥈';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            opacity: 0.5;
+        }
+        
+        .rank-3::before {
+            content: '🥉';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            opacity: 0.5;
+        }
+        
         .leaderboard-card {
             background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(247,250,252,0.95));
             backdrop-filter: blur(8px);
@@ -137,47 +318,8 @@ $current_user_profile_picture = $current_user_data['profile_picture'] ?? 'assets
             position: relative;
             overflow: hidden;
         }
-        .leaderboard-card:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 12px 30px rgba(14, 165, 233, 0.25);
-            background: linear-gradient(135deg, rgba(255,255,255,1), rgba(247,250,252,1));
-        }
-        .rank-1::before {
-            content: '👑';
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 20px;
-            opacity: 0.5;
-        }
-        .rank-2::before {
-            content: '🥈';
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 20px;
-            opacity: 0.5;
-        }
-        .rank-3::before {
-            content: '🥉';
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 20px;
-            opacity: 0.5;
-        }
-
-        /* Podium */
-        .podium {
-            display: flex;
-            justify-content: center;
-            align-items: flex-end;
-            gap: 12px;
-            margin-bottom: 32px;
-            perspective: 1000px;
-        }
+        
         .podium-item {
-            width: 120px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -186,181 +328,63 @@ $current_user_profile_picture = $current_user_data['profile_picture'] ?? 'assets
             position: relative;
             animation: podiumPop 0.5s ease-out;
         }
-        .podium-item:hover {
-            transform: translateY(-5px) rotateX(5deg);
-        }
+        
         @keyframes podiumPop {
             0% { transform: scale(0.8); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
         }
+        
         .podium-1 {
-            height: 200px;
             background: linear-gradient(to top, #facc15, #fef08a);
             box-shadow: 0 12px 20px rgba(250, 204, 21, 0.4);
         }
+        
         .podium-2 {
-            height: 160px;
             background: linear-gradient(to top, #d1d5db, #f3f4f6);
             box-shadow: 0 10px 15px rgba(209, 213, 219, 0.4);
         }
+        
         .podium-3 {
-            height: 120px;
             background: linear-gradient(to top, #f97316, #fdba74);
             box-shadow: 0 8px 12px rgba(249, 115, 22, 0.4);
         }
+        
         .podium-avatar {
-            width: 60px;
-            height: 60px;
             border-radius: 50%;
             border: 3px solid white;
-            margin-top: -30px;
             object-fit: cover;
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
             transition: transform 0.3s ease;
         }
-        .podium-avatar:hover {
-            transform: scale(1.1);
-        }
-        .podium-rank {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 8px;
-            color: #1e293b;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        .podium-name {
-            margin-top: 8px;
-            font-weight: 700;
-            color: #1e293b;
-            text-align: center;
-            font-size: 1rem;
-        }
-        .podium-points {
-            font-size: 0.9rem;
-            font-weight: bold;
-            color: #0ea5e9;
-            margin-top: 4px;
-        }
-
-        /* Progress Bar for Current User */
-        .progress-bar {
-            background: #e5e7eb;
-            border-radius: 20px;
-            height: 10px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            background: linear-gradient(to right, #4f46e5, #06b6d4);
-            height: 100%;
-            transition: width 1s ease-in-out;
-        }
-
-        /* Floating Particles */
+        
+        /* Floating particles */
         .particle {
             position: absolute;
             border-radius: 50%;
             animation: float-particle 12s infinite ease-in-out;
             z-index: 0;
         }
+        
         @keyframes float-particle {
             0%, 100% { transform: translateY(0) scale(1); }
             50% { transform: translateY(-40px) scale(0.7); }
         }
-
-        /* Mobile Adjustments */
-        @media (max-width: 640px) {
-            .max-w-6xl {
-                padding-left: 1rem;
-                padding-right: 1rem;
-            }
-            h1 {
-                font-size: 2rem;
-            }
-            p.text-lg {
-                font-size: 1rem;
-            }
-            .podium {
-                gap: 8px;
-                margin-bottom: 24px;
-            }
-            .podium-item {
-                width: 90px;
-            }
-            .podium-1 {
-                height: 160px;
-            }
-            .podium-2 {
-                height: 120px;
-            }
-            .podium-3 {
-                height: 80px;
-            }
-            .podium-avatar {
-                width: 40px;
-                height: 40px;
-                margin-top: -20px;
-            }
-            .podium-rank {
-                font-size: 18px;
-            }
-            .podium-name {
-                font-size: 0.8rem;
-            }
-            .podium-points {
-                font-size: 0.75rem;
-            }
-            .leaderboard-card {
-                padding: 0.75rem;
-            }
-            .leaderboard-card img {
-                width: 32px;
-                height: 32px;
-            }
-            .leaderboard-card span.text-lg {
-                font-size: 0.9rem;
-            }
-            .leaderboard-card span.text-sm {
-                font-size: 0.75rem;
-            }
-            .progress-bar {
-                height: 8px;
-            }
-            .motivational-section {
-                padding: 1.5rem;
-            }
-            .motivational-section h2 {
-                font-size: 1.5rem;
-            }
-            .motivational-section p {
-                font-size: 0.9rem;
-            }
-            .motivational-section a {
-                padding: 0.75rem 1.5rem;
-                font-size: 0.9rem;
-            }
-            .navbar {
-                padding: 0.75rem 1rem;
-            }
-            .mobile-menu a {
-                padding: 0.5rem 1rem;
-                font-size: 0.9rem;
-            }
-            .user-dropdown {
-                width: 160px;
-            }
-            .user-dropdown a {
-                font-size: 0.85rem;
-            }
+        
+        /* Mobile menu transitions */
+        .mobile-menu {
+            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
         }
-
-        @media (max-width: 768px) {
-            .table-container {
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-            }
-            table {
-                min-width: 600px;
-            }
+        
+        .mobile-menu.open {
+            max-height: 500px;
+            opacity: 1;
+        }
+        
+        .user-dropdown {
+            transition: all 0.2s ease-in-out;
         }
     </style>
     <script>
@@ -440,9 +464,9 @@ $current_user_profile_picture = $current_user_data['profile_picture'] ?? 'assets
                         <i class="fas fa-bars text-xl"></i>
                     </button>
                     <!-- Logo -->
-                    <a href="index.php" class="flex-shrink-0 flex items-center text-xl sm:text-2xl font-bold ml-2 sm:ml-0">
+                    <a href="index.php" class="flex-shrink-0 flex items-center text-xl font-bold ml-2">
                         <i class="fas fa-graduation-cap mr-2"></i>
-                        EduConnect
+                        <span class="hidden sm:inline">EduConnect</span>
                     </a>
                 </div>
                 <div class="hidden md:flex md:items-center md:space-x-4">
@@ -545,23 +569,23 @@ $current_user_profile_picture = $current_user_data['profile_picture'] ?? 'assets
     </nav>
 
     <!-- Main Content -->
-    <div class="max-w-6xl mx-auto px-4 py-8 relative">
+    <div class="max-w-6xl mx-auto px-4 py-6 relative">
         <!-- Floating Particles -->
         <div class="particle bg-purple-200 w-8 h-8 top-10 left-5"></div>
         <div class="particle bg-pink-200 w-6 h-6 top-40 right-10" style="animation-delay: 2s;"></div>
         <div class="particle bg-blue-200 w-10 h-10 bottom-20 left-15" style="animation-delay: 4s;"></div>
 
         <!-- Header -->
-        <h1 class="text-4xl md:text-5xl font-bold text-center mb-3 text-primary-800 animate__animated animate__bounceIn">
-            🏆 Papan Peringkat
+        <h1 class="text-3xl font-bold text-center mb-2 text-primary-800 animate__animated animate__bounceIn">
+            �️ Papan Peringkat
         </h1>
-        <p class="text-center text-gray-600 mb-10 max-w-2xl mx-auto text-lg">
+        <p class="text-center text-gray-600 mb-6 mx-auto text-sm sm:text-base">
             Bersinarlah seperti bintang! 🌟 Lihat siapa yang memimpin dan kejar posisi teratas!
         </p>
 
         <!-- Podium for Top 3 -->
         <?php if (count($leaderboard) >= 3): ?>
-            <div class="podium animate__animated animate__fadeIn">
+            <div class="podium flex justify-center items-end animate__animated animate__fadeIn">
                 <!-- 2nd Place -->
                 <div class="podium-item podium-2">
                     <div class="podium-rank">🥈</div>
@@ -587,39 +611,39 @@ $current_user_profile_picture = $current_user_data['profile_picture'] ?? 'assets
         <?php endif; ?>
 
         <!-- Leaderboard Table -->
-        <div class="bg-white/90 backdrop-blur-lg rounded-2xl shadow-2xl overflow-hidden border border-white/30 mb-10 animate__animated animate__fadeInUp table-container">
-            <div class="overflow-x-auto">
+        <div class="bg-white/90 backdrop-blur-lg rounded-xl shadow-lg overflow-hidden border border-white/30 mb-8 animate__animated animate__fadeInUp">
+            <div class="table-container">
                 <table class="w-full">
                     <thead class="bg-gradient-to-r from-primary-600 to-primary-500 text-white">
                         <tr>
-                            <th class="py-3 px-4 text-left rounded-tl-2xl">Peringkat</th>
-                            <th class="py-3 px-4 text-left">Nama Pengguna</th>
-                            <th class="py-3 px-4 text-left">Prestasi</th>
-                            <th class="py-3 px-4 text-right rounded-tr-2xl">Poin</th>
+                            <th class="py-3 px-3 sm:px-4 text-left rounded-tl-xl">Rank</th>
+                            <th class="py-3 px-3 sm:px-4 text-left">Nama</th>
+                            <th class="py-3 px-3 sm:px-4 text-left">Prestasi</th>
+                            <th class="py-3 px-3 sm:px-4 text-right rounded-tr-xl">Poin</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100">
                         <?php foreach ($leaderboard as $index => $row): ?>
                             <tr class="leaderboard-card <?php echo $index < 3 ? 'rank-' . ($index + 1) : ''; ?>" onclick="triggerConfetti(<?php echo $index; ?>)">
-                                <td class="py-3 px-4">
+                                <td class="py-3 px-3 sm:px-4">
                                     <div class="flex items-center">
-                                        <span class="w-8 h-8 flex items-center justify-center rounded-full <?php
+                                        <span class="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center rounded-full <?php
                                             echo $index == 0 ? 'bg-yellow-100 text-yellow-800' :
                                                 ($index == 1 ? 'bg-gray-100 text-gray-800' :
                                                     ($index == 2 ? 'bg-orange-100 text-orange-800' : 'bg-primary-50 text-primary-600'));
-                                        ?> font-bold text-base mr-2">
+                                        ?> font-bold text-sm sm:text-base mr-2">
                                             <?php echo $index + 1; ?>
                                         </span>
                                     </div>
                                 </td>
-                                <td class="py-3 px-4">
-                                    <div class="flex items-center space-x-3">
-                                        <img src="<?php echo htmlspecialchars($row['profile_picture'] ? asset('Uploads/profiles/' . $row['profile_picture']) : 'assets/images/default-avatar.png'); ?>" alt="Profile" class="w-10 h-10 rounded-full border-2 border-white shadow-md">
-                                        <span class="font-semibold text-gray-800 text-base"><?php echo htmlspecialchars($row['full_name']); ?></span>
+                                <td class="py-3 px-3 sm:px-4">
+                                    <div class="flex items-center space-x-2 sm:space-x-3">
+                                        <img src="<?php echo htmlspecialchars($row['profile_picture'] ? asset('Uploads/profiles/' . $row['profile_picture']) : 'assets/images/default-avatar.png'); ?>" alt="Profile" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-white shadow-md">
+                                        <span class="font-semibold text-gray-800 text-sm sm:text-base"><?php echo htmlspecialchars($row['full_name']); ?></span>
                                     </div>
                                 </td>
-                                <td class="py-3 px-4">
-                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold <?php
+                                <td class="py-3 px-3 sm:px-4">
+                                    <span class="inline-flex items-center px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-xs font-semibold <?php
                                         echo $index == 0 ? 'bg-yellow-100 text-yellow-800' :
                                             ($index == 1 ? 'bg-gray-100 text-gray-800' :
                                                 ($index == 2 ? 'bg-orange-100 text-orange-800' : 'bg-purple-100 text-purple-800'));
@@ -630,13 +654,13 @@ $current_user_profile_picture = $current_user_data['profile_picture'] ?? 'assets
                                                     ($index == 2 ? 'fa-award' : 'fa-star'));
                                         ?> mr-1"></i>
                                         <?php
-                                        echo $index == 0 ? 'Top Star 🌟' :
-                                            ($index == 1 ? 'Super Achiever 🥈' :
-                                                ($index == 2 ? 'Great Effort 🥉' : 'Rising Star ✨'));
+                                        echo $index == 0 ? 'Top Star' :
+                                            ($index == 1 ? 'Super' :
+                                                ($index == 2 ? 'Great' : 'Rising'));
                                         ?>
                                     </span>
                                 </td>
-                                <td class="py-3 px-4 text-right font-bold text-primary-600 text-base">
+                                <td class="py-3 px-3 sm:px-4 text-right font-bold text-primary-600 text-sm sm:text-base">
                                     <?php echo $row['total_points']; ?>
                                     <span class="text-gray-500 text-xs font-normal">pts</span>
                                 </td>
@@ -647,21 +671,21 @@ $current_user_profile_picture = $current_user_data['profile_picture'] ?? 'assets
             </div>
 
             <!-- Current User Position -->
-            <div class="bg-gradient-to-r from-primary-50 to-purple-50 border-t border-gray-100 px-4 py-5 rounded-b-2xl">
-                <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="bg-gradient-to-r from-primary-50 to-purple-50 border-t border-gray-100 px-4 py-4 rounded-b-xl">
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-3">
                     <div class="flex items-center space-x-3">
-                        <span class="w-8 h-8 flex items-center justify-center rounded-full bg-purple-100 text-purple-800 font-bold text-base">
+                        <span class="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center rounded-full bg-purple-100 text-purple-800 font-bold text-sm sm:text-base">
                             <?php echo $current_user_position; ?>
                         </span>
                         <div class="flex items-center space-x-2">
-                            <img src="<?php echo htmlspecialchars($current_user_profile_picture ? asset('Uploads/profiles/' . $current_user_profile_picture) : 'assets/images/default-avatar.png'); ?>" alt="Profile" class="w-8 h-8 rounded-full border-2 border-white shadow-md">
+                            <img src="<?php echo htmlspecialchars($current_user_profile_picture ? asset('Uploads/profiles/' . $current_user_profile_picture) : 'assets/images/default-avatar.png'); ?>" alt="Profile" class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-white shadow-md">
                             <div>
-                                <span class="font-semibold text-gray-800 text-base">Posisi Anda: <?php echo htmlspecialchars($current_user_name); ?></span>
-                                <div class="text-xs text-gray-500">Terus berusaha untuk naik peringkat! 🚀</div>
+                                <span class="font-semibold text-gray-800 text-sm sm:text-base"><?php echo htmlspecialchars($current_user_name); ?></span>
+                                <div class="text-xs text-gray-500">Posisi Anda</div>
                             </div>
                         </div>
                     </div>
-                    <div class="w-full sm:w-1/3">
+                    <div class="w-full sm:w-1/3 mt-2 sm:mt-0">
                         <div class="flex justify-between text-xs text-gray-600 mb-1">
                             <span>Poin Anda</span>
                             <span><?php echo $current_user_points; ?> pts</span>
@@ -675,12 +699,12 @@ $current_user_profile_picture = $current_user_data['profile_picture'] ?? 'assets
         </div>
 
         <!-- Motivational Section -->
-        <div class="mt-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl shadow-2xl p-6 text-white animate__animated animate__pulse motivational-section">
+        <div class="mt-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl shadow-lg p-5 text-white animate__animated animate__pulse">
             <div class="max-w-3xl mx-auto text-center">
-                <h2 class="text-2xl font-bold mb-3">Jadilah Bintang Berikutnya! 🌟</h2>
-                <p class="mb-5 text-base opacity-90">Setiap misi yang kamu selesaikan membawa kamu lebih dekat ke puncak! Ayo, taklukkan tantangan baru!</p>
-                <a href="mission.php" class="inline-flex items-center px-6 py-2 bg-white text-purple-600 font-semibold rounded-xl shadow-lg hover:bg-gray-50 transition duration-200">
-                    <i class="fas fa-rocket mr-2"></i> Ambil Misi Sekarang!
+                <h2 class="text-xl sm:text-2xl font-bold mb-2">Jadilah Bintang Berikutnya! 🌟</h2>
+                <p class="mb-4 text-sm sm:text-base opacity-90">Setiap misi yang kamu selesaikan membawa kamu lebih dekat ke puncak!</p>
+                <a href="mission.php" class="inline-flex items-center px-5 py-2 bg-white text-purple-600 font-semibold rounded-lg shadow hover:bg-gray-50 transition duration-200">
+                    <i class="fas fa-rocket mr-2"></i> Ambil Misi
                 </a>
             </div>
         </div>
@@ -689,7 +713,7 @@ $current_user_profile_picture = $current_user_data['profile_picture'] ?? 'assets
     <!-- Footer -->
     <footer class="bg-gradient-to-r from-primary-800 to-primary-900 text-white py-6">
         <div class="container mx-auto px-4 text-center">
-            <p class="text-sm opacity-80">© <?php echo date('Y'); ?> EduConnect. Dibuat dengan 💖 untuk pembelajaran yang menyenangkan!</p>
+            <p class="text-xs sm:text-sm opacity-80">© <?php echo date('Y'); ?> EduConnect. Dibuat dengan 💖 untuk pembelajaran yang menyenangkan!</p>
         </div>
     </footer>
 
@@ -721,8 +745,8 @@ $current_user_profile_picture = $current_user_data['profile_picture'] ?? 'assets
         function triggerConfetti(index) {
             if (index < 3) {
                 confetti({
-                    particleCount: 80,
-                    spread: 60,
+                    particleCount: 60,
+                    spread: 50,
                     origin: { y: 0.6 },
                     colors: index === 0 ? ['#facc15', '#fef08a'] :
                             index === 1 ? ['#d1d5db', '#f3f4f6'] :
