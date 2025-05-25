@@ -576,7 +576,7 @@ $current_user_profile_picture = $current_user_data['profile_picture'] ?? 'assets
         <div class="particle bg-blue-200 w-10 h-10 bottom-20 left-15" style="animation-delay: 4s;"></div>
 
         <!-- Header -->
-        <h1 class="text-3xl font-bold text-center mb-2 text-primary-800 animate__animated animate__bounceIn">
+        <h1 class="text-3xl font-bold text-center mb-2 mt-10 text-primary-800 animate__animated animate__bounceIn">
             �️ Papan Peringkat
         </h1>
         <p class="text-center text-gray-600 mb-6 mx-auto text-sm sm:text-base">
