@@ -3,6 +3,7 @@
 require_once('config.php');
 require_once('db_connect.php');
 require_once 'auth/auth.php';
+require_once 'helpers.php';
 
 $auth = new Auth();
 $user = $auth->getCurrentUser();
@@ -182,7 +183,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="flex items-center space-x-4">
                     <div class="relative group">
                         <button class="flex items-center space-x-2 focus:outline-none">
-                            <img src="<?php echo $user_data['profile_picture'] ?? 'assets/images/default-avatar.jpg'; ?>" 
+                            <img src="<?php echo $user_data['profile_picture'] ?? getRandomDefaultAvatar($user['id']); ?>" 
                                  class="w-8 h-8 rounded-full border-2 border-white">
                             <span><?php echo htmlspecialchars($user['full_name']); ?></span>
                             <i class="fas fa-chevron-down text-xs"></i>
@@ -208,7 +209,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="w-full md:w-1/3">
                 <div class="profile-card p-6 shadow-lg border border-white/30">
                     <div class="flex flex-col items-center">
-                        <img src="<?php echo $user_data['profile_picture'] ?? 'assets/images/default-avatar.jpg'; ?>" 
+                        <img src="<?php echo $user_data['profile_picture'] ?? getRandomDefaultAvatar($user['id']); ?>" 
                              class="w-32 h-32 rounded-full border-4 border-white shadow-lg mb-4 object-cover">
                         <h2 class="text-xl font-bold text-gray-800"><?php echo htmlspecialchars($user_data['full_name']); ?></h2>
                         <span class="text-sm text-primary-600 font-medium mb-4"><?php echo ucfirst($user_data['role']); ?></span>

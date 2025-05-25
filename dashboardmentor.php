@@ -2,6 +2,7 @@
 require_once 'config.php';
 require_once 'db_connect.php';
 require_once 'auth/auth.php';
+require_once 'helpers.php';
 
 $auth = new Auth();
 
@@ -188,7 +189,7 @@ $popular_tags = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
                     <div class="ml-3 relative">
                         <div>
                             <button id="user-menu-button" class="max-w-xs flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
-                                <img class="h-8 w-8 rounded-full" src="<?php echo $user['profile_picture'] ?? 'assets/images/default-avatar.png'; ?>" alt="<?php echo htmlspecialchars($user['full_name']); ?>">
+                                <img class="h-8 w-8 rounded-full" src="<?php echo $user['profile_picture'] ?? getRandomDefaultAvatar($user['id']); ?>" alt="<?php echo htmlspecialchars($user['full_name']); ?>">
                                 <span class="ml-2 hidden md:inline text-sm font-medium text-gray-700"><?php echo htmlspecialchars($user['full_name']); ?></span>
                                 <i class="fas fa-chevron-down ml-1 text-xs text-gray-500"></i>
                             </button>
@@ -237,7 +238,7 @@ $popular_tags = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
             <div class="w-full md:w-64 flex-shrink-0">
                 <div class="bg-white rounded-lg shadow-sm overflow-hidden">
                     <div class="p-6 text-center">
-                        <img class="h-24 w-24 rounded-full mx-auto border-4 border-primary-100" src="<?php echo $user['profile_picture'] ?? 'assets/images/default-avatar.png'; ?>" alt="<?php echo htmlspecialchars($user['full_name']); ?>">
+                        <img class="h-24 w-24 rounded-full mx-auto border-4 border-primary-100" src="<?php echo $user['profile_picture'] ?? getRandomDefaultAvatar($user['id']); ?>" alt="<?php echo htmlspecialchars($user['full_name']); ?>">
                         <h3 class="mt-4 text-lg font-medium text-gray-900"><?php echo htmlspecialchars($user['full_name']); ?></h3>
                         <p class="text-sm text-primary-600 font-medium">Mentor</p>
                         

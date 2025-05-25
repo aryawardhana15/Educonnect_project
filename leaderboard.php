@@ -2,6 +2,7 @@
 require_once('config.php');
 require_once('db_connect.php');
 require_once 'auth/auth.php';
+require_once 'helpers.php';
 
 $auth = new Auth();
 $user = $auth->getCurrentUser();
@@ -577,7 +578,7 @@ $current_user_profile_picture = $current_user_data['profile_picture'] ?? 'assets
 
         <!-- Header -->
         <h1 class="text-3xl font-bold text-center mb-2 mt-10 text-primary-800 animate__animated animate__bounceIn">
-            �️ Papan Peringkat
+            🏆 Papan Peringkat
         </h1>
         <p class="text-center text-gray-600 mb-6 mx-auto text-sm sm:text-base">
             Bersinarlah seperti bintang! 🌟 Lihat siapa yang memimpin dan kejar posisi teratas!
@@ -589,21 +590,21 @@ $current_user_profile_picture = $current_user_data['profile_picture'] ?? 'assets
                 <!-- 2nd Place -->
                 <div class="podium-item podium-2">
                     <div class="podium-rank">🥈</div>
-                    <img src="<?php echo htmlspecialchars($leaderboard[1]['profile_picture'] ? asset('Uploads/profiles/' . $leaderboard[1]['profile_picture']) : 'assets/images/default-avatar.png'); ?>" alt="2nd Place" class="podium-avatar">
+                    <img src="<?php echo $leaderboard[1]['profile_picture'] ?? getRandomDefaultAvatar($leaderboard[1]['id']); ?>" alt="2nd Place" class="podium-avatar">
                     <div class="podium-name"><?php echo htmlspecialchars($leaderboard[1]['full_name']); ?></div>
                     <div class="podium-points"><?php echo $leaderboard[1]['total_points']; ?> pts</div>
                 </div>
                 <!-- 1st Place -->
                 <div class="podium-item podium-1">
                     <div class="podium-rank">👑</div>
-                    <img src="<?php echo htmlspecialchars($leaderboard[0]['profile_picture'] ? asset('Uploads/profiles/' . $leaderboard[0]['profile_picture']) : 'assets/images/default-avatar.png'); ?>" alt="1st Place" class="podium-avatar">
+                    <img src="<?php echo $leaderboard[0]['profile_picture'] ?? getRandomDefaultAvatar($leaderboard[0]['id']); ?>" alt="1st Place" class="podium-avatar">
                     <div class="podium-name"><?php echo htmlspecialchars($leaderboard[0]['full_name']); ?></div>
                     <div class="podium-points"><?php echo $leaderboard[0]['total_points']; ?> pts</div>
                 </div>
                 <!-- 3rd Place -->
                 <div class="podium-item podium-3">
                     <div class="podium-rank">🥉</div>
-                    <img src="<?php echo htmlspecialchars($leaderboard[2]['profile_picture'] ? asset('Uploads/profiles/' . $leaderboard[2]['profile_picture']) : 'assets/images/default-avatar.png'); ?>" alt="3rd Place" class="podium-avatar">
+                    <img src="<?php echo $leaderboard[2]['profile_picture'] ?? getRandomDefaultAvatar($leaderboard[2]['id']); ?>" alt="3rd Place" class="podium-avatar">
                     <div class="podium-name"><?php echo htmlspecialchars($leaderboard[2]['full_name']); ?></div>
                     <div class="podium-points"><?php echo $leaderboard[2]['total_points']; ?> pts</div>
                 </div>
@@ -611,120 +612,119 @@ $current_user_profile_picture = $current_user_data['profile_picture'] ?? 'assets
         <?php endif; ?>
 
         <!-- Leaderboard Table -->
-     <!-- Leaderboard Table -->
-<div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 mb-8">
-    <div class="overflow-x-auto">
-        <table class="w-full">
-            <thead class="bg-gradient-to-r from-primary-600 to-primary-500 text-white">
-                <tr>
-                    <th class="py-3 px-4 text-left rounded-tl-xl w-16">Rank</th>
-                    <th class="py-3 px-4 text-left">Nama</th>
-                    <th class="py-3 px-4 text-left w-32">Prestasi</th>
-                    <th class="py-3 px-4 text-right rounded-tr-xl w-24">Poin</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200">
-                <?php foreach ($leaderboard as $index => $row): ?>
-                <tr class="hover:bg-gray-50 transition-colors">
-                    <td class="py-4 px-4">
-                        <div class="flex items-center justify-center w-8 h-8 rounded-full <?php
-                            echo $index == 0 ? 'bg-yellow-100 text-yellow-800' :
-                                ($index == 1 ? 'bg-gray-100 text-gray-800' :
-                                    ($index == 2 ? 'bg-orange-100 text-orange-800' : 'bg-primary-50 text-primary-600'));
-                        ?> font-bold">
-                            <?php echo $index + 1; ?>
-                        </div>
-                    </td>
-                    <td class="py-4 px-4">
-                        <div class="flex items-center space-x-3">
-                            <img src="<?php echo htmlspecialchars($row['profile_picture'] ? asset('Uploads/profiles/' . $row['profile_picture']) : 'assets/images/default-avatar.png'); ?>" 
-                                 alt="Profile" 
-                                 class="w-10 h-10 rounded-full border-2 border-white shadow-sm object-cover">
-                            <span class="font-medium text-gray-800"><?php echo htmlspecialchars($row['full_name']); ?></span>
-                        </div>
-                    </td>
-                    <td class="py-4 px-4">
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold <?php
-                            echo $index == 0 ? 'bg-yellow-100 text-yellow-800' :
-                                ($index == 1 ? 'bg-gray-100 text-gray-800' :
-                                    ($index == 2 ? 'bg-orange-100 text-orange-800' : 'bg-purple-100 text-purple-800'));
-                        ?>">
-                            <?php
-                            echo $index == 0 ? 'Top Star' :
-                                ($index == 1 ? 'Super' :
-                                    ($index == 2 ? 'Great' : 'Rising'));
-                            ?>
-                        </span>
-                    </td>
-                    <td class="py-4 px-4 text-right font-bold text-primary-600">
-                        <?php echo $row['total_points']; ?> <span class="text-gray-500 font-normal">pts</span>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 mb-8">
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gradient-to-r from-primary-600 to-primary-500 text-white">
+                        <tr>
+                            <th class="py-3 px-4 text-left rounded-tl-xl w-16">Rank</th>
+                            <th class="py-3 px-4 text-left">Nama</th>
+                            <th class="py-3 px-4 text-left w-32">Prestasi</th>
+                            <th class="py-3 px-4 text-right rounded-tr-xl w-24">Poin</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        <?php foreach ($leaderboard as $index => $row): ?>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="py-4 px-4">
+                                <div class="flex items-center justify-center w-8 h-8 rounded-full <?php
+                                    echo $index == 0 ? 'bg-yellow-100 text-yellow-800' :
+                                        ($index == 1 ? 'bg-gray-100 text-gray-800' :
+                                            ($index == 2 ? 'bg-orange-100 text-orange-800' : 'bg-primary-50 text-primary-600'));
+                                ?> font-bold">
+                                    <?php echo $index + 1; ?>
+                                </div>
+                            </td>
+                            <td class="py-4 px-4">
+                                <div class="flex items-center space-x-3">
+                                    <img src="<?php echo $row['profile_picture'] ?? getRandomDefaultAvatar($row['id']); ?>" 
+                                         alt="Profile" 
+                                         class="w-10 h-10 rounded-full border-2 border-white shadow-sm object-cover">
+                                    <span class="font-medium text-gray-800"><?php echo htmlspecialchars($row['full_name']); ?></span>
+                                </div>
+                            </td>
+                            <td class="py-4 px-4">
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold <?php
+                                    echo $index == 0 ? 'bg-yellow-100 text-yellow-800' :
+                                        ($index == 1 ? 'bg-gray-100 text-gray-800' :
+                                            ($index == 2 ? 'bg-orange-100 text-orange-800' : 'bg-purple-100 text-purple-800'));
+                                ?>">
+                                    <?php
+                                    echo $index == 0 ? 'Top Star' :
+                                        ($index == 1 ? 'Super' :
+                                            ($index == 2 ? 'Great' : 'Rising'));
+                                    ?>
+                                </span>
+                            </td>
+                            <td class="py-4 px-4 text-right font-bold text-primary-600">
+                                <?php echo $row['total_points']; ?> <span class="text-gray-500 font-normal">pts</span>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
 
-    <!-- Current User Position -->
-    <div class="bg-gray-50 border-t border-gray-200 px-4 py-3 rounded-b-xl">
-        <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-100 text-purple-800 font-bold">
-                    <?php echo $current_user_position; ?>
-                </span>
-                <div class="flex items-center space-x-2">
-                    <img src="<?php echo htmlspecialchars($current_user_profile_picture ? asset('Uploads/profiles/' . $current_user_profile_picture) : 'assets/images/default-avatar.png'); ?>" 
-                         alt="Profile" 
-                         class="w-8 h-8 rounded-full border-2 border-white shadow-sm object-cover">
-                    <div>
-                        <span class="font-medium text-gray-800"><?php echo htmlspecialchars($current_user_name); ?></span>
-                        <div class="text-xs text-gray-500">Posisi Anda</div>
-                    </div>
-                </div>
-            </div>
-            <div class="text-right">
-                <div class="font-bold text-primary-600"><?php echo $current_user_points; ?> <span class="text-gray-500 font-normal">pts</span></div>
-            </div>
-        </div>
-    </div>
-</div>
             <!-- Current User Position -->
-            <div class="bg-gradient-to-r from-primary-50 to-purple-50 border-t border-gray-100 px-4 py-4 rounded-b-xl">
-                <div class="flex flex-col sm:flex-row justify-between items-center gap-3">
+            <div class="bg-gray-50 border-t border-gray-200 px-4 py-3 rounded-b-xl">
+                <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
-                        <span class="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center rounded-full bg-purple-100 text-purple-800 font-bold text-sm sm:text-base">
+                        <span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-100 text-purple-800 font-bold">
                             <?php echo $current_user_position; ?>
                         </span>
                         <div class="flex items-center space-x-2">
-                            <img src="<?php echo htmlspecialchars($current_user_profile_picture ? asset('Uploads/profiles/' . $current_user_profile_picture) : 'assets/images/default-avatar.png'); ?>" alt="Profile" class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-white shadow-md">
+                            <img src="<?php echo $current_user_profile_picture ?? getRandomDefaultAvatar($user['id']); ?>" 
+                                 alt="Profile" 
+                                 class="w-8 h-8 rounded-full border-2 border-white shadow-sm object-cover">
                             <div>
-                                <span class="font-semibold text-gray-800 text-sm sm:text-base"><?php echo htmlspecialchars($current_user_name); ?></span>
+                                <span class="font-medium text-gray-800"><?php echo htmlspecialchars($current_user_name); ?></span>
                                 <div class="text-xs text-gray-500">Posisi Anda</div>
                             </div>
                         </div>
                     </div>
-                    <div class="w-full sm:w-1/3 mt-2 sm:mt-0">
-                        <div class="flex justify-between text-xs text-gray-600 mb-1">
-                            <span>Poin Anda</span>
-                            <span><?php echo $current_user_points; ?> pts</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: <?php echo min(($current_user_points / ($leaderboard[0]['total_points'] ?: 1)) * 100, 100); ?>%"></div>
-                        </div>
+                    <div class="text-right">
+                        <div class="font-bold text-primary-600"><?php echo $current_user_points; ?> <span class="text-gray-500 font-normal">pts</span></div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Motivational Section -->
-        <div class="mt-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl shadow-lg p-5 text-white animate__animated animate__pulse">
-            <div class="max-w-3xl mx-auto text-center">
-                <h2 class="text-xl sm:text-2xl font-bold mb-2">Jadilah Bintang Berikutnya! 🌟</h2>
-                <p class="mb-4 text-sm sm:text-base opacity-90">Setiap misi yang kamu selesaikan membawa kamu lebih dekat ke puncak!</p>
-                <a href="mission.php" class="inline-flex items-center px-5 py-2 bg-white text-purple-600 font-semibold rounded-lg shadow hover:bg-gray-50 transition duration-200">
-                    <i class="fas fa-rocket mr-2"></i> Ambil Misi
-                </a>
+        <!-- Current User Position -->
+        <div class="bg-gradient-to-r from-primary-50 to-purple-50 border-t border-gray-100 px-4 py-4 rounded-b-xl">
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-3">
+                <div class="flex items-center space-x-3">
+                    <span class="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center rounded-full bg-purple-100 text-purple-800 font-bold text-sm sm:text-base">
+                        <?php echo $current_user_position; ?>
+                    </span>
+                    <div class="flex items-center space-x-2">
+                        <img src="<?php echo $current_user_profile_picture ?? getRandomDefaultAvatar($user['id']); ?>" alt="Profile" class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-white shadow-md">
+                        <div>
+                            <span class="font-semibold text-gray-800 text-sm sm:text-base"><?php echo htmlspecialchars($current_user_name); ?></span>
+                            <div class="text-xs text-gray-500">Posisi Anda</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full sm:w-1/3 mt-2 sm:mt-0">
+                    <div class="flex justify-between text-xs text-gray-600 mb-1">
+                        <span>Poin Anda</span>
+                        <span><?php echo $current_user_points; ?> pts</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: <?php echo min(($current_user_points / ($leaderboard[0]['total_points'] ?: 1)) * 100, 100); ?>%"></div>
+                    </div>
+                </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Motivational Section -->
+    <div class="mt-6 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl shadow-lg p-5 text-white animate__animated animate__pulse">
+        <div class="max-w-3xl mx-auto text-center">
+            <h2 class="text-xl sm:text-2xl font-bold mb-2">Jadilah Bintang Berikutnya! 🌟</h2>
+            <p class="mb-4 text-sm sm:text-base opacity-90">Setiap misi yang kamu selesaikan membawa kamu lebih dekat ke puncak!</p>
+            <a href="mission.php" class="inline-flex items-center px-5 py-2 bg-white text-purple-600 font-semibold rounded-lg shadow hover:bg-gray-50 transition duration-200">
+                <i class="fas fa-rocket mr-2"></i> Ambil Misi
+            </a>
         </div>
     </div>
 
@@ -737,31 +737,96 @@ $current_user_profile_picture = $current_user_data['profile_picture'] ?? 'assets
 
     <!-- JavaScript for Interactivity -->
     <script>
-        // Mobile Menu Toggle
+    // Mobile Menu Toggle - Perbaikan
+    document.addEventListener('DOMContentLoaded', function() {
         const mobileMenuButton = document.getElementById('mobile-menu-button');
         const mobileMenu = document.getElementById('mobile-menu');
-        mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('open');
-        });
+        
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Toggle visibility
+                if (mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.remove('hidden');
+                    mobileMenu.classList.add('open');
+                    
+                    // Change hamburger icon to X
+                    const icon = mobileMenuButton.querySelector('i');
+                    if (icon) {
+                        icon.classList.remove('fa-bars');
+                        icon.classList.add('fa-times');
+                    }
+                } else {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenu.classList.remove('open');
+                    
+                    // Change X icon back to hamburger
+                    const icon = mobileMenuButton.querySelector('i');
+                    if (icon) {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                }
+            });
 
-        // User Menu Dropdown
-        const userMenuButton = document.getElementById('user-menu-button');
-        const userMenu = document.getElementById('user-menu');
-        userMenuButton.addEventListener('click', (e) => {
-            e.stopPropagation();
-            userMenu.classList.toggle('hidden');
+            // Close mobile menu when clicking on a link
+            const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+            mobileMenuLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenu.classList.remove('open');
+                    
+                    const icon = mobileMenuButton.querySelector('i');
+                    if (icon) {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+            });
+
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!mobileMenuButton.contains(e.target) && !mobileMenu.contains(e.target)) {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenu.classList.remove('open');
+                    
+                    const icon = mobileMenuButton.querySelector('i');
+                    if (icon) {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                }
+            });
+        }
+
+        // User Menu Dropdown (untuk desktop)
+        const userMenuButtons = document.querySelectorAll('[data-user-menu-button]');
+        userMenuButtons.forEach(button => {
+            const userMenu = button.nextElementSibling;
+            if (userMenu) {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    userMenu.classList.toggle('hidden');
+                });
+            }
         });
 
         // Close dropdown when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!userMenuButton.contains(e.target) && !userMenu.contains(e.target)) {
-                userMenu.classList.add('hidden');
-            }
+        document.addEventListener('click', function(e) {
+            userMenuButtons.forEach(button => {
+                const userMenu = button.nextElementSibling;
+                if (userMenu && !button.contains(e.target) && !userMenu.contains(e.target)) {
+                    userMenu.classList.add('hidden');
+                }
+            });
         });
 
         // Confetti Animation for Top Ranks
         function triggerConfetti(index) {
-            if (index < 3) {
+            if (typeof confetti !== 'undefined' && index < 3) {
                 confetti({
                     particleCount: 60,
                     spread: 50,
@@ -774,11 +839,11 @@ $current_user_profile_picture = $current_user_data['profile_picture'] ?? 'assets
         }
 
         // Trigger confetti on page load for top 3
-        window.addEventListener('load', () => {
-            if (<?php echo count($leaderboard) >= 3 ? 'true' : 'false'; ?>) {
-                setTimeout(() => triggerConfetti(0), 500);
-            }
-        });
-    </script>
+        const leaderboardCount = <?php echo count($leaderboard); ?>;
+        if (leaderboardCount >= 3) {
+            setTimeout(() => triggerConfetti(0), 500);
+        }
+    });
+</script>
 </body>
 </html>

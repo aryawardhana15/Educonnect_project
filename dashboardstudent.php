@@ -2,6 +2,7 @@
 require_once 'config.php';
 require_once 'db_connect.php';
 require_once 'auth/auth.php';
+require_once 'helpers.php';
 
 $auth = new Auth();
 
@@ -397,7 +398,7 @@ if ($user['role'] !== 'student') {
                         <!-- Animated avatar with hover effect -->
                         <div class="relative inline-block group">
                             <img class="h-24 w-24 rounded-full mx-auto border-4 border-primary-100 avatar-hover transition-all duration-300" 
-                                 src="<?php echo $user['profile_picture'] ?? 'assets/images/default-avatar.png'; ?>" 
+                                 src="<?php echo $user['profile_picture'] ?? getRandomDefaultAvatar($user['id']); ?>" 
                                  alt="<?php echo htmlspecialchars($user['full_name']); ?>">
                             <!-- Cute crown for top students -->
                             <?php if ($user['points'] > 500): ?>

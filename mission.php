@@ -2,6 +2,7 @@
 require_once('config.php');
 require_once('db_connect.php');
 require_once 'auth/auth.php';
+require_once 'helpers.php';
 
 $auth = new Auth();
 $user = $auth->getCurrentUser();
@@ -306,7 +307,9 @@ if ($role === 'student') {
                     <?php if (isset($_SESSION['user_id'])): ?>
                     <div class="relative group">
                         <button class="flex items-center space-x-2 text-white hover:text-primary-200 focus:outline-none">
-                            <i class="fas fa-user-circle text-xl"></i>
+                            <img src="<?php echo $user['profile_picture'] ?? getRandomDefaultAvatar($user['id']); ?>" 
+                                 alt="Profile" 
+                                 class="w-8 h-8 rounded-full">
                             <span class="hidden lg:inline"><?php echo htmlspecialchars($_SESSION['full_name']); ?></span>
                             <i class="fas fa-chevron-down text-xs"></i>
                         </button>
@@ -341,6 +344,15 @@ if ($role === 'student') {
         </div>
         <div id="mobile-menu" class="hidden md:hidden bg-primary-700 border-t border-primary-600">
             <div class="px-2 pt-2 pb-3 space-y-1">
+                <?php if (isset($_SESSION['user_id'])): ?>
+                <div class="flex items-center space-x-3 px-3 py-2">
+                    <img src="<?php echo $user['profile_picture'] ?? getRandomDefaultAvatar($user['id']); ?>" 
+                         alt="Profile" 
+                         class="w-8 h-8 rounded-full border-2 border-white">
+                    <span class="text-white font-medium"><?php echo htmlspecialchars($_SESSION['full_name']); ?></span>
+                </div>
+                <hr class="border-primary-600 my-2">
+                <?php endif; ?>
                 <a href="kelas.php" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-primary-600">
                     <i class="fas fa-graduation-cap mr-2"></i>Kelas
                 </a>
@@ -487,7 +499,8 @@ if ($role === 'student') {
                             </div>
                         </div>
                         <div class="flex items-center mb-3 w-full">
-                            <img src="<?php echo $item['profile_picture'] ?? 'assets/images/default-avatar.png'; ?>" class="w-10 h-10 rounded-full border-2 border-white shadow-md mr-3">
+                            <img src="<?php echo $item['profile_picture'] ?? getRandomDefaultAvatar($item['user_id']); ?>" 
+                                 class="w-10 h-10 rounded-full border-2 border-white shadow-md mr-3">
                             <div>
                                 <div class="font-semibold text-gray-700 text-sm"><?php echo htmlspecialchars($item['full_name']); ?></div>
                                 <div class="text-xs text-gray-500">

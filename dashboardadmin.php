@@ -2,6 +2,7 @@
 require_once 'config.php';
 require_once 'db_connect.php';
 require_once 'auth/auth.php';
+require_once 'helpers.php';
 
 $auth = new Auth();
 
@@ -71,7 +72,7 @@ if ($user['role'] !== 'admin') {
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                            <img src="<?php echo $user['profile_picture'] ?? 'assets/images/default-avatar.png'; ?>" class="rounded-circle" width="32" height="32" alt="Avatar">
+                            <img src="<?php echo $user['profile_picture'] ?? getRandomDefaultAvatar($user['id']); ?>" class="rounded-circle" width="32" height="32" alt="Avatar">
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <?php
@@ -107,7 +108,7 @@ if ($user['role'] !== 'admin') {
                 <div class="card mb-4">
                     <div class="card-body">
                         <div class="text-center mb-3">
-                            <img src="<?php echo $user['profile_picture'] ?? 'assets/images/default-avatar.png'; ?>" 
+                            <img src="<?php echo $user['profile_picture'] ?? getRandomDefaultAvatar($user['id']); ?>" 
                                  class="rounded-circle" width="100" height="100" alt="Profile Picture">
                             <h5 class="mt-2"><?php echo htmlspecialchars($user['full_name']); ?></h5>
                             <p class="text-muted">Admin</p>

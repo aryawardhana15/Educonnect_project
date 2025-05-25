@@ -2,6 +2,7 @@
 require_once('config.php');
 require_once('db_connect.php');
 require_once('auth/auth.php');
+require_once 'helpers.php';
 
 // Inisialisasi Auth
 $auth = new Auth($conn);
@@ -170,7 +171,7 @@ if ($discussion_id) {
             <!-- Diskusi -->
             <div class="bg-white rounded-xl shadow-md p-6">
                 <div class="flex items-start">
-                    <img src="<?php echo $discussion['profile_image'] ?: '/assets/images/default-avatar.png'; ?>" 
+                    <img src="<?php echo $discussion['profile_image'] ?: getRandomDefaultAvatar($discussion['user_id']); ?>" 
                          alt="<?php echo htmlspecialchars($discussion['full_name']); ?>"
                          class="w-10 h-10 rounded-full mr-4">
                     <div class="flex-grow">
@@ -222,7 +223,7 @@ if ($discussion_id) {
                     <?php foreach ($comments as $comment): ?>
                     <div class="bg-white rounded-xl shadow-md p-6">
                         <div class="flex items-start">
-                            <img src="<?php echo $comment['profile_image'] ?: '/assets/images/default-avatar.png'; ?>" 
+                            <img src="<?php echo $comment['profile_image'] ?: getRandomDefaultAvatar($comment['user_id']); ?>" 
                                  alt="<?php echo htmlspecialchars($comment['full_name']); ?>"
                                  class="w-8 h-8 rounded-full mr-4">
                             <div class="flex-grow">
@@ -283,7 +284,7 @@ if ($discussion_id) {
                 <a href="/discussion.php?course_id=<?php echo $course_id; ?>&discussion_id=<?php echo $discussion['id']; ?>" 
                    class="block bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition">
                     <div class="flex items-start">
-                        <img src="<?php echo $discussion['profile_image'] ?: '/assets/images/default-avatar.png'; ?>" 
+                        <img src="<?php echo $discussion['profile_image'] ?: getRandomDefaultAvatar($discussion['user_id']); ?>" 
                              alt="<?php echo htmlspecialchars($discussion['full_name']); ?>"
                              class="w-10 h-10 rounded-full mr-4">
                         <div class="flex-grow">

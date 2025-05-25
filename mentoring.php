@@ -2,6 +2,7 @@
 require_once('config.php');
 require_once('db_connect.php');
 require_once 'auth/auth.php';
+require_once 'includes/helpers.php';
 
 $auth = new Auth();
 $user = $auth->getCurrentUser();
@@ -653,7 +654,7 @@ if ($role === 'mentor') {
                         <?php foreach ($scheduled_sessions as $session): ?>
                         <div class="bg-white rounded-xl shadow p-4 flex flex-col">
                             <div class="flex items-center mb-3">
-                                <img src="<?= $session['student_image'] ?: 'assets/images/default-avatar.png' ?>" alt="<?= $session['student_name'] ?>" class="w-10 h-10 rounded-full mr-3">
+                                <img src="<?= $session['student_image'] ?: getRandomDefaultAvatar() ?>" alt="<?= $session['student_name'] ?>" class="w-10 h-10 rounded-full mr-3">
                                 <div>
                                     <div class="font-bold text-primary-700"><?= $session['student_name'] ?></div>
                                     <div class="text-gray-600 text-sm"><?= date('d M Y', strtotime($session['session_date'])) ?> <?= date('H:i', strtotime($session['session_time'])) ?></div>
@@ -812,7 +813,7 @@ if ($role === 'mentor') {
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                 <?php foreach ($mentors as $m): ?>
                 <div class="bg-white rounded-xl shadow p-5 flex flex-col items-center">
-                    <img src="<?= $m['profile_picture'] ?? 'assets/images/default-avatar.png' ?>" class="w-20 h-20 rounded-full border-4 border-primary-200 mb-3">
+                    <img src="<?= $m['profile_picture'] ?? getRandomDefaultAvatar() ?>" class="w-20 h-20 rounded-full border-4 border-primary-200 mb-3">
                     <div class="font-bold text-lg text-primary-700 mb-1"><?= $m['full_name'] ?? '-' ?></div>
                     <div class="text-gray-500 text-sm mb-1"><?= $m['bio'] ?? '-' ?></div>
                     
