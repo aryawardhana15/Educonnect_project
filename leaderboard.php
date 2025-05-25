@@ -611,65 +611,83 @@ $current_user_profile_picture = $current_user_data['profile_picture'] ?? 'assets
         <?php endif; ?>
 
         <!-- Leaderboard Table -->
-        <div class="bg-white/90 backdrop-blur-lg rounded-xl shadow-lg overflow-hidden border border-white/30 mb-8 animate__animated animate__fadeInUp">
-            <div class="table-container">
-                <table class="w-full">
-                    <thead class="bg-gradient-to-r from-primary-600 to-primary-500 text-white">
-                        <tr>
-                            <th class="py-3 px-3 sm:px-4 text-left rounded-tl-xl">Rank</th>
-                            <th class="py-3 px-3 sm:px-4 text-left">Nama</th>
-                            <th class="py-3 px-3 sm:px-4 text-left">Prestasi</th>
-                            <th class="py-3 px-3 sm:px-4 text-right rounded-tr-xl">Poin</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-100">
-                        <?php foreach ($leaderboard as $index => $row): ?>
-                            <tr class="leaderboard-card <?php echo $index < 3 ? 'rank-' . ($index + 1) : ''; ?>" onclick="triggerConfetti(<?php echo $index; ?>)">
-                                <td class="py-3 px-3 sm:px-4">
-                                    <div class="flex items-center">
-                                        <span class="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center rounded-full <?php
-                                            echo $index == 0 ? 'bg-yellow-100 text-yellow-800' :
-                                                ($index == 1 ? 'bg-gray-100 text-gray-800' :
-                                                    ($index == 2 ? 'bg-orange-100 text-orange-800' : 'bg-primary-50 text-primary-600'));
-                                        ?> font-bold text-sm sm:text-base mr-2">
-                                            <?php echo $index + 1; ?>
-                                        </span>
-                                    </div>
-                                </td>
-                                <td class="py-3 px-3 sm:px-4">
-                                    <div class="flex items-center space-x-2 sm:space-x-3">
-                                        <img src="<?php echo htmlspecialchars($row['profile_picture'] ? asset('Uploads/profiles/' . $row['profile_picture']) : 'assets/images/default-avatar.png'); ?>" alt="Profile" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-white shadow-md">
-                                        <span class="font-semibold text-gray-800 text-sm sm:text-base"><?php echo htmlspecialchars($row['full_name']); ?></span>
-                                    </div>
-                                </td>
-                                <td class="py-3 px-3 sm:px-4">
-                                    <span class="inline-flex items-center px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-xs font-semibold <?php
-                                        echo $index == 0 ? 'bg-yellow-100 text-yellow-800' :
-                                            ($index == 1 ? 'bg-gray-100 text-gray-800' :
-                                                ($index == 2 ? 'bg-orange-100 text-orange-800' : 'bg-purple-100 text-purple-800'));
-                                    ?>">
-                                        <i class="fas <?php
-                                            echo $index == 0 ? 'fa-crown' :
-                                                ($index == 1 ? 'fa-medal' :
-                                                    ($index == 2 ? 'fa-award' : 'fa-star'));
-                                        ?> mr-1"></i>
-                                        <?php
-                                        echo $index == 0 ? 'Top Star' :
-                                            ($index == 1 ? 'Super' :
-                                                ($index == 2 ? 'Great' : 'Rising'));
-                                        ?>
-                                    </span>
-                                </td>
-                                <td class="py-3 px-3 sm:px-4 text-right font-bold text-primary-600 text-sm sm:text-base">
-                                    <?php echo $row['total_points']; ?>
-                                    <span class="text-gray-500 text-xs font-normal">pts</span>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
+     <!-- Leaderboard Table -->
+<div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 mb-8">
+    <div class="overflow-x-auto">
+        <table class="w-full">
+            <thead class="bg-gradient-to-r from-primary-600 to-primary-500 text-white">
+                <tr>
+                    <th class="py-3 px-4 text-left rounded-tl-xl w-16">Rank</th>
+                    <th class="py-3 px-4 text-left">Nama</th>
+                    <th class="py-3 px-4 text-left w-32">Prestasi</th>
+                    <th class="py-3 px-4 text-right rounded-tr-xl w-24">Poin</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                <?php foreach ($leaderboard as $index => $row): ?>
+                <tr class="hover:bg-gray-50 transition-colors">
+                    <td class="py-4 px-4">
+                        <div class="flex items-center justify-center w-8 h-8 rounded-full <?php
+                            echo $index == 0 ? 'bg-yellow-100 text-yellow-800' :
+                                ($index == 1 ? 'bg-gray-100 text-gray-800' :
+                                    ($index == 2 ? 'bg-orange-100 text-orange-800' : 'bg-primary-50 text-primary-600'));
+                        ?> font-bold">
+                            <?php echo $index + 1; ?>
+                        </div>
+                    </td>
+                    <td class="py-4 px-4">
+                        <div class="flex items-center space-x-3">
+                            <img src="<?php echo htmlspecialchars($row['profile_picture'] ? asset('Uploads/profiles/' . $row['profile_picture']) : 'assets/images/default-avatar.png'); ?>" 
+                                 alt="Profile" 
+                                 class="w-10 h-10 rounded-full border-2 border-white shadow-sm object-cover">
+                            <span class="font-medium text-gray-800"><?php echo htmlspecialchars($row['full_name']); ?></span>
+                        </div>
+                    </td>
+                    <td class="py-4 px-4">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold <?php
+                            echo $index == 0 ? 'bg-yellow-100 text-yellow-800' :
+                                ($index == 1 ? 'bg-gray-100 text-gray-800' :
+                                    ($index == 2 ? 'bg-orange-100 text-orange-800' : 'bg-purple-100 text-purple-800'));
+                        ?>">
+                            <?php
+                            echo $index == 0 ? 'Top Star' :
+                                ($index == 1 ? 'Super' :
+                                    ($index == 2 ? 'Great' : 'Rising'));
+                            ?>
+                        </span>
+                    </td>
+                    <td class="py-4 px-4 text-right font-bold text-primary-600">
+                        <?php echo $row['total_points']; ?> <span class="text-gray-500 font-normal">pts</span>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
 
+    <!-- Current User Position -->
+    <div class="bg-gray-50 border-t border-gray-200 px-4 py-3 rounded-b-xl">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <span class="flex items-center justify-center w-8 h-8 rounded-full bg-purple-100 text-purple-800 font-bold">
+                    <?php echo $current_user_position; ?>
+                </span>
+                <div class="flex items-center space-x-2">
+                    <img src="<?php echo htmlspecialchars($current_user_profile_picture ? asset('Uploads/profiles/' . $current_user_profile_picture) : 'assets/images/default-avatar.png'); ?>" 
+                         alt="Profile" 
+                         class="w-8 h-8 rounded-full border-2 border-white shadow-sm object-cover">
+                    <div>
+                        <span class="font-medium text-gray-800"><?php echo htmlspecialchars($current_user_name); ?></span>
+                        <div class="text-xs text-gray-500">Posisi Anda</div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-right">
+                <div class="font-bold text-primary-600"><?php echo $current_user_points; ?> <span class="text-gray-500 font-normal">pts</span></div>
+            </div>
+        </div>
+    </div>
+</div>
             <!-- Current User Position -->
             <div class="bg-gradient-to-r from-primary-50 to-purple-50 border-t border-gray-100 px-4 py-4 rounded-b-xl">
                 <div class="flex flex-col sm:flex-row justify-between items-center gap-3">
