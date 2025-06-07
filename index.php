@@ -911,7 +911,7 @@ if ($auth->isLoggedIn()) {
                     <!-- Chat Container -->
                     <div id="chat-box" class="mb-6 p-4 bg-gray-50 rounded-lg h-64 overflow-y-auto shadow-inner">
                         <div class="ai-message p-3 mb-3 bg-white rounded-lg shadow-sm max-w-[80%]">
-                            <p class="font-medium text-primary">🤖 AI Assistant:</p>
+                            <p class="font-medium text-primary">ðŸ¤– AI Assistant:</p>
                             <p class="text-gray-700">Hai! Saya AI Assistant EduConnect. Ada yang bisa saya bantu terkait pembelajaran Anda hari ini?</p>
                             <p class="text-xs text-gray-400 mt-1">Baru saja</p>
                         </div>
@@ -1068,7 +1068,7 @@ if ($auth->isLoggedIn()) {
         const userMsgDiv = document.createElement('div');
         userMsgDiv.className = 'user-message p-3 mb-3 bg-blue-50 rounded-lg shadow-sm max-w-[80%] ml-auto text-right';
         userMsgDiv.innerHTML = `
-            <p class="font-medium text-blue-600">👤 Anda:</p>
+            <p class="font-medium text-blue-600">ðŸ‘¤ Anda:</p>
             <p class="text-gray-700">${userMessage.value}</p>
             <p class="text-xs text-gray-400 mt-1">Baru saja</p>
         `;
@@ -1079,7 +1079,7 @@ if ($auth->isLoggedIn()) {
             const aiMsgDiv = document.createElement('div');
             aiMsgDiv.className = 'ai-message p-3 mb-3 bg-white rounded-lg shadow-sm max-w-[80%]';
             aiMsgDiv.innerHTML = `
-                <p class="font-medium text-primary">🤖 AI Assistant:</p>
+                <p class="font-medium text-primary">ðŸ¤– AI Assistant:</p>
                 <p class="text-gray-700">Saya memahami pertanyaan Anda tentang "${userMessage.value}". Berikut penjelasannya: ...</p>
                 <p class="text-xs text-gray-400 mt-1">Baru saja</p>
             `;
@@ -1489,31 +1489,37 @@ if ($auth->isLoggedIn()) {
     </section>
 
     <!-- CTA Section -->
-    <section id="signup" class="py-20 bg-primary text-white relative overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-r from-primary to-secondary opacity-90"></div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-            <h2 class="text-3xl font-bold mb-6 animate__animated animate__pulse animate__infinite">Siap Memulai Perjalanan Belajarmu?</h2>
-            <p class="text-xl mb-8 max-w-3xl mx-auto">Bergabunglah dengan ribuan siswa lainnya yang telah merasakan manfaat EduConnect untuk pemerataan pendidikan di Indonesia.</p>
+   <section id="signup" class="py-20 bg-primary text-white relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-r from-primary to-secondary opacity-90"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+        <h2 class="text-3xl font-bold mb-6 animate__animated animate__pulse animate__infinite">Siap Memulai Perjalanan Belajarmu?</h2>
+        <p class="text-xl mb-8 max-w-3xl mx-auto">Bergabunglah dengan ribuan siswa lainnya yang telah merasakan manfaat EduConnect untuk pemerataan pendidikan di Indonesia.</p>
+        
+        <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mt-8">
+            <!-- Register Button - Cute with animation -->
+            <a href="auth/register.php" class="relative inline-flex items-center px-8 py-3 bg-white text-primary rounded-full font-bold text-lg shadow-lg transform transition-all hover:scale-105 hover:shadow-xl animate__animated animate__bounceIn">
+                <span class="mr-2">Daftar Sekarang</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                </svg>
+                <span class="absolute -top-2 -right-2 h-6 w-6 flex items-center justify-center bg-yellow-300 text-primary rounded-full text-xs animate-ping">✨</span>
+            </a>
             
-            <div class="max-w-md mx-auto bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-500">
-                <div class="p-8">
-                    <h3 class="text-2xl font-bold text-dark mb-4">Daftar Gratis</h3>
-                    <form class="space-y-4">
-                        <input type="text" placeholder="Nama Lengkap" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-dark">
-                        <input type="email" placeholder="Email" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-dark">
-                        <input type="password" placeholder="Password" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-dark">
-                        <select class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-dark">
-                            <option value="">Pilih peran</option>
-                            <option value="student">Siswa</option>
-                            <option value="mentor">Mentor</option>
-                        </select>
-                        <button type="submit" class="w-full bg-primary text-white font-semibold py-3 rounded-lg hover:bg-primary-dark transition duration-300 transform hover:-translate-y-1">Daftar Sekarang</button>
-                    </form>
-                    <p class="text-gray-600 mt-4 text-sm">Sudah punya akun? <a href="#login" class="text-primary font-semibold hover:underline">Masuk</a></p>
-                </div>
-            </div>
+            <!-- Login Button - Cute alternative style -->
+            <a href="auth/login.php" class="relative inline-flex items-center px-8 py-3 border-2 border-white text-white rounded-full font-bold text-lg hover:bg-white hover:text-primary transition-all duration-300 group">
+                <span class="mr-2">Masuk</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 group-hover:animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                <span class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-3/4 h-1 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+            </a>
         </div>
-    </section>
+        
+        <!-- Decorative elements -->
+        <div class="absolute -bottom-10 -left-10 w-32 h-32 rounded-full bg-yellow-300 opacity-20 mix-blend-overlay"></div>
+        <div class="absolute -top-20 -right-20 w-64 h-64 rounded-full bg-pink-300 opacity-20 mix-blend-overlay"></div>
+    </div>
+</section>
 
     <!-- Contact Section -->
     <section id="contact" class="py-20 bg-white">
@@ -1638,7 +1644,7 @@ if ($auth->isLoggedIn()) {
             </div>
             
             <div class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
-                <p class="text-gray-400 mb-4 md:mb-0">© 2025 EduConnect. All rights reserved. Designed by Arya Wardhana</p>
+                <p class="text-gray-400 mb-4 md:mb-0">Â© 2025 EduConnect. All rights reserved. Designed by Arya Wardhana</p>
                 <div class="flex space-x-6">
                     <a href="#" class="text-gray-400 hover:text-white transition duration-300 transform hover:-translate-y-1">
                         <i class="fab fa-facebook-f"></i>
@@ -1684,7 +1690,7 @@ if ($auth->isLoggedIn()) {
         </div>
         <div id="chat-box-popup" class="p-4 h-64 overflow-y-auto">
             <div class="ai-message p-3 mb-3 max-w-xs">
-                <p class="font-medium">🤖 AI Assistant:</p>
+                <p class="font-medium">ðŸ¤– AI Assistant:</p>
                 <p>Hai! Ada yang bisa saya bantu?</p>
             </div>
         </div>
@@ -1818,10 +1824,10 @@ window.addEventListener('load', function() {
             
             if (sender === 'user') {
                 div.classList.add('ml-auto');
-                div.innerHTML = `<p class="font-medium">👤 Anda:</p><p>${message}</p>`;
+                div.innerHTML = `<p class="font-medium">ðŸ‘¤ Anda:</p><p>${message}</p>`;
             } else {
                 div.classList.add('mr-auto');
-                div.innerHTML = `<p class="font-medium">🤖 AI Assistant:</p><p>${message}</p>`;
+                div.innerHTML = `<p class="font-medium">ðŸ¤– AI Assistant:</p><p>${message}</p>`;
             }
             
             chatBox.appendChild(div);
