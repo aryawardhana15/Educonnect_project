@@ -378,7 +378,6 @@ if ($auth->isLoggedIn()) {
     <div class="particle"></div>
     <div class="particle"></div>
     <div class="particle"></div>
-    <div class="particle"></div>
   </div>
 
   <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 py-20 md:py-0 relative z-10">
