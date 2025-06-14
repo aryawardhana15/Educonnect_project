@@ -50,7 +50,7 @@ function is_active($path) {
 // Konfigurasi Database
 define('DB_HOST', 'localhost');
 define('DB_USER', 'root');
-define('DB_PASS', '');
+define('DB_PASS', 'hafiz1180');
 define('DB_NAME', 'educonnect');
 
 // Konfigurasi API
