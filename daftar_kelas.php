@@ -9,13 +9,13 @@ $user = $isLoggedIn ? $auth->getCurrentUser() : null;
 
 $db = db();
 
-// Filter (optional, jika ada filter)
+// Filter (optional, if filters are applied)
 $type = $_GET['type'] ?? 'all';
 $education_level = $_GET['education_level'] ?? 'all';
 $subject = $_GET['subject'] ?? 'all';
 $level = $_GET['level'] ?? 'all';
 
-// Query semua kelas
+// Query all courses
 $where = [];
 $params = [];
 if ($type !== 'all') {
@@ -39,19 +39,19 @@ $stmt = $db->prepare("SELECT c.*, u.full_name as mentor_name FROM courses c JOIN
 $stmt->execute($params);
 $courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Untuk filter subject
+// For subject filter
 $subjects_stmt = $db->query("SELECT DISTINCT subject FROM courses WHERE subject IS NOT NULL AND subject != ''");
 $subjects = $subjects_stmt->fetchAll(PDO::FETCH_COLUMN);
 
-// Dummy bootcamp (atau query bootcamp jika ada)
+// Dummy bootcamp (or query bootcamp if available)
 $bootcamps = [];
 ?>
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kelas - EduConnect</title>
+    <title>Courses - EduConnect</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome CDN -->
@@ -208,15 +208,15 @@ $bootcamps = [];
                 <div class="hidden md:flex items-center space-x-8">
                     <a href="kelas.php" class="nav-link font-medium flex items-center space-x-2">
                         <i class="fas fa-graduation-cap"></i>
-                        <span>Kelas</span>
+                        <span>Courses</span>
                     </a>
                     <a href="mission.php" class="nav-link font-medium flex items-center space-x-2">
                         <i class="fas fa-tasks"></i>
-                        <span>Misi</span>
+                        <span>Missions</span>
                     </a>
                     <a href="community.php" class="nav-link font-medium flex items-center space-x-2">
                         <i class="fas fa-users"></i>
-                        <span>Komunitas</span>
+                        <span>Community</span>
                     </a>
                 </div>
                 
@@ -231,17 +231,17 @@ $bootcamps = [];
                             <i class="fas fa-chevron-down text-xs"></i>
                         </button>
                         <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 hidden group-hover:block">
-                            <a href="profile.php" class="block px-4 py-2 text-gray-800 hover:bg-primary-100">Profil</a>
+                            <a href="profile.php" class="block px-4 py-2 text-gray-800 hover:bg-primary-100">Profile</a>
                             <?php if ($auth->hasRole('admin')): ?>
                             <a href="admin/dashboard.php" class="block px-4 py-2 text-gray-800 hover:bg-primary-100">Admin Panel</a>
                             <?php endif; ?>
                             <div class="border-t border-gray-200"></div>
-                            <a href="auth/logout.php" class="block px-4 py-2 text-gray-800 hover:bg-primary-100">Keluar</a>
+                            <a href="auth/logout.php" class="block px-4 py-2 text-gray-800 hover:bg-primary-100">Log Out</a>
                         </div>
                     </div>
                     <?php else: ?>
                     <a href="auth/login.php" class="px-5 py-2 bg-white text-primary-600 font-bold rounded-lg shadow hover:bg-primary-100 transition-all duration-300">
-                        <i class="fas fa-sign-in-alt mr-2"></i> Masuk
+                        <i class="fas fa-sign-in-alt mr-2"></i> Log In
                     </a>
                     <?php endif; ?>
                     <button class="md:hidden focus:outline-none">
@@ -259,17 +259,17 @@ $bootcamps = [];
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                 <div class="animate__animated animate__fadeInLeft">
                     <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
-                        Temukan <span class="text-primary-600">Kelas Terbaik</span> Untuk Masa Depanmu
+                        Discover the <span class="text-primary-600">Best Courses</span> for Your Future
                     </h1>
                     <p class="text-lg md:text-xl text-gray-600 mb-8 max-w-lg">
-                        Tingkatkan keterampilanmu dengan kelas dan bootcamp berkualitas dari mentor berpengalaman di seluruh Indonesia.
+                        Enhance your skills with high-quality courses and bootcamps from experienced mentors across the globe.
                     </p>
                     <div class="flex flex-wrap gap-4">
                         <a href="#courses" class="px-8 py-3 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                            <i class="fas fa-book-open mr-2"></i> Jelajahi Kelas
+                            <i class="fas fa-book-open mr-2"></i> Explore Courses
                         </a>
                         <a href="#bootcamps" class="px-8 py-3 bg-white text-primary-600 border-2 border-primary-600 font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                            <i class="fas fa-laptop-code mr-2"></i> Lihat Bootcamp
+                            <i class="fas fa-laptop-code mr-2"></i> View Bootcamps
                         </a>
                     </div>
                 </div>
@@ -290,51 +290,51 @@ $bootcamps = [];
         <div class="glass-card rounded-2xl shadow-xl p-6 mb-12 animate__animated animate__fadeIn">
             <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
                 <i class="fas fa-sliders-h mr-3 text-primary-600"></i>
-                Filter Kelas
+                Filter Courses
             </h2>
             
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <!-- Type Filter -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-3">Tipe Kelas</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-3">Course Type</label>
                     <div class="flex flex-wrap gap-2">
                         <a href="?type=all" class="filter-btn px-4 py-2 rounded-xl border border-primary-500 text-sm font-medium <?php echo $type === 'all' ? 'bg-primary-500 text-white' : 'text-primary-500 hover:bg-primary-50'; ?>">
-                            Semua
+                            All
                         </a>
                         <a href="?type=free" class="filter-btn px-4 py-2 rounded-xl border border-primary-500 text-sm font-medium <?php echo $type === 'free' ? 'bg-primary-500 text-white' : 'text-primary-500 hover:bg-primary-50'; ?>">
-                            Gratis
+                            Free
                         </a>
                         <a href="?type=premium" class="filter-btn px-4 py-2 rounded-xl border border-primary-500 text-sm font-medium <?php echo $type === 'premium' ? 'bg-primary-500 text-white' : 'text-primary-500 hover:bg-primary-50'; ?>">
-                            Berbayar
+                            Paid
                         </a>
                     </div>
                 </div>
                 
                 <!-- Education Level Filter -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-3">Jenjang Pendidikan</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-3">Education Level</label>
                     <div class="flex flex-wrap gap-2">
                         <a href="?education_level=all" class="filter-btn px-4 py-2 rounded-xl border border-primary-500 text-sm font-medium <?php echo $education_level === 'all' ? 'bg-primary-500 text-white' : 'text-primary-500 hover:bg-primary-50'; ?>">
-                            Semua
+                            All
                         </a>
                         <a href="?education_level=sd" class="filter-btn px-4 py-2 rounded-xl border border-primary-500 text-sm font-medium <?php echo $education_level === 'sd' ? 'bg-primary-500 text-white' : 'text-primary-500 hover:bg-primary-50'; ?>">
-                            SD
+                            Elementary
                         </a>
                         <a href="?education_level=smp" class="filter-btn px-4 py-2 rounded-xl border border-primary-500 text-sm font-medium <?php echo $education_level === 'smp' ? 'bg-primary-500 text-white' : 'text-primary-500 hover:bg-primary-50'; ?>">
-                            SMP
+                            Junior High
                         </a>
                         <a href="?education_level=sma" class="filter-btn px-4 py-2 rounded-xl border border-primary-500 text-sm font-medium <?php echo $education_level === 'sma' ? 'bg-primary-500 text-white' : 'text-primary-500 hover:bg-primary-50'; ?>">
-                            SMA
+                            Senior High
                         </a>
                     </div>
                 </div>
                 
                 <!-- Subject Filter -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-3">Mata Pelajaran</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-3">Subject</label>
                     <div class="relative">
                         <select onchange="window.location.href=this.value" class="appearance-none w-full pl-4 pr-10 py-2.5 border border-gray-300 rounded-xl focus:ring-primary-500 focus:border-primary-500 bg-white shadow-sm">
-                            <option value="?subject=all">Semua Mata Pelajaran</option>
+                            <option value="?subject=all">All Subjects</option>
                             <?php foreach ($subjects as $sub): ?>
                             <option value="?subject=<?php echo urlencode($sub); ?>" <?php echo $subject === $sub ? 'selected' : ''; ?>>
                                 <?php echo htmlspecialchars($sub); ?>
@@ -349,19 +349,19 @@ $bootcamps = [];
                 
                 <!-- Level Filter -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-3">Level Kesulitan</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-3">Difficulty Level</label>
                     <div class="flex flex-wrap gap-2">
                         <a href="?level=all" class="filter-btn px-4 py-2 rounded-xl border border-primary-500 text-sm font-medium <?php echo $level === 'all' ? 'bg-primary-500 text-white' : 'text-primary-500 hover:bg-primary-50'; ?>">
-                            Semua
+                            All
                         </a>
                         <a href="?level=beginner" class="filter-btn px-4 py-2 rounded-xl border border-primary-500 text-sm font-medium <?php echo $level === 'beginner' ? 'bg-primary-500 text-white' : 'text-primary-500 hover:bg-primary-50'; ?>">
-                            Pemula
+                            Beginner
                         </a>
                         <a href="?level=intermediate" class="filter-btn px-4 py-2 rounded-xl border border-primary-500 text-sm font-medium <?php echo $level === 'intermediate' ? 'bg-primary-500 text-white' : 'text-primary-500 hover:bg-primary-50'; ?>">
-                            Menengah
+                            Intermediate
                         </a>
                         <a href="?level=advanced" class="filter-btn px-4 py-2 rounded-xl border border-primary-500 text-sm font-medium <?php echo $level === 'advanced' ? 'bg-primary-500 text-white' : 'text-primary-500 hover:bg-primary-50'; ?>">
-                            Lanjutan
+                            Advanced
                         </a>
                     </div>
                 </div>
@@ -372,12 +372,12 @@ $bootcamps = [];
         <div id="courses" class="mb-16 animate__animated animate__fadeIn">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
                 <div>
-                    <h2 class="text-3xl font-bold text-gray-900">Kelas Tersedia</h2>
-                    <p class="text-gray-500">Pilih kelas yang sesuai dengan kebutuhan belajarmu</p>
+                    <h2 class="text-3xl font-bold text-gray-900">Available Courses</h2>
+                    <p class="text-gray-500">Choose courses that match your learning needs</p>
                 </div>
                 <div class="mt-4 md:mt-0">
                     <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-primary-100 text-primary-800">
-                        <i class="fas fa-check-circle mr-2"></i> <?php echo count($courses); ?> Kelas Ditemukan
+                        <i class="fas fa-check-circle mr-2"></i> <?php echo count($courses); ?> Courses Found
                     </span>
                 </div>
             </div>
@@ -387,10 +387,10 @@ $bootcamps = [];
                     <div class="mx-auto w-48 h-48 bg-primary-50 rounded-full flex items-center justify-center mb-6">
                         <i class="fas fa-book-open text-5xl text-primary-600"></i>
                     </div>
-                    <h3 class="text-2xl font-medium text-gray-900 mb-3">Tidak ada kelas yang ditemukan</h3>
-                    <p class="text-gray-500 mb-6 max-w-md mx-auto">Coba ubah filter pencarian Anda untuk menemukan kelas yang sesuai dengan kebutuhan Anda.</p>
+                    <h3 class="text-2xl font-medium text-gray-900 mb-3">No Courses Found</h3>
+                    <p class="text-gray-500 mb-6 max-w-md mx-auto">Try adjusting your search filters to find courses that suit your needs.</p>
                     <a href="?type=all&level=all&education_level=all&subject=all" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-xl shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
-                        <i class="fas fa-sync-alt mr-2"></i> Reset Semua Filter
+                        <i class="fas fa-sync-alt mr-2"></i> Reset All Filters
                     </a>
                 </div>
             <?php else: ?>
@@ -405,7 +405,7 @@ $bootcamps = [];
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                                 <div class="absolute top-4 right-4">
                                     <span class="<?php echo $course['type'] === 'free' ? 'bg-green-500' : 'bg-primary-500'; ?> text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-md">
-                                        <?php echo $course['type'] === 'free' ? 'Gratis' : 'Rp ' . number_format($course['price'], 0, ',', '.'); ?>
+                                        <?php echo $course['type'] === 'free' ? 'Free' : '$' . number_format($course['price'], 0, ',', '.'); ?>
                                     </span>
                                 </div>
                             </div>
@@ -421,7 +421,7 @@ $bootcamps = [];
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                         <?php 
                                         if ($course['education_level'] !== 'umum') {
-                                            echo strtoupper($course['education_level']) . ' Kelas ' . $course['grade'];
+                                            echo strtoupper($course['education_level']) . ' Grade ' . $course['grade'];
                                         } else {
                                             echo ucfirst($course['level']);
                                         }
@@ -436,22 +436,22 @@ $bootcamps = [];
                                 
                                 <?php if (!$isLoggedIn): ?>
                                     <a href="auth/login.php" class="w-full block bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg text-center transition duration-300">
-                                        Login untuk Bergabung
+                                        Log In to Enroll
                                     </a>
                                 <?php else: ?>
                                     <?php if ($user['role'] === 'student'): ?>
                                         <?php if ($course['type'] === 'free'): ?>
                                             <a href="course/enroll.php?id=<?php echo $course['id']; ?>" class="w-full block bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg text-center transition duration-300">
-                                                Mulai Belajar
+                                                Start Learning
                                             </a>
                                         <?php else: ?>
                                             <a href="course/payment.php?id=<?php echo $course['id']; ?>" class="w-full block bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg text-center transition duration-300">
-                                                Daftar Kelas
+                                                Enroll in Course
                                             </a>
                                         <?php endif; ?>
                                     <?php else: ?>
                                         <a href="course/detail.php?id=<?php echo $course['id']; ?>" class="w-full block bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg text-center transition duration-300">
-                                            Lihat Detail
+                                            View Details
                                         </a>
                                     <?php endif; ?>
                                 <?php endif; ?>
@@ -467,12 +467,12 @@ $bootcamps = [];
         <div id="bootcamps" class="animate__animated animate__fadeIn">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
                 <div>
-                    <h2 class="text-3xl font-bold text-gray-900">Bootcamp Mendatang</h2>
-                    <p class="text-gray-500">Tingkatkan skillmu secara intensif dengan bootcamp kami</p>
+                    <h2 class="text-3xl font-bold text-gray-900">Upcoming Bootcamps</h2>
+                    <p class="text-gray-500">Boost your skills intensively with our bootcamps</p>
                 </div>
                 <div class="mt-4 md:mt-0">
                     <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
-                        <i class="fas fa-laptop-code mr-2"></i> <?php echo count($bootcamps); ?> Bootcamp Tersedia
+                        <i class="fas fa-laptop-code mr-2"></i> <?php echo count($bootcamps); ?> Bootcamps Available
                     </span>
                 </div>
             </div>
@@ -482,10 +482,10 @@ $bootcamps = [];
                     <div class="mx-auto w-48 h-48 bg-purple-50 rounded-full flex items-center justify-center mb-6">
                         <i class="fas fa-laptop-code text-5xl text-purple-600"></i>
                     </div>
-                    <h3 class="text-2xl font-medium text-gray-900 mb-3">Tidak ada bootcamp yang tersedia</h3>
-                    <p class="text-gray-500 mb-6 max-w-md mx-auto">Kami sedang mempersiapkan bootcamp terbaru. Pantau terus halaman ini untuk update terbaru!</p>
+                    <h3 class="text-2xl font-medium text-gray-900 mb-3">No Bootcamps Available</h3>
+                    <p class="text-gray-500 mb-6 max-w-md mx-auto">We are preparing new bootcamps. Keep checking this page for the latest updates!</p>
                     <button class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-xl shadow-sm text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 cursor-not-allowed opacity-75">
-                        <i class="fas fa-bell mr-2"></i> Notifikasi Saya
+                        <i class="fas fa-bell mr-2"></i> Notify Me
                     </button>
                 </div>
             <?php else: ?>
@@ -518,11 +518,11 @@ $bootcamps = [];
                                     </div>
                                     <div class="flex items-center text-sm text-gray-600">
                                         <i class="fas fa-clock mr-3 text-lg text-primary-500"></i>
-                                        <span><?php echo $bootcamp['duration']; ?> minggu (<?php echo ($bootcamp['duration'] * 10); ?> jam pembelajaran)</span>
+                                        <span><?php echo $bootcamp['duration']; ?> weeks (<?php echo ($bootcamp['duration'] * 10); ?> hours of learning)</span>
                                     </div>
                                     <div class="flex items-center text-sm text-gray-600">
                                         <i class="fas fa-users mr-3 text-lg text-primary-500"></i>
-                                        <span><?php echo $bootcamp['current_students']; ?>/<?php echo $bootcamp['max_students']; ?> peserta terdaftar</span>
+                                        <span><?php echo $bootcamp['current_students']; ?>/<?php echo $bootcamp['max_students']; ?> participants enrolled</span>
                                         <div class="ml-auto w-20 h-2 bg-gray-200 rounded-full overflow-hidden">
                                             <div class="h-full bg-primary-500" style="width: <?php echo ($bootcamp['current_students'] / $bootcamp['max_students']) * 100; ?>%"></div>
                                         </div>
@@ -531,7 +531,7 @@ $bootcamps = [];
                                 
                                 <div class="flex justify-between items-center mb-6">
                                     <span class="text-2xl font-bold text-gray-800">
-                                        Rp <?php echo number_format($bootcamp['price'], 0, ',', '.'); ?>
+                                        $<?php echo number_format($bootcamp['price'], 0, ',', '.'); ?>
                                     </span>
                                     <div class="flex items-center">
                                         <i class="fas fa-star text-yellow-400 mr-1"></i>
@@ -542,15 +542,81 @@ $bootcamps = [];
                                 
                                 <?php if ($bootcamp['user_status'] === 'not_registered'): ?>
                                 <a href="bootcamp/register.php?id=<?php echo $bootcamp['id']; ?>" class="w-full flex items-center justify-center px-6 py-3 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300">
-                                    <i class="fas fa-pen-fancy mr-2"></i> Daftar Bootcamp
+                                    <i class="fas fa-pen-fancy mr-2"></i> Enroll in Bootcamp
                                 </a>
                                 <?php elseif ($bootcamp['user_status'] === 'registered'): ?>
                                 <a href="bootcamp/payment.php?id=<?php echo $bootcamp['id']; ?>" class="w-full flex items-center justify-center px-6 py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300">
-                                    <i class="fas fa-credit-card mr-2"></i> Selesaikan Pembayaran
+                                    <i class="fas fa-credit-card mr-2"></i> Complete Payment
                                 </a>
                                 <?php else: ?>
                                 <a href="bootcamp/dashboard.php?id=<?php echo $bootcamp['id']; ?>" class="w-full flex items-center justify-center px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300">
-                                    <i class="fas fa-door-open mr-2"></i> Masuk Bootcamp
+                                    <i class="fas fa-door-open mr-2"></i> Access Bootcamp
+                                </a>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                    <?php foreach ($bootcamps as $bootcamp): ?>
+                    <div class="course-card bg-white rounded-2xl shadow-lg overflow-hidden">
+                        <div class="relative course-card-inner">
+                            <div class="relative h-56 overflow-hidden">
+                                <img src="<?php echo $bootcamp['thumbnail'] ?? 'assets/images/default-bootcamp.jpg'; ?>" 
+                                     alt="<?php echo htmlspecialchars($bootcamp['title']); ?>"
+                                     class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                                <div class="absolute top-4 right-4">
+                                    <span class="bg-purple-500 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-md">
+                                        Bootcamp
+                                    </span>
+                                </div>
+                                <div class="absolute bottom-4 left-4 right-4">
+                                    <h3 class="text-xl font-bold text-white leading-tight"><?php echo htmlspecialchars($bootcamp['title']); ?></h3>
+                                </div>
+                            </div>
+                            
+                            <div class="p-6">
+                                <p class="text-gray-600 text-sm mb-6 line-clamp-2"><?php echo htmlspecialchars($bootcamp['description']); ?></p>
+                                
+                                <div class="space-y-3 mb-6">
+                                    <div class="flex items-center text-sm text-gray-600">
+                                        <i class="fas fa-calendar-alt mr-3 text-lg text-primary-500"></i>
+                                        <span><?php echo date('d M Y', strtotime($bootcamp['start_date'])); ?> - <?php echo date('d M Y', strtotime($bootcamp['end_date'])); ?></span>
+                                    </div>
+                                    <div class="flex items-center text-sm text-gray-600">
+                                        <i class="fas fa-clock mr-3 text-lg text-primary-500"></i>
+                                        <span><?php echo $bootcamp['duration']; ?> weeks (<?php echo ($bootcamp['duration'] * 10); ?> hours of learning)</span>
+                                    </div>
+                                    <div class="flex items-center text-sm text-gray-600">
+                                        <i class="fas fa-users mr-3 text-lg text-primary-500"></i>
+                                        <span><?php echo $bootcamp['current_students']; ?>/<?php echo $bootcamp['max_students']; ?> participants enrolled</span>
+                                        <div class="ml-auto w-20 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                            <div class="h-full bg-primary-500" style="width: <?php echo ($bootcamp['current_students'] / $bootcamp['max_students']) * 100; ?>%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex justify-between items-center mb-6">
+                                    <span class="text-2xl font-bold text-gray-800">
+                                        $<?php echo number_format($bootcamp['price'], 0, ',', '.'); ?>
+                                    </span>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-star text-yellow-400 mr-1"></i>
+                                        <span class="font-medium">4.9</span>
+                                        <span class="text-gray-500 text-sm ml-1">(128)</span>
+                                    </div>
+                                </div>
+                                
+                                <?php if ($bootcamp['user_status'] === 'not_registered'): ?>
+                                <a href="bootcamp/register.php?id=<?php echo $bootcamp['id']; ?>" class="w-full flex items-center justify-center px-6 py-3 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300">
+                                    <i class="fas fa-pen-fancy mr-2"></i> Enroll in Bootcamp
+                                </a>
+                                <?php elseif ($bootcamp['user_status'] === 'registered'): ?>
+                                <a href="bootcamp/payment.php?id=<?php echo $bootcamp['id']; ?>" class="w-full flex items-center justify-center px-6 py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300">
+                                    <i class="fas fa-credit-card mr-2"></i> Complete Payment
+                                </a>
+                                <?php else: ?>
+                                <a href="bootcamp/dashboard.php?id=<?php echo $bootcamp['id']; ?>" class="w-full flex items-center justify-center px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300">
+                                    <i class="fas fa-door-open mr-2"></i> Access Bootcamp
                                 </a>
                                 <?php endif; ?>
                             </div>
@@ -565,14 +631,14 @@ $bootcamps = [];
     <!-- CTA Section -->
     <div class="bg-gradient-to-r from-primary-600 to-primary-700 text-white py-16 mt-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 class="text-3xl md:text-4xl font-bold mb-6">Siap Memulai Perjalanan Belajarmu?</h2>
-            <p class="text-xl text-primary-100 max-w-3xl mx-auto mb-8">Bergabunglah dengan ribuan siswa lainnya yang telah meningkatkan keterampilan mereka dengan EduConnect.</p>
+            <h2 class="text-3xl md:text-4xl font-bold mb-6">Ready to Start Your Learning Journey?</h2>
+            <p class="text-xl text-primary-100 max-w-3xl mx-auto mb-8">Join thousands of students who have enhanced their skills with EduConnect.</p>
             <div class="flex flex-wrap justify-center gap-4">
                 <a href="kelas.php" class="px-8 py-3.5 bg-white text-primary-600 font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                    <i class="fas fa-book-open mr-2"></i> Jelajahi Kelas
+                    <i class="fas fa-book-open mr-2"></i> Explore Courses
                 </a>
                 <a href="mission.php" class="px-8 py-3.5 bg-transparent border-2 border-white text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                    <i class="fas fa-tasks mr-2"></i> Lihat Misi
+                    <i class="fas fa-tasks mr-2"></i> View Missions
                 </a>
             </div>
         </div>
@@ -591,7 +657,7 @@ $bootcamps = [];
                         </svg>
                         <span class="text-xl font-bold text-white">EduConnect</span>
                     </div>
-                    <p class="text-gray-400 mb-6">Platform pembelajaran online terbaik untuk siswa SD, SMP, dan SMA di Indonesia.</p>
+                    <p class="text-gray-400 mb-6">The best online learning platform for elementary, junior high, and senior high students worldwide.</p>
                     <div class="flex space-x-4">
                         <a href="#" class="text-gray-400 hover:text-white transition-colors">
                             <i class="fab fa-facebook-f"></i>
@@ -613,31 +679,31 @@ $bootcamps = [];
                         <li>
                             <a href="kelas.php" class="text-gray-400 hover:text-white transition-colors flex items-center">
                                 <i class="fas fa-chevron-right text-xs mr-2 text-primary-500"></i>
-                                Kelas
+                                Courses
                             </a>
                         </li>
                         <li>
                             <a href="mission.php" class="text-gray-400 hover:text-white transition-colors flex items-center">
                                 <i class="fas fa-chevron-right text-xs mr-2 text-primary-500"></i>
-                                Misi
+                                Missions
                             </a>
                         </li>
                         <li>
                             <a href="community.php" class="text-gray-400 hover:text-white transition-colors flex items-center">
                                 <i class="fas fa-chevron-right text-xs mr-2 text-primary-500"></i>
-                                Komunitas
+                                Community
                             </a>
                         </li>
                         <li>
                             <a href="about.php" class="text-gray-400 hover:text-white transition-colors flex items-center">
                                 <i class="fas fa-chevron-right text-xs mr-2 text-primary-500"></i>
-                                Tentang Kami
+                                About Us
                             </a>
                         </li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-lg font-semibold text-white mb-6">Bantuan</h4>
+                    <h4 class="text-lg font-semibold text-white mb-6">Support</h4>
                     <ul class="space-y-3">
                         <li>
                             <a href="#" class="text-gray-400 hover:text-white transition-colors flex items-center">
@@ -648,28 +714,28 @@ $bootcamps = [];
                         <li>
                             <a href="#" class="text-gray-400 hover:text-white transition-colors flex items-center">
                                 <i class="fas fa-chevron-right text-xs mr-2 text-primary-500"></i>
-                                Hubungi Kami
+                                Contact Us
                             </a>
                         </li>
                         <li>
                             <a href="#" class="text-gray-400 hover:text-white transition-colors flex items-center">
                                 <i class="fas fa-chevron-right text-xs mr-2 text-primary-500"></i>
-                                Kebijakan Privasi
+                                Privacy Policy
                             </a>
                         </li>
                         <li>
                             <a href="#" class="text-gray-400 hover:text-white transition-colors flex items-center">
                                 <i class="fas fa-chevron-right text-xs mr-2 text-primary-500"></i>
-                                Syarat & Ketentuan
+                                Terms & Conditions
                             </a>
                         </li>
                     </ul>
                 </div>
                 <div>
                     <h4 class="text-lg font-semibold text-white mb-6">Newsletter</h4>
-                    <p class="text-gray-400 mb-4">Dapatkan update terbaru tentang kelas dan promosi spesial.</p>
+                    <p class="text-gray-400 mb-4">Get the latest updates on courses and special promotions.</p>
                     <form class="flex">
-                        <input type="email" placeholder="Email Anda" class="px-4 py-2 w-full rounded-l-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-800">
+                        <input type="email" placeholder="Your Email" class="px-4 py-2 w-full rounded-l-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-800">
                         <button type="submit" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-r-lg transition-colors">
                             <i class="fas fa-paper-plane"></i>
                         </button>
@@ -677,7 +743,7 @@ $bootcamps = [];
                 </div>
             </div>
             <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-500 text-sm">
-                <p>&copy; <?php echo date('Y'); ?> EduConnect. All rights reserved.</p>
+                <p>© <?php echo date('Y'); ?> EduConnect. All rights reserved.</p>
             </div>
         </div>
     </footer>
