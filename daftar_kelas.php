@@ -191,63 +191,110 @@ $bootcamps = [];
 </head>
 <body class="bg-gradient-to-br from-gray-50 to-gray-100">
     <!-- Navbar -->
-    <nav class="bg-gradient-to-r from-primary-700 to-primary-600 text-white shadow-xl">
+      <nav class="bg-white shadow-lg sticky top-0 z-50 backdrop-blur-sm bg-opacity-80">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-20 items-center">
-                <div class="flex items-center space-x-4">
-                    <a href="index.php" class="text-2xl font-bold flex items-center">
-                        <svg class="w-8 h-8 mr-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M12 8V16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M8 12H16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        EduConnect
-                    </a>
-                </div>
-                
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="kelas.php" class="nav-link font-medium flex items-center space-x-2">
-                        <i class="fas fa-graduation-cap"></i>
-                        <span>Courses</span>
-                    </a>
-                    <a href="mission.php" class="nav-link font-medium flex items-center space-x-2">
-                        <i class="fas fa-tasks"></i>
-                        <span>Missions</span>
-                    </a>
-                    <a href="community.php" class="nav-link font-medium flex items-center space-x-2">
-                        <i class="fas fa-users"></i>
-                        <span>Community</span>
-                    </a>
-                </div>
-                
-                <div class="flex items-center space-x-4">
-                    <?php if ($isLoggedIn && $user): ?>
-                    <div class="relative group">
-                        <button class="flex items-center space-x-2 focus:outline-none">
-                            <div class="w-8 h-8 rounded-full bg-primary-400 flex items-center justify-center">
-                                <i class="fas fa-user text-white"></i>
-                            </div>
-                            <span class="hidden md:inline font-medium"><?php echo htmlspecialchars($user['full_name'] ?? ''); ?></span>
-                            <i class="fas fa-chevron-down text-xs"></i>
-                        </button>
-                        <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 hidden group-hover:block">
-                            <a href="profile.php" class="block px-4 py-2 text-gray-800 hover:bg-primary-100">Profile</a>
-                            <?php if ($auth->hasRole('admin')): ?>
-                            <a href="admin/dashboard.php" class="block px-4 py-2 text-gray-800 hover:bg-primary-100">Admin Panel</a>
-                            <?php endif; ?>
-                            <div class="border-t border-gray-200"></div>
-                            <a href="auth/logout.php" class="block px-4 py-2 text-gray-800 hover:bg-primary-100">Log Out</a>
-                        </div>
+            <div class="flex justify-between h-16 items-center">
+                <!-- Logo and Title -->
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <i class="fas fa-graduation-cap text-primary text-2xl mr-2 transform hover:rotate-12 transition-transform"></i>
+                        <span class="text-xl font-bold text-dark hover:text-primary transition-colors">EduConnect</span>
                     </div>
+                </div>
+
+                <!-- Main Menu (Desktop) -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <?php if ($auth->isLoggedIn()): ?>
+                        <?php
+                        $is_dashboard = basename($_SERVER['PHP_SELF']) === 'dashboardadmin.php' || basename($_SERVER['PHP_SELF']) === 'dashboardmentor.php' || basename($_SERVER['PHP_SELF']) === 'dashboardstudent.php';
+                        ?>
+                        <a href="<?php echo $is_dashboard ? 'index.php' : ($user['role'] === 'admin' ? 'dashboardadmin.php' : ($user['role'] === 'mentor' ? 'dashboardmentor.php' : 'dashboardstudent.php')); ?>" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">
+                            <?php echo $is_dashboard ? 'Landing Page' : 'Dashboard'; ?>
+                        </a>
+                        <a href="<?php echo $kelas_link; ?>" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">Courses</a>
+                        <a href="<?php echo $misi_link; ?>" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">Missions</a>
+                        <a href="community.php" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">Community</a>
                     <?php else: ?>
-                    <a href="auth/login.php" class="px-5 py-2 bg-white text-primary-600 font-bold rounded-lg shadow hover:bg-primary-100 transition-all duration-300">
-                        <i class="fas fa-sign-in-alt mr-2"></i> Log In
-                    </a>
+                        <a href="daftar_kelas.php" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">Courses</a>
+                        <a href="mission.php" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">Missions</a>
+                        <a href="community.php" class="text-gray-700 hover:text-primary px-3 py-2 font-medium transition-colors hover:scale-105">Community</a>
                     <?php endif; ?>
-                    <button class="md:hidden focus:outline-none">
-                        <i class="fas fa-bars text-xl"></i>
+                </div>
+
+                <!-- Class, Cart, and Login Icons -->
+                <div class="hidden md:flex items-center space-x-4 relative">
+                    <?php if ($auth->isLoggedIn()): ?>
+                        <?php $user = $auth->getCurrentUser(); ?>
+                        <div class="relative group" id="profileDropdown">
+                            <button type="button" class="focus:outline-none flex items-center" id="avatarBtn">
+                                <img src="<?php echo $user['profile_picture'] ?? 'assets/images/default-avatar.png'; ?>" class="rounded-full w-8 h-8 border-2 border-primary" alt="Avatar">
+                            </button>
+                            <div id="dropdownMenu" class="hidden absolute right-0 mt-2 w-44 bg-white rounded-lg shadow-lg py-2 z-50 border border-gray-100">
+                                <a href="profile.php" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Profile</a>
+                                <div class="border-t my-1"></div>
+                                <a href="auth/logout.php" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Logout</a>
+                            </div>
+                        </div>
+                        <script>
+                            // Dropdown logic
+                            const avatarBtn = document.getElementById('avatarBtn');
+                            const dropdownMenu = document.getElementById('dropdownMenu');
+                            document.addEventListener('click', function(e) {
+                                if (avatarBtn.contains(e.target)) {
+                                    dropdownMenu.classList.toggle('hidden');
+                                } else if (!dropdownMenu.contains(e.target)) {
+                                    dropdownMenu.classList.add('hidden');
+                                }
+                            });
+                        </script>
+                    <?php else: ?>
+                        <a href="auth/login.php" class="mobile-menu-item block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition">
+                            <i class="fas fa-sign-in-alt mr-2"></i>Login
+                        </a>
+                        <a href="auth/register.php" class="mobile-menu-item block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition">
+                            <i class="fas fa-user-plus mr-2"></i>Register
+                        </a>
+                    <?php endif; ?>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="flex items-center md:hidden">
+                    <button id="mobile-menu-button" class="hamburger p-2 rounded-md text-gray-700 hover:text-primary focus:outline-none transition-transform duration-300">
+                        <span class="hamburger-line block w-6 h-0.5 bg-gray-700 mb-1.5 transition-all duration-300"></span>
+                        <span class="hamburger-line block w-6 h-0.5 bg-gray-700 mb-1.5 transition-all duration-300"></span>
+                        <span class="hamburger-line block w-6 h-0.5 bg-gray-700 transition-all duration-300"></span>
                     </button>
                 </div>
+            </div>
+        </div>
+
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="mobile-nav md:hidden bg-white shadow-lg hidden transform origin-top transition-all duration-300 ease-out">
+            <div class="px-2 pt-2 pb-4 space-y-1 sm:px-3">
+                <a href="kelas.php" class="mobile-menu-item block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition">
+                    <i class="fas fa-chalkboard-teacher mr-2"></i>Courses
+                </a>
+                <a href="mission.php" class="mobile-menu-item block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition">
+                    <i class="fas fa-tasks mr-2"></i>Missions
+                </a>
+                <a href="community.php" class="mobile-menu-item block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition">
+                    <i class="fas fa-users mr-2"></i>Community
+                </a>
+                <?php if ($auth->isLoggedIn()): ?>
+                    <a href="profile.php" class="mobile-menu-item block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition">
+                        <i class="fas fa-user mr-2"></i>Profile
+                    </a>
+                    <a href="auth/logout.php" class="mobile-menu-item block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </a>
+                <?php else: ?>
+                    <a href="auth/login.php" class="mobile-menu-item block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Login
+                    </a>
+                    <a href="auth/register.php" class="mobile-menu-item block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition">
+                        <i class="fas fa-user-plus mr-2"></i>Register
+                    </a>
+                <?php endif; ?>
             </div>
         </div>
     </nav>
@@ -463,169 +510,105 @@ $bootcamps = [];
             <?php endif; ?>
         </div>
 
-        <!-- Bootcamps Section -->
-        <div id="bootcamps" class="animate__animated animate__fadeIn">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
-                <div>
-                    <h2 class="text-3xl font-bold text-gray-900">Upcoming Bootcamps</h2>
-                    <p class="text-gray-500">Boost your skills intensively with our bootcamps</p>
-                </div>
-                <div class="mt-4 md:mt-0">
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
-                        <i class="fas fa-laptop-code mr-2"></i> <?php echo count($bootcamps); ?> Bootcamps Available
-                    </span>
+        
+    <!-- Bootcamps Section -->
+<div id="bootcamps" class="animate__animated animate__fadeIn">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+        <div>
+            <h2 class="text-3xl font-bold text-gray-900">Upcoming Bootcamps</h2>
+            <p class="text-gray-500">Boost your skills intensively with our bootcamps</p>
+        </div>
+        <div class="mt-4 md:mt-0">
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
+                <i class="fas fa-laptop-code mr-2"></i> <?php echo count($bootcamps); ?> Bootcamps Available
+            </span>
+        </div>
+    </div>
+    
+    <?php if (empty($bootcamps)): ?>
+        <div class="glass-card rounded-2xl p-12 text-center shadow-lg">
+            <div class="mx-auto w-48 h-48 bg-purple-50 rounded-full flex items-center justify-center mb-6">
+                <i class="fas fa-laptop-code text-5xl text-purple-600"></i>
+            </div>
+            <h3 class="text-2xl font-medium text-gray-900 mb-3">No Bootcamps Available</h3>
+            <p class="text-gray-500 mb-6 max-w-md mx-auto">We are preparing new bootcamps. Keep checking this page for the latest updates!</p>
+            <button class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-xl shadow-sm text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 cursor-not-allowed opacity-75">
+                <i class="fas fa-bell mr-2"></i> Notify Me
+            </button>
+        </div>
+    <?php else: ?>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <?php foreach ($bootcamps as $bootcamp): ?>
+            <div class="course-card bg-white rounded-2xl shadow-lg overflow-hidden">
+                <div class="relative course-card-inner">
+                    <div class="relative h-56 overflow-hidden">
+                        <img src="<?php echo $bootcamp['thumbnail'] ?? 'assets/images/default-bootcamp.jpg'; ?>" 
+                             alt="<?php echo htmlspecialchars($bootcamp['title']); ?>"
+                             class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <div class="absolute top-4 right-4">
+                            <span class="bg-purple-500 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-md">
+                                Bootcamp
+                            </span>
+                        </div>
+                        <div class="absolute bottom-4 left-4 right-4">
+                            <h3 class="text-xl font-bold text-white leading-tight"><?php echo htmlspecialchars($bootcamp['title']); ?></h3>
+                        </div>
+                    </div>
+                    
+                    <div class="p-6">
+                        <p class="text-gray-600 text-sm mb-6 line-clamp-2"><?php echo htmlspecialchars($bootcamp['description']); ?></p>
+                        
+                        <div class="space-y-3 mb-6">
+                            <div class="flex items-center text-sm text-gray-600">
+                                <i class="fas fa-calendar-alt mr-3 text-lg text-primary-500"></i>
+                                <span><?php echo date('d M Y', strtotime($bootcamp['start_date'])); ?> - <?php echo date('d M Y', strtotime($bootcamp['end_date'])); ?></span>
+                            </div>
+                            <div class="flex items-center text-sm text-gray-600">
+                                <i class="fas fa-clock mr-3 text-lg text-primary-500"></i>
+                                <span><?php echo $bootcamp['duration']; ?> weeks (<?php echo ($bootcamp['duration'] * 10); ?> hours of learning)</span>
+                            </div>
+                            <div class="flex items-center text-sm text-gray-600">
+                                <i class="fas fa-users mr-3 text-lg text-primary-500"></i>
+                                <span><?php echo $bootcamp['current_students']; ?>/<?php echo $bootcamp['max_students']; ?> participants enrolled</span>
+                                <div class="ml-auto w-20 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                    <div class="h-full bg-primary-500" style="width: <?php echo ($bootcamp['current_students'] / $bootcamp['max_students']) * 100; ?>%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center mb-6">
+                            <span class="text-2xl font-bold text-gray-800">
+                                $<?php echo number_format($bootcamp['price'], 0, ',', '.'); ?>
+                            </span>
+                            <div class="flex items-center">
+                                <i class="fas fa-star text-yellow-400 mr-1"></i>
+                                <span class="font-medium">4.9</span>
+                                <span class="text-gray-500 text-sm ml-1">(128)</span>
+                            </div>
+                        </div>
+                        
+                        <?php if ($bootcamp['user_status'] === 'not_registered'): ?>
+                        <a href="bootcamp/register.php?id=<?php echo $bootcamp['id']; ?>" class="w-full flex items-center justify-center px-6 py-3 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300">
+                            <i class="fas fa-pen-fancy mr-2"></i> Enroll in Bootcamp
+                        </a>
+                        <?php elseif ($bootcamp['user_status'] === 'registered'): ?>
+                        <a href="bootcamp/payment.php?id=<?php echo $bootcamp['id']; ?>" class="w-full flex items-center justify-center px-6 py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300">
+                            <i class="fas fa-credit-card mr-2"></i> Complete Payment
+                        </a>
+                        <?php else: ?>
+                        <a href="bootcamp/dashboard.php?id=<?php echo $bootcamp['id']; ?>" class="w-full flex items-center justify-center px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300">
+                            <i class="fas fa-door-open mr-2"></i> Access Bootcamp
+                        </a>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
-            
-            <?php if (empty($bootcamps)): ?>
-                <div class="glass-card rounded-2xl p-12 text-center shadow-lg">
-                    <div class="mx-auto w-48 h-48 bg-purple-50 rounded-full flex items-center justify-center mb-6">
-                        <i class="fas fa-laptop-code text-5xl text-purple-600"></i>
-                    </div>
-                    <h3 class="text-2xl font-medium text-gray-900 mb-3">No Bootcamps Available</h3>
-                    <p class="text-gray-500 mb-6 max-w-md mx-auto">We are preparing new bootcamps. Keep checking this page for the latest updates!</p>
-                    <button class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-xl shadow-sm text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 cursor-not-allowed opacity-75">
-                        <i class="fas fa-bell mr-2"></i> Notify Me
-                    </button>
-                </div>
-            <?php else: ?>
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <?php foreach ($bootcamps as $bootcamp): ?>
-                    <div class="course-card bg-white rounded-2xl shadow-lg overflow-hidden">
-                        <div class="relative course-card-inner">
-                            <div class="relative h-56 overflow-hidden">
-                                <img src="<?php echo $bootcamp['thumbnail'] ?? 'assets/images/default-bootcamp.jpg'; ?>" 
-                                     alt="<?php echo htmlspecialchars($bootcamp['title']); ?>"
-                                     class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                                <div class="absolute top-4 right-4">
-                                    <span class="bg-purple-500 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-md">
-                                        Bootcamp
-                                    </span>
-                                </div>
-                                <div class="absolute bottom-4 left-4 right-4">
-                                    <h3 class="text-xl font-bold text-white leading-tight"><?php echo htmlspecialchars($bootcamp['title']); ?></h3>
-                                </div>
-                            </div>
-                            
-                            <div class="p-6">
-                                <p class="text-gray-600 text-sm mb-6 line-clamp-2"><?php echo htmlspecialchars($bootcamp['description']); ?></p>
-                                
-                                <div class="space-y-3 mb-6">
-                                    <div class="flex items-center text-sm text-gray-600">
-                                        <i class="fas fa-calendar-alt mr-3 text-lg text-primary-500"></i>
-                                        <span><?php echo date('d M Y', strtotime($bootcamp['start_date'])); ?> - <?php echo date('d M Y', strtotime($bootcamp['end_date'])); ?></span>
-                                    </div>
-                                    <div class="flex items-center text-sm text-gray-600">
-                                        <i class="fas fa-clock mr-3 text-lg text-primary-500"></i>
-                                        <span><?php echo $bootcamp['duration']; ?> weeks (<?php echo ($bootcamp['duration'] * 10); ?> hours of learning)</span>
-                                    </div>
-                                    <div class="flex items-center text-sm text-gray-600">
-                                        <i class="fas fa-users mr-3 text-lg text-primary-500"></i>
-                                        <span><?php echo $bootcamp['current_students']; ?>/<?php echo $bootcamp['max_students']; ?> participants enrolled</span>
-                                        <div class="ml-auto w-20 h-2 bg-gray-200 rounded-full overflow-hidden">
-                                            <div class="h-full bg-primary-500" style="width: <?php echo ($bootcamp['current_students'] / $bootcamp['max_students']) * 100; ?>%"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="flex justify-between items-center mb-6">
-                                    <span class="text-2xl font-bold text-gray-800">
-                                        $<?php echo number_format($bootcamp['price'], 0, ',', '.'); ?>
-                                    </span>
-                                    <div class="flex items-center">
-                                        <i class="fas fa-star text-yellow-400 mr-1"></i>
-                                        <span class="font-medium">4.9</span>
-                                        <span class="text-gray-500 text-sm ml-1">(128)</span>
-                                    </div>
-                                </div>
-                                
-                                <?php if ($bootcamp['user_status'] === 'not_registered'): ?>
-                                <a href="bootcamp/register.php?id=<?php echo $bootcamp['id']; ?>" class="w-full flex items-center justify-center px-6 py-3 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300">
-                                    <i class="fas fa-pen-fancy mr-2"></i> Enroll in Bootcamp
-                                </a>
-                                <?php elseif ($bootcamp['user_status'] === 'registered'): ?>
-                                <a href="bootcamp/payment.php?id=<?php echo $bootcamp['id']; ?>" class="w-full flex items-center justify-center px-6 py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300">
-                                    <i class="fas fa-credit-card mr-2"></i> Complete Payment
-                                </a>
-                                <?php else: ?>
-                                <a href="bootcamp/dashboard.php?id=<?php echo $bootcamp['id']; ?>" class="w-full flex items-center justify-center px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300">
-                                    <i class="fas fa-door-open mr-2"></i> Access Bootcamp
-                                </a>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                    </div>
-                    <?php foreach ($bootcamps as $bootcamp): ?>
-                    <div class="course-card bg-white rounded-2xl shadow-lg overflow-hidden">
-                        <div class="relative course-card-inner">
-                            <div class="relative h-56 overflow-hidden">
-                                <img src="<?php echo $bootcamp['thumbnail'] ?? 'assets/images/default-bootcamp.jpg'; ?>" 
-                                     alt="<?php echo htmlspecialchars($bootcamp['title']); ?>"
-                                     class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                                <div class="absolute top-4 right-4">
-                                    <span class="bg-purple-500 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-md">
-                                        Bootcamp
-                                    </span>
-                                </div>
-                                <div class="absolute bottom-4 left-4 right-4">
-                                    <h3 class="text-xl font-bold text-white leading-tight"><?php echo htmlspecialchars($bootcamp['title']); ?></h3>
-                                </div>
-                            </div>
-                            
-                            <div class="p-6">
-                                <p class="text-gray-600 text-sm mb-6 line-clamp-2"><?php echo htmlspecialchars($bootcamp['description']); ?></p>
-                                
-                                <div class="space-y-3 mb-6">
-                                    <div class="flex items-center text-sm text-gray-600">
-                                        <i class="fas fa-calendar-alt mr-3 text-lg text-primary-500"></i>
-                                        <span><?php echo date('d M Y', strtotime($bootcamp['start_date'])); ?> - <?php echo date('d M Y', strtotime($bootcamp['end_date'])); ?></span>
-                                    </div>
-                                    <div class="flex items-center text-sm text-gray-600">
-                                        <i class="fas fa-clock mr-3 text-lg text-primary-500"></i>
-                                        <span><?php echo $bootcamp['duration']; ?> weeks (<?php echo ($bootcamp['duration'] * 10); ?> hours of learning)</span>
-                                    </div>
-                                    <div class="flex items-center text-sm text-gray-600">
-                                        <i class="fas fa-users mr-3 text-lg text-primary-500"></i>
-                                        <span><?php echo $bootcamp['current_students']; ?>/<?php echo $bootcamp['max_students']; ?> participants enrolled</span>
-                                        <div class="ml-auto w-20 h-2 bg-gray-200 rounded-full overflow-hidden">
-                                            <div class="h-full bg-primary-500" style="width: <?php echo ($bootcamp['current_students'] / $bootcamp['max_students']) * 100; ?>%"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="flex justify-between items-center mb-6">
-                                    <span class="text-2xl font-bold text-gray-800">
-                                        $<?php echo number_format($bootcamp['price'], 0, ',', '.'); ?>
-                                    </span>
-                                    <div class="flex items-center">
-                                        <i class="fas fa-star text-yellow-400 mr-1"></i>
-                                        <span class="font-medium">4.9</span>
-                                        <span class="text-gray-500 text-sm ml-1">(128)</span>
-                                    </div>
-                                </div>
-                                
-                                <?php if ($bootcamp['user_status'] === 'not_registered'): ?>
-                                <a href="bootcamp/register.php?id=<?php echo $bootcamp['id']; ?>" class="w-full flex items-center justify-center px-6 py-3 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300">
-                                    <i class="fas fa-pen-fancy mr-2"></i> Enroll in Bootcamp
-                                </a>
-                                <?php elseif ($bootcamp['user_status'] === 'registered'): ?>
-                                <a href="bootcamp/payment.php?id=<?php echo $bootcamp['id']; ?>" class="w-full flex items-center justify-center px-6 py-3 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300">
-                                    <i class="fas fa-credit-card mr-2"></i> Complete Payment
-                                </a>
-                                <?php else: ?>
-                                <a href="bootcamp/dashboard.php?id=<?php echo $bootcamp['id']; ?>" class="w-full flex items-center justify-center px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-300">
-                                    <i class="fas fa-door-open mr-2"></i> Access Bootcamp
-                                </a>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                    </div>
-                    <?php endforeach; ?>
-                </div>
-            <?php endif; ?>
+            <?php endforeach; ?>
         </div>
+    <?php endif; ?>
+</div>
+        
     </div>
 
     <!-- CTA Section -->
