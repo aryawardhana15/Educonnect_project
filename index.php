@@ -336,7 +336,7 @@ if ($auth->isLoggedIn()) {
         <!-- Mobile menu -->
         <div id="mobile-menu" class="mobile-nav md:hidden bg-white shadow-lg hidden transform origin-top transition-all duration-300 ease-out">
             <div class="px-2 pt-2 pb-4 space-y-1 sm:px-3">
-                <a href="kelas.php" class="mobile-menu-item block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition">
+                <a href="daftar_kelas.php" class="mobile-menu-item block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition">
                     <i class="fas fa-chalkboard-teacher mr-2"></i>Courses
                 </a>
                 <a href="mission.php" class="mobile-menu-item block px-3 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 rounded-md transition">
@@ -904,7 +904,7 @@ if ($auth->isLoggedIn()) {
                         <!-- Chat Container -->
                         <div id="chat-box" class="mb-6 p-4 bg-gray-50 rounded-lg h-64 overflow-y-auto shadow-inner">
                             <div class="ai-message p-3 mb-3 bg-white rounded-lg shadow-sm max-w-[80%]">
-                                <p class="font-medium text-primary">🤖 AI Assistant:</p>
+                                <p class="font-medium text-primary">ðŸ¤– AI Assistant:</p>
                                 <p class="text-gray-700">Hi! I'm EduConnect's AI Assistant. How can I help with your learning today?</p>
                                 <p class="text-xs text-gray-400 mt-1">Just now</p>
                             </div>
@@ -925,7 +925,7 @@ if ($auth->isLoggedIn()) {
                     </div>
                     
                     <!-- Floating Feature Card -->
-                    < 🙂
+                    < ðŸ™‚
 
                     <div class="absolute -bottom-5 -right-5 bg-white p-4 rounded-xl shadow-lg hidden lg:block" data-aos="zoom-in" data-aos-delay="300">
                         <div class="flex items-center">
@@ -986,7 +986,7 @@ if ($auth->isLoggedIn()) {
                                 </div>
                                 <div>
                                     <h3 class="text-lg font-bold text-gray-900 mb-1">Material Integration</h3>
-                                    <p class="text-gray-600">Seamlessly connected to EduConnect’s learning content.</p>
+                                    <p class="text-gray-600">Seamlessly connected to EduConnectâ€™s learning content.</p>
                                 </div>
                             </div>
                         </div>
@@ -1063,7 +1063,7 @@ if ($auth->isLoggedIn()) {
             const userMsgDiv = document.createElement('div');
             userMsgDiv.className = 'user-message-text p-3 mb-3 bg-blue-50 rounded-lg shadow-sm max-w-[80%] ml-auto text-right';
             userMsgDiv.innerHTML = `
-                <p class="font-medium text-blue-600">👤 You:</p>
+                <p class="font-medium text-blue-600">ðŸ‘¤ You:</p>
                 <p class="text-gray-700">${userMessage.value}</p>
                 <p class="text-xs text-gray-400 mt-1">Just now</p>
             `;
@@ -1074,7 +1074,7 @@ if ($auth->isLoggedIn()) {
                 const aiMsgDiv = document.createElement('div');
                 aiMsgDiv.className = 'ai-message p-3 mb-3 bg-white rounded-lg shadow-sm max-w-[80%]';
                 aiMsgDiv.innerHTML = `
-                    <p class="font-medium text-primary">🤖 AI Assistant:</p>
+                    <p class="font-medium text-primary">ðŸ¤– AI Assistant:</p>
                     <p>I understand your question about "${userMessage.value}". Here's the explanation:...</p>
                     <p class="text-xs text-gray-400 mt-1">Just now</p>
                 `;
@@ -1144,7 +1144,7 @@ if ($auth->isLoggedIn()) {
                                     <i class="fas fa-star"></i>
                                 </div>
                             </div>
-                            <p class="text-gray-600 mb-6">"As a mentor, I’m impressed by the enthusiasm of students in remote areas. EduConnect provides the perfect platform to share knowledge. The AI feature also helps me address basic questions, allowing me to focus on more complex material."</p>
+                            <p class="text-gray-600 mb-6">"As a mentor, Iâ€™m impressed by the enthusiasm of students in remote areas. EduConnect provides the perfect platform to share knowledge. The AI feature also helps me address basic questions, allowing me to focus on more complex material."</p>
                             <div class="flex items-center">
                                 <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Mentor" class="w-12 h-12 rounded-full mr-4">
                                 <div>
@@ -1167,7 +1167,7 @@ if ($auth->isLoggedIn()) {
                                     <i class="fas fa-star-half-alt"></i>
                                 </div>
                             </div>
-                            <p class="text-gray-600 mb-6">"The digital marketing bootcamp at EduConnect helped me start an online business. Now I can sell products nationwide! The AI Assistant was also very helpful when I studied at night and couldn’t reach a mentor."</p>
+                            <p class="text-gray-600 mb-6">"The digital marketing bootcamp at EduConnect helped me start an online business. Now I can sell products nationwide! The AI Assistant was also very helpful when I studied at night and couldnâ€™t reach a mentor."</p>
                             <div class="flex items-center">
                                 <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Student" class="w-12 h-12 rounded-full mr-4">
                                 <div>
@@ -1190,7 +1190,7 @@ if ($auth->isLoggedIn()) {
                                     <i class="fas fa-star"></i>
                                 </div>
                             </div>
-                            <p class="text-gray-600 mb-6">"As a school principal in a remote area, EduConnect has been a solution for our teacher shortage. Students can learn from quality mentors and an always-ready AI Assistant. Our students’ academic performance has significantly improved!"</p>
+                            <p class="text-gray-600 mb-6">"As a school principal in a remote area, EduConnect has been a solution for our teacher shortage. Students can learn from quality mentors and an always-ready AI Assistant. Our studentsâ€™ academic performance has significantly improved!"</p>
                             <div class="flex items-center">
                                 <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Principal" class="w-12 h-12 rounded-full mr-4">
                                 <div>
@@ -1231,7 +1231,7 @@ if ($auth->isLoggedIn()) {
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
                     </svg>
-                    <span class="absolute -top-2 -right-2 h-6 w-6 flex items-center justify-center bg-yellow-300 text-primary rounded-full text-xs animate-ping">✨</span>
+                    <span class="absolute -top-2 -right-2 h-6 w-6 flex items-center justify-center bg-yellow-300 text-primary rounded-full text-xs animate-ping">âœ¨</span>
                 </a>
                 
                 <!-- Login Button - Cute alternative style -->
@@ -1372,7 +1372,7 @@ if ($auth->isLoggedIn()) {
             </div>
             
             <div class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
-                <p class="text-gray-400 mb-4 md:mb-0">© 2025 EduConnect. All rights reserved. Designed by Arya Wardhana</p>
+                <p class="text-gray-400 mb-4 md:mb-0">Â© 2025 EduConnect. All rights reserved. Designed by Arya Wardhana</p>
                 <div class="flex space-x-6">
                     <a href="#" class="text-gray-400 hover:text-white transition duration-300 transform hover:-translate-y-1">
                         <i class="fab fa-facebook-f"></i>
@@ -1418,7 +1418,7 @@ if ($auth->isLoggedIn()) {
         </div>
         <div id="chat-box-popup" class="p-4 h-64 overflow-y-auto">
             <div class="ai-message p-3 mb-3 max-w-xs">
-                <p class="font-medium">🤖 AI Assistant:</p>
+                <p class="font-medium">ðŸ¤– AI Assistant:</p>
                 <p>Hi! How can I help you?</p>
             </div>
         </div>
@@ -1552,10 +1552,10 @@ window.addEventListener('load', function() {
             
             if (sender === 'user') {
                 div.classList.add('ml-auto');
-                div.innerHTML = `<p class="font-medium">ðŸ‘¤ Anda:</p><p>${message}</p>`;
+                div.innerHTML = `<p class="font-medium">Ã°Å¸â€˜Â¤ Anda:</p><p>${message}</p>`;
             } else {
                 div.classList.add('mr-auto');
-                div.innerHTML = `<p class="font-medium">ðŸ¤– AI Assistant:</p><p>${message}</p>`;
+                div.innerHTML = `<p class="font-medium">Ã°Å¸Â¤â€“ AI Assistant:</p><p>${message}</p>`;
             }
             
             chatBox.appendChild(div);
