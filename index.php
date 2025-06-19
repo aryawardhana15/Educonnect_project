@@ -1391,7 +1391,7 @@ if ($auth->isLoggedIn()) {
         </div>
     </footer>
 
-    <!-- Floating Action Buttons -->
+   
     <div class="fixed bottom-6 right-6 z-50 flex flex-col space-y-3">
         <button id="chat-button" class="bg-primary text-white p-4 rounded-full shadow-lg hover:bg-primary-dark transition duration-300 transform hover:scale-110 group relative">
             <i class="fas fa-comment-dots text-xl"></i>

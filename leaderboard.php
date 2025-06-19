@@ -689,6 +689,8 @@ $current_user_profile_picture = $current_user_data['profile_picture'] ?? 'assets
             </div>
         </div>
 
+
+
         <!-- Current User Position -->
         <div class="bg-gradient-to-r from-primary-50 to-purple-50 border-t border-gray-100 px-4 py-4 rounded-b-xl">
             <div class="flex flex-col sm:flex-row justify-between items-center gap-3">
